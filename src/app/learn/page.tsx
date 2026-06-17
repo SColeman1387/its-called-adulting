@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getWeeklyLesson, getThisWeekRecord, markWeekViewed, recordResponse, getLearningStreak, getWeekKey } from "@/lib/learning";
+import { awardPoints } from "@/lib/points";
 import { CATEGORIES, Task } from "@/lib/data";
 import { getProfile } from "@/lib/profile";
 
@@ -25,6 +26,7 @@ export default function LearnPage() {
   const handleResponse = (r: "learned" | "knew-it") => {
     if (!task) return;
     recordResponse(task.id, r);
+    awardPoints("lesson_complete", `Weekly lesson: ${task.title}`, getWeekKey());
     setResponse(r);
     setStreak(getLearningStreak());
   };

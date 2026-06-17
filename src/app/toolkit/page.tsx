@@ -12,6 +12,7 @@ import {
   markToolAcquired,
   unmarkToolAcquired,
 } from "@/lib/toolkit";
+import { awardPoints } from "@/lib/points";
 
 export default function ToolkitPage() {
   const [acquired, setAcquired] = useState<string[]>([]);
@@ -37,6 +38,8 @@ export default function ToolkitPage() {
       setAcquired((a) => a.filter((id) => id !== toolId));
     } else {
       markToolAcquired(toolId);
+      const tool = TOOLS.find((t) => t.id === toolId);
+      if (tool) awardPoints("tool_acquired", tool.name, toolId);
       setAcquired((a) => [...a, toolId]);
     }
   };

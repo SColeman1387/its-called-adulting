@@ -1,284 +1,222 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useAuth } from "@/lib/useAuth";
+import { getTotalPoints, getLedgerEntries, deductPoints, GIFT_CARD_TIERS, POINT_VALUES, PointEvent } from "@/lib/points";
 import { getSupabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/useAuth";
 
-const TIER1_THRESHOLD = 6;   // tools acquired
-const TIER2_THRESHOLD = 12;  // all tools + 6 months
-
-const TIER1_OPTIONS = [
-  { id: "multi-tool", label: "Multi-Tool", emoji: "🔧", desc: "Pocket-sized, handles 12 jobs" },
-  { id: "tire-inflator", label: "Tire Inflator", emoji: "💨", desc: "Cordless, fits in your trunk" },
-];
-
-const TIER2_OPTIONS = [
-  { id: "drill", label: "Cordless Drill Kit", emoji: "🔩", desc: "20V, 2 batteries, charger included" },
-  { id: "jump-pack", label: "Lithium Jump Pack", emoji: "⚡", desc: "Jump your car without another vehicle" },
-  { id: "tire-inflator", label: "Premium Tire Inflator", emoji: "💨", desc: "Digital, auto-shutoff, with gauge" },
-];
-
-interface RewardRow {
-  tier: string;
-  reward_choice: string | null;
-  status: string;
-}
+const TYPE_LABELS: Record<PointEvent["type"], string> = {
+  task_complete:   "✅ Completed a task",
+  lesson_complete: "📖 Weekly lesson",
+  tool_acquired:   "🔧 Added a tool",
+  referral:        "👋 Referred a friend",
+  signup:          "🎉 Joined the app",
+};
 
 export default function RewardsPage() {
-  const { user, loading } = useAuth();
-  const [toolCount, setToolCount] = useState(0);
-  const [monthsElapsed, setMonthsElapsed] = useState(0);
-  const [rewards, setRewards] = useState<RewardRow[]>([]);
-  const [redeeming, setRedeeming] = useState<"tier1" | "tier2" | null>(null);
-  const [choice, setChoice] = useState("");
-  const [form, setForm] = useState({ name: "", address: "", city: "", state: "", zip: "", phone: "" });
+  const { user } = useAuth();
+  const [points, setPoints] = useState(0);
+  const [ledger, setLedger] = useState<PointEvent[]>([]);
+  const [selected, setSelected] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
+  const [step, setStep] = useState<"choose" | "confirm" | "done">("choose");
+  const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!user) return;
-    const supabase = getSupabase();
+    setPoints(getTotalPoints());
+    setLedger(getLedgerEntries());
+  }, []);
 
-    supabase
-      .from("tool_acquisitions")
-      .select("id", { count: "exact" })
-      .eq("user_id", user.id)
-      .then(({ count }) => setToolCount(count ?? 0));
-
-    supabase
-      .from("profiles")
-      .select("created_at")
-      .eq("id", user.id)
-      .single()
-      .then(({ data }) => {
-        if (data?.created_at) {
-          const created = new Date(data.created_at);
-          const now = new Date();
-          const months =
-            (now.getFullYear() - created.getFullYear()) * 12 +
-            (now.getMonth() - created.getMonth());
-          setMonthsElapsed(months);
-        }
-      });
-
-    supabase
-      .from("rewards")
-      .select("tier, reward_choice, status")
-      .eq("user_id", user.id)
-      .then(({ data }) => setRewards(data ?? []));
-  }, [user]);
-
-  const tier1Eligible = toolCount >= TIER1_THRESHOLD;
-  const tier2Eligible = toolCount >= TIER2_THRESHOLD && monthsElapsed >= 6;
-  const tier1Claimed = rewards.some((r) => r.tier === "tier1");
-  const tier2Claimed = rewards.some((r) => r.tier === "tier2");
+  const selectedTier = GIFT_CARD_TIERS.find((t) => t.id === selected);
 
   const handleRedeem = async () => {
-    if (!user || !redeeming || !choice) return;
+    if (!selectedTier) return;
+    if (!email.trim()) { setError("Enter your email so we can send the code."); return; }
     setSubmitting(true);
+    setError(null);
+
     const supabase = getSupabase();
-    await supabase.from("rewards").insert({
-      user_id: user.id,
-      tier: redeeming,
-      reward_choice: choice,
+    const { error: dbError } = await supabase.from("rewards").insert({
+      user_id: user?.id ?? null,
+      tier: selectedTier.id,
+      reward_choice: selectedTier.label,
       status: "pending",
-      ship_name: form.name,
-      ship_address: form.address,
-      ship_city: form.city,
-      ship_state: form.state,
-      ship_zip: form.zip,
-      ship_phone: form.phone,
+      ship_name: email.trim(),
+      ship_address: "digital",
+      ship_city: "digital",
+      ship_state: "digital",
+      ship_zip: "00000",
     });
+
+    if (dbError) {
+      setError("Something went wrong. Try again.");
+      setSubmitting(false);
+      return;
+    }
+
+    deductPoints(selectedTier.points, `Redeemed ${selectedTier.label}`);
+    setPoints(getTotalPoints());
+    setLedger(getLedgerEntries());
+    setStep("done");
     setSubmitting(false);
-    setSuccess(true);
-    setRedeeming(null);
   };
 
-  if (loading) return null;
-
-  if (!user) {
-    return (
-      <main className="max-w-sm mx-auto px-6 pt-20 text-center">
-        <div className="text-5xl mb-4">🏆</div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Sign in to view rewards</h1>
-        <p className="text-gray-500 text-sm mb-6">Earn real tools by building your adulting toolkit.</p>
-        <Link href="/auth?redirect=/rewards" className="inline-block bg-orange-500 text-white font-bold px-6 py-3 rounded-2xl text-sm">
-          Create account →
-        </Link>
-      </main>
-    );
-  }
-
-  if (success) {
-    return (
-      <main className="max-w-sm mx-auto px-6 pt-20 text-center">
-        <div className="text-5xl mb-4">🎉</div>
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Reward redeemed!</h1>
-        <p className="text-gray-500 text-sm mb-6 leading-relaxed">
-          We&apos;ll process your order and ship it to the address you provided. You&apos;ll hear from us within a few days.
-        </p>
-        <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-6 py-3 rounded-2xl text-sm">
-          Back to home →
-        </Link>
-      </main>
-    );
-  }
-
   return (
-    <main className="max-w-2xl mx-auto px-4 pb-24">
-      <div className="pt-8 pb-4">
+    <main className="max-w-lg mx-auto px-4 pb-24">
+
+      {/* Header */}
+      <div className="pt-8 pb-2">
         <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
-        <h1 className="text-2xl font-bold text-gray-900">Rewards</h1>
-        <p className="text-gray-500 text-sm mt-1">Build your toolkit, earn real tools — on us.</p>
+        <h1 className="text-2xl font-bold text-gray-900">Adulting Bucks</h1>
+        <p className="text-gray-400 text-sm mt-1">Earn points, redeem for Amazon gift cards.</p>
       </div>
 
-      {/* Progress summary */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-4 mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-semibold text-gray-700">Your toolkit progress</span>
-          <span className="text-sm font-bold text-orange-600">{toolCount} / 12 tools</span>
-        </div>
-        <div className="w-full bg-gray-100 rounded-full h-3">
-          <div
-            className="bg-orange-400 h-3 rounded-full transition-all"
-            style={{ width: `${(toolCount / 12) * 100}%` }}
-          />
-        </div>
-        <div className="flex justify-between text-xs text-gray-400 mt-1.5">
-          <span>Tier 1 at 6 tools</span>
-          <span>Tier 2 at 12 tools + 6 months</span>
-        </div>
+      {/* Balance card */}
+      <div className="bg-[#0f1f3d] rounded-3xl p-6 mt-4 mb-6 text-white text-center">
+        <p className="text-sm text-blue-300 font-semibold uppercase tracking-widest mb-1">Your balance</p>
+        <p className="text-6xl font-black mb-1">{points.toLocaleString()}</p>
+        <p className="text-blue-300 text-sm">Adulting Bucks</p>
       </div>
 
-      {/* Tier 1 */}
-      <div className={`rounded-2xl border-2 p-5 mb-4 ${tier1Eligible ? "border-orange-200 bg-orange-50" : "border-gray-100 bg-gray-50"}`}>
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-3xl">🥈</span>
-          <div>
-            <div className="font-bold text-gray-900">Tier 1 Reward</div>
-            <div className="text-xs text-gray-500">Acquire any 6 tools</div>
-          </div>
-          {tier1Claimed && <span className="ml-auto text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✓ Claimed</span>}
-          {tier1Eligible && !tier1Claimed && <span className="ml-auto text-xs bg-orange-500 text-white font-bold px-2 py-0.5 rounded-full">Ready!</span>}
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 mb-3">
-          {TIER1_OPTIONS.map((opt) => (
-            <div key={opt.id} className="bg-white rounded-xl p-3 border border-gray-100 text-center">
-              <div className="text-2xl mb-1">{opt.emoji}</div>
-              <div className="text-xs font-bold text-gray-900">{opt.label}</div>
-              <div className="text-xs text-gray-400 mt-0.5">{opt.desc}</div>
+      {/* How to earn */}
+      <div className="bg-gray-50 rounded-2xl p-5 mb-6">
+        <h2 className="text-sm font-bold text-gray-700 mb-3">How to earn</h2>
+        <div className="space-y-2">
+          {(Object.entries(POINT_VALUES) as [PointEvent["type"], number][]).map(([type, pts]) => (
+            <div key={type} className="flex items-center justify-between text-sm">
+              <span className="text-gray-600">{TYPE_LABELS[type]}</span>
+              <span className="font-bold text-orange-500">+{pts} pts</span>
             </div>
           ))}
         </div>
-
-        {tier1Eligible && !tier1Claimed ? (
-          <button
-            onClick={() => setRedeeming("tier1")}
-            className="w-full py-3 bg-orange-500 text-white font-bold rounded-xl text-sm hover:bg-orange-600 transition-colors"
-          >
-            Redeem Tier 1 reward →
-          </button>
-        ) : !tier1Eligible ? (
-          <div className="text-center text-xs text-gray-400 py-2">
-            {TIER1_THRESHOLD - toolCount} more tool{TIER1_THRESHOLD - toolCount !== 1 ? "s" : ""} to go
-          </div>
-        ) : null}
       </div>
 
-      {/* Tier 2 */}
-      <div className={`rounded-2xl border-2 p-5 mb-6 ${tier2Eligible ? "border-yellow-200 bg-yellow-50" : "border-gray-100 bg-gray-50"}`}>
-        <div className="flex items-center gap-3 mb-3">
-          <span className="text-3xl">🥇</span>
-          <div>
-            <div className="font-bold text-gray-900">Tier 2 Reward</div>
-            <div className="text-xs text-gray-500">All 12 tools + 6 months with the app</div>
-          </div>
-          {tier2Claimed && <span className="ml-auto text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">✓ Claimed</span>}
-          {tier2Eligible && !tier2Claimed && <span className="ml-auto text-xs bg-yellow-500 text-white font-bold px-2 py-0.5 rounded-full">Ready!</span>}
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 mb-3">
-          {TIER2_OPTIONS.map((opt) => (
-            <div key={opt.id} className="bg-white rounded-xl p-3 border border-gray-100 text-center">
-              <div className="text-2xl mb-1">{opt.emoji}</div>
-              <div className="text-xs font-bold text-gray-900">{opt.label}</div>
-              <div className="text-xs text-gray-400 mt-0.5">{opt.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        {tier2Eligible && !tier2Claimed ? (
-          <button
-            onClick={() => setRedeeming("tier2")}
-            className="w-full py-3 bg-yellow-500 text-white font-bold rounded-xl text-sm hover:bg-yellow-600 transition-colors"
-          >
-            Redeem Tier 2 reward →
-          </button>
-        ) : !tier2Eligible ? (
-          <div className="text-center text-xs text-gray-400 py-2">
-            {toolCount < 12 ? `${12 - toolCount} more tools` : `${6 - monthsElapsed} more months`} to unlock
-          </div>
-        ) : null}
-      </div>
-
-      {/* Redemption form sheet */}
-      {redeeming && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center">
-          <div className="absolute inset-0 bg-black/40" onClick={() => setRedeeming(null)} />
-          <div className="relative bg-white rounded-t-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="sticky top-0 bg-white border-b border-gray-100 px-5 pt-5 pb-4 flex items-center justify-between">
-              <h2 className="font-bold text-gray-900">Claim your {redeeming === "tier1" ? "Tier 1" : "Tier 2"} reward</h2>
-              <button onClick={() => setRedeeming(null)} className="text-gray-400 text-2xl leading-none">×</button>
-            </div>
-            <div className="px-5 py-4 space-y-4">
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-2">Choose your reward</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {(redeeming === "tier1" ? TIER1_OPTIONS : TIER2_OPTIONS).map((opt) => (
-                    <button
-                      key={opt.id}
-                      onClick={() => setChoice(opt.id)}
-                      className={`p-3 rounded-xl border-2 text-center transition-all ${choice === opt.id ? "border-orange-400 bg-orange-50" : "border-gray-100 bg-white"}`}
-                    >
-                      <div className="text-2xl mb-1">{opt.emoji}</div>
-                      <div className="text-xs font-bold text-gray-900">{opt.label}</div>
-                    </button>
-                  ))}
-                </div>
+      {/* Gift card tiers */}
+      <h2 className="text-base font-bold text-gray-900 mb-3">Redeem for gift cards</h2>
+      <div className="space-y-3 mb-6">
+        {GIFT_CARD_TIERS.map((tier) => {
+          const canAfford = points >= tier.points;
+          const ptsNeeded = tier.points - points;
+          return (
+            <button
+              key={tier.id}
+              onClick={() => canAfford && setSelected(tier.id)}
+              className={`w-full text-left rounded-2xl border-2 p-5 transition-all ${
+                selected === tier.id
+                  ? "border-orange-500 bg-orange-50"
+                  : canAfford
+                  ? "border-gray-100 bg-white hover:border-orange-200"
+                  : "border-gray-100 bg-white opacity-50"
+              }`}
+            >
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-bold text-gray-900">{tier.label}</span>
+                {canAfford ? (
+                  <span className="text-xs bg-green-100 text-green-700 font-bold px-2 py-0.5 rounded-full">Available</span>
+                ) : (
+                  <span className="text-xs bg-gray-100 text-gray-500 font-medium px-2 py-0.5 rounded-full">
+                    Need {ptsNeeded.toLocaleString()} more
+                  </span>
+                )}
               </div>
+              <p className="text-sm text-gray-400">{tier.points.toLocaleString()} Adulting Bucks</p>
+            </button>
+          );
+        })}
+      </div>
 
-              {[
-                { key: "name", label: "Full name", placeholder: "Jane Smith" },
-                { key: "address", label: "Street address", placeholder: "123 Main St" },
-                { key: "city", label: "City", placeholder: "Columbus" },
-                { key: "state", label: "State", placeholder: "OH" },
-                { key: "zip", label: "ZIP code", placeholder: "43215" },
-                { key: "phone", label: "Phone (optional)", placeholder: "614-555-0100" },
-              ].map(({ key, label, placeholder }) => (
-                <div key={key}>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">{label}</label>
-                  <input
-                    value={form[key as keyof typeof form]}
-                    onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                    placeholder={placeholder}
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400 focus:ring-2 focus:ring-orange-100"
-                  />
-                </div>
-              ))}
+      {/* Redeem button */}
+      {selected && step === "choose" && (
+        <button
+          onClick={() => setStep("confirm")}
+          className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600 transition-colors"
+        >
+          Redeem {selectedTier?.label} →
+        </button>
+      )}
 
-              <button
-                onClick={handleRedeem}
-                disabled={!choice || !form.name || !form.address || !form.city || !form.zip || submitting}
-                className="w-full py-4 bg-orange-500 text-white font-bold rounded-2xl text-sm hover:bg-orange-600 transition-colors disabled:opacity-50"
-              >
-                {submitting ? "Submitting…" : "Submit redemption →"}
-              </button>
-              <div className="h-2" />
-            </div>
+      {/* Confirm step */}
+      {step === "confirm" && selectedTier && (
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+          <h3 className="font-bold text-gray-900 mb-1">Confirm redemption</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            We&apos;ll email you an Amazon gift card code within 2 business days.
+            This will deduct <strong>{selectedTier.points.toLocaleString()} points</strong> from your balance.
+          </p>
+          <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
+            Email to send the code to
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400 mb-4"
+          />
+          {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
+          <div className="flex gap-3">
+            <button
+              onClick={() => setStep("choose")}
+              className="flex-1 py-3 rounded-xl border border-gray-200 text-sm font-semibold text-gray-500"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleRedeem}
+              disabled={submitting}
+              className="flex-1 py-3 rounded-xl bg-orange-500 text-white font-bold text-sm hover:bg-orange-600 disabled:opacity-60"
+            >
+              {submitting ? "Submitting…" : "Confirm →"}
+            </button>
           </div>
         </div>
       )}
+
+      {/* Done state */}
+      {step === "done" && (
+        <div className="text-center py-8">
+          <div className="text-5xl mb-3">🎉</div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Request submitted!</h2>
+          <p className="text-gray-500 text-sm leading-relaxed mb-6">
+            You&apos;ll receive your Amazon gift card code at <strong>{email}</strong> within 2 business days.
+          </p>
+          <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-8 py-3 rounded-2xl text-sm">
+            Back to home →
+          </Link>
+        </div>
+      )}
+
+      {/* Points history */}
+      {ledger.length > 0 && step === "choose" && (
+        <div className="mt-8">
+          <button
+            onClick={() => setShowHistory(!showHistory)}
+            className="text-sm text-gray-400 font-medium w-full text-center"
+          >
+            {showHistory ? "Hide" : "Show"} points history ({ledger.length} events)
+          </button>
+          {showHistory && (
+            <div className="mt-4 space-y-2">
+              {ledger.map((e) => (
+                <div key={e.id} className="flex items-center justify-between text-sm py-2 border-b border-gray-50">
+                  <div>
+                    <p className="text-gray-700 font-medium">{e.label}</p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(e.ts).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                    </p>
+                  </div>
+                  <span className={`font-bold ${e.points > 0 ? "text-orange-500" : "text-gray-400"}`}>
+                    {e.points > 0 ? "+" : ""}{e.points}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
     </main>
   );
 }

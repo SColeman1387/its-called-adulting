@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { TASKS, CATEGORIES } from "@/lib/data";
 import { recordCompletion, getTaskStreak, getCompletionCount, getLastCompletion } from "@/lib/streaks";
+import { awardPoints } from "@/lib/points";
 
 export default function TaskPage() {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function TaskPage() {
   const markComplete = () => {
     if (!task) return;
     recordCompletion(task.id);
+    awardPoints("task_complete", task.title, task.id);
     setCompleted(true);
     setCount((c) => c + 1);
     const newStreak = task.checkInterval ? getTaskStreak(task.id, task.checkInterval) : 0;

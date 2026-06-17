@@ -4,6 +4,7 @@ import Link from "next/link";
 import { CATEGORIES, getSeasonalTasks, getCurrentSeason } from "@/lib/data";
 import { getProfile, UserProfile, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
 import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/learning";
+import { getTotalPoints } from "@/lib/points";
 import { Task } from "@/lib/data";
 
 const seasonEmoji: Record<string, string> = {
@@ -27,6 +28,7 @@ export default function Home() {
   const [weeklyLesson, setWeeklyLesson] = useState<Task | null>(null);
   const [lessonDone, setLessonDone] = useState(false);
   const [learningStreak, setLearningStreak] = useState(0);
+  const [points, setPoints] = useState(0);
 
   useEffect(() => {
     const p = getProfile();
@@ -40,6 +42,7 @@ export default function Home() {
     const record = getThisWeekRecord();
     setLessonDone(!!record?.response);
     setLearningStreak(getLearningStreak());
+    setPoints(getTotalPoints());
     setLoaded(true);
   }, []);
 
@@ -63,9 +66,15 @@ export default function Home() {
         <p className="text-gray-400 text-xs mt-1">
           Everything your dad would have taught you — all in one place.
         </p>
-        <div className="mt-4 inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 text-xs font-medium px-3 py-1.5 rounded-full">
-          <span>{seasonEmoji[season]}</span>
-          <span>Showing tasks for {season} in Columbus, OH</span>
+        <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
+          <div className="inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 text-xs font-medium px-3 py-1.5 rounded-full">
+            <span>{seasonEmoji[season]}</span>
+            <span>Showing tasks for {season} in Columbus, OH</span>
+          </div>
+          <Link href="/rewards" className="inline-flex items-center gap-1.5 bg-[#0f1f3d] text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-[#1a2f55] transition-colors">
+            <span>⭐</span>
+            <span>{points.toLocaleString()} Adulting Bucks</span>
+          </Link>
         </div>
       </div>
 
