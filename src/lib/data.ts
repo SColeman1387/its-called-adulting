@@ -1,0 +1,1605 @@
+export type Season = "spring" | "summer" | "fall" | "winter" | "year-round";
+export type Category = "car" | "home" | "finances" | "health" | "appliances" | "cooking" | "guides";
+
+// Profile flags that gate task visibility
+export type TaskRequires =
+  | "hasCar"
+  | "hasPool"
+  | "hasYard"
+  | "hasWaterSoftener"
+  | "hasDryer"
+  | "hasFireplace"
+  | "homeOwner"    // own-house only
+  | "hasOutdoorAccess"; // rent-house or own-house (not apartment)
+
+export interface Task {
+  id: string;
+  title: string;
+  description: string;
+  howDidIKnow: string;
+  category: Category;
+  season: Season;
+  difficulty: "easy" | "medium" | "hard";
+  requires?: TaskRequires;
+  timeEstimate: string;
+  checkInterval?: number; // days between completions (30 = monthly, 90 = quarterly, 365 = yearly)
+  diyGuide: {
+    intro: string;
+    steps: string[];
+    tips: string[];
+    toolsNeeded: string[];
+  };
+  proSearchQuery: string;
+}
+
+export interface Category_ {
+  id: Category;
+  label: string;
+  icon: string;
+  color: string;
+  bgColor: string;
+}
+
+export const CATEGORIES: Category_[] = [
+  { id: "car", label: "Your Car", icon: "🚗", color: "text-blue-600", bgColor: "bg-blue-50" },
+  { id: "home", label: "Home & Apt", icon: "🏠", color: "text-green-600", bgColor: "bg-green-50" },
+  { id: "finances", label: "Finances", icon: "💰", color: "text-yellow-600", bgColor: "bg-yellow-50" },
+  { id: "health", label: "Health", icon: "❤️", color: "text-red-600", bgColor: "bg-red-50" },
+  { id: "appliances", label: "Appliances", icon: "🔧", color: "text-purple-600", bgColor: "bg-purple-50" },
+  { id: "cooking", label: "Cooking", icon: "🍳", color: "text-orange-600", bgColor: "bg-orange-50" },
+  { id: "guides", label: "Guides", icon: "📖", color: "text-indigo-600", bgColor: "bg-indigo-50" },
+];
+
+export const TASKS: Task[] = [
+  // CAR
+  {
+    id: "tire-pressure",
+    checkInterval: 30,
+    title: "Check Tire Pressure",
+    description: "Low tire pressure reduces fuel economy and can be dangerous in wet or icy conditions.",
+    howDidIKnow: "Your car loses about 1 PSI of tire pressure for every 10°F it gets colder — so every fall your tires are slowly going flat and nobody tells you to check.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "10 minutes",
+    diyGuide: {
+      intro: "Tire pressure drops about 1 PSI for every 10°F temperature drop — so it needs checking more often in fall/winter. Your ideal PSI is on a sticker inside your driver's door.",
+      steps: [
+        "Find your recommended PSI — look on the sticker inside the driver's door jamb (not the tire sidewall).",
+        "Remove the valve cap from the first tire (it's the small rubber nub on the inside of the rim).",
+        "Press your tire pressure gauge firmly onto the valve stem and read the number.",
+        "If it's below the recommended PSI, add air at a gas station air pump (usually $1–$2).",
+        "If it's too high, press the small pin inside the valve stem with the back of the gauge to release air.",
+        "Repeat for all four tires — and don't forget the spare in the trunk!",
+        "Replace all valve caps.",
+      ],
+      tips: [
+        "Check pressure when tires are 'cold' — before driving or after the car has sat for 3+ hours.",
+        "A good tire gauge costs $5–$10 and lives in your glove box.",
+        "Do this monthly and before any long road trip.",
+      ],
+      toolsNeeded: ["Tire pressure gauge ($5–$10)", "Air pump (at most gas stations)"],
+    },
+    proSearchQuery: "tire shop Columbus Ohio",
+  },
+  {
+    id: "oil-check",
+    checkInterval: 30,
+    title: "Check Engine Oil",
+    description: "Running low on oil is one of the fastest ways to destroy an engine. Takes 2 minutes to check.",
+    howDidIKnow: "An engine with no oil can seize and die in minutes — and the repair bill is thousands of dollars. Nobody tells you it's a 2-minute check that could save your entire car.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "5 minutes",
+    diyGuide: {
+      intro: "Engine oil lubricates all the moving parts in your engine. Too little = catastrophic damage. Check it monthly.",
+      steps: [
+        "Park on a level surface and turn off your engine. Wait 5 minutes for oil to drain back into the pan.",
+        "Pop the hood — there's a release lever under the dashboard on the left side.",
+        "Find the oil dipstick — usually has a yellow or orange ring, labeled 'OIL'.",
+        "Pull the dipstick out completely and wipe it clean with a rag or paper towel.",
+        "Push it all the way back in, then pull it out again.",
+        "Look at the tip — there are two marks (MIN and MAX). The oil level should be between them.",
+        "Also look at the oil color. Dark brown is fine. Black and gritty means it needs changing. Milky/foamy means water in the oil — see a mechanic immediately.",
+        "If low, add the oil type listed in your owner's manual. Do NOT overfill.",
+      ],
+      tips: [
+        "Your owner's manual (in the glove box) tells you exactly which oil type your car needs.",
+        "Most cars use 5W-30 or 5W-20 — it's written on the oil cap too.",
+        "If you're adding oil frequently, it may be burning or leaking — worth mentioning at your next oil change.",
+      ],
+      toolsNeeded: ["Clean rag or paper towels", "Correct motor oil for your car (check manual)"],
+    },
+    proSearchQuery: "oil change Columbus Ohio",
+  },
+  {
+    id: "wiper-blades",
+    checkInterval: 180,
+    title: "Replace Wiper Blades",
+    description: "Streaky or squeaky wipers are a safety hazard in rain. Blades last about 6–12 months.",
+    howDidIKnow: "Most people wait until they can barely see in the rain to replace wipers. You're supposed to swap them every fall before the weather turns — it takes 15 minutes and no tools.",
+    category: "car",
+    season: "fall",
+    difficulty: "easy",
+    timeEstimate: "15 minutes",
+    diyGuide: {
+      intro: "Old wiper blades streak, skip, or squeak — making it hard to see in rain or snow. Replacing them takes about 15 minutes and no tools.",
+      steps: [
+        "Measure your blades before buying — driver and passenger sides are often different lengths. Check your owner's manual or the packaging rack at any auto parts store.",
+        "Lift the wiper arm away from the windshield until it locks upright. Be careful — if it snaps back without a blade, it can crack your windshield.",
+        "Find the release tab where the blade meets the arm — usually a small plastic clip on the underside. Press it and slide the blade off.",
+        "Slide the new blade onto the arm — you'll hear a click when it's locked.",
+        "Gently lower the arm back to the windshield.",
+        "Repeat for the other side.",
+        "Run them with washer fluid to test.",
+      ],
+      tips: [
+        "AutoZone and O'Reilly staff will often install them for free if you buy the blades there.",
+        "Replace both at the same time — if one is worn, the other is too.",
+        "Beam-style blades (no metal frame) handle snow and ice better.",
+      ],
+      toolsNeeded: ["New wiper blades (measure first — check your manual)", "No tools needed"],
+    },
+    proSearchQuery: "auto parts store Columbus Ohio",
+  },
+  {
+    id: "coolant-check",
+    checkInterval: 90,
+    title: "Check Coolant Level",
+    description: "Coolant keeps your engine from overheating in summer and freezing in winter.",
+    howDidIKnow: "If your engine overheats on the highway, you pull over — but the damage is already done. A cracked engine block from low coolant can cost more than the car is worth.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "5 minutes",
+    diyGuide: {
+      intro: "Coolant (antifreeze) regulates engine temperature. Running low in summer causes overheating; in winter it can freeze and crack your engine block.",
+      steps: [
+        "Let your engine cool completely before touching anything — at least 2 hours after driving. Hot coolant can spray and cause serious burns.",
+        "Open the hood and find the coolant reservoir — a translucent plastic tank, usually near the radiator, with a colored cap (often yellow or green).",
+        "Check the level against the MIN/MAX marks on the side. You don't need to open it unless it's below MIN.",
+        "If low, open the cap and add a 50/50 mix of coolant and distilled water (or pre-mixed coolant).",
+        "Replace the cap tightly.",
+      ],
+      tips: [
+        "NEVER open the radiator cap when the engine is hot.",
+        "Use the same color coolant as what's already in there — mixing types can cause problems.",
+        "If it's constantly running low, you may have a leak — see a mechanic.",
+      ],
+      toolsNeeded: ["Coolant (check your manual for type)", "Distilled water (if not using pre-mix)"],
+    },
+    proSearchQuery: "auto repair Columbus Ohio",
+  },
+
+  // HOME
+  {
+    id: "air-filter",
+    checkInterval: 60,
+    title: "Replace HVAC Air Filter",
+    description: "A dirty air filter strains your HVAC system, raises energy bills, and worsens air quality.",
+    howDidIKnow: "A clogged air filter makes your HVAC system work twice as hard — shortening its life by years. Replacing it takes 5 minutes and costs $5. Replacing the whole system costs $5,000.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "5 minutes",
+    diyGuide: {
+      intro: "Your HVAC filter traps dust, pollen, and pet dander. Replace it every 1–3 months depending on whether you have pets or allergies.",
+      steps: [
+        "Find your filter — usually in a slot on the wall/ceiling return vent or inside the HVAC unit itself in a closet or basement.",
+        "Note the size printed on the edge of the old filter (e.g., '20x25x1').",
+        "Turn off your HVAC system before pulling the old filter out.",
+        "Slide out the old filter — it will be visibly dirty (gray/brown). That's normal.",
+        "Slide the new filter in — there's an arrow on the frame showing airflow direction, which points toward the HVAC unit.",
+        "Turn the system back on.",
+        "Mark the install date on the filter frame with a marker so you know when to change it next.",
+      ],
+      tips: [
+        "Set a phone reminder for 60–90 days from now.",
+        "Higher MERV ratings (8–12) catch more particles but reduce airflow. MERV 8 is the sweet spot for most apartments.",
+        "Buy a 3-pack to have spares on hand.",
+      ],
+      toolsNeeded: ["Replacement filter (note the size on the old one)", "Optional: marker to write the date"],
+    },
+    proSearchQuery: "HVAC service Columbus Ohio",
+  },
+  {
+    id: "smoke-detector",
+    checkInterval: 180,
+    title: "Test & Replace Smoke Detector Batteries",
+    description: "Smoke detectors save lives but only when they work. Test monthly, replace batteries yearly.",
+    howDidIKnow: "Three out of five home fire deaths happen in homes with no working smoke detector. The battery dying silently at 2am is the most predictable thing in the world — and the easiest to prevent.",
+    category: "home",
+    season: "fall",
+    difficulty: "easy",
+    timeEstimate: "15 minutes",
+    diyGuide: {
+      intro: "Most people never test their smoke detectors until something burns. A dead battery is useless. The rule: change batteries when clocks change (fall and spring).",
+      steps: [
+        "Press and hold the test button on each detector for 3–5 seconds. A loud beep means it's working.",
+        "If no beep or a weak chirp, the battery is dead.",
+        "Twist the detector counterclockwise to remove it from the ceiling mount.",
+        "Open the battery compartment (usually a slide or press tab on the back).",
+        "Replace with a fresh 9V battery — don't use old or half-used batteries.",
+        "Snap it closed, remount, and test again.",
+        "Also check the manufacture date stamped on the back — replace the whole unit if it's more than 10 years old.",
+      ],
+      tips: [
+        "Carbon monoxide detectors need the same treatment — test them too.",
+        "You should have one on every level of your home and near every sleeping area.",
+        "Buy a multi-pack of 9V batteries so you always have spares.",
+      ],
+      toolsNeeded: ["9V batteries", "Step stool or ladder if needed"],
+    },
+    proSearchQuery: "handyman Columbus Ohio",
+  },
+  {
+    id: "winterize-hoses",
+    title: "Disconnect & Store Garden Hoses",
+    description: "Water left in outdoor hoses and pipes freezes and can burst your pipes — an expensive repair.",
+    howDidIKnow: "The hose looks fine outside. But water sitting in the pipe behind it freezes, expands, and bursts the pipe inside your wall. You won't know until spring — when there's a puddle in your basement.",
+    category: "home",
+    season: "fall",
+    difficulty: "easy",
+    timeEstimate: "20 minutes",
+    requires: "hasOutdoorAccess",
+    diyGuide: {
+      intro: "When temps drop below 32°F, water left in outdoor faucet lines can freeze, expand, and crack pipes inside your walls. Do this before the first hard freeze — typically mid-October in Columbus.",
+      steps: [
+        "Turn off the indoor shutoff valve for your outdoor faucet (usually in the basement or crawl space, on the pipe that leads outside).",
+        "Go outside and open the outdoor faucet to drain any remaining water.",
+        "Disconnect your garden hose from the spigot.",
+        "Drain the hose completely — hold one end up high and walk toward the other end to push water out.",
+        "Coil the hose and store it in a garage or shed.",
+        "Leave the outdoor faucet open slightly to allow any residual water to drain.",
+        "If you don't have an indoor shutoff, buy a foam faucet cover at any hardware store ($2–$5).",
+      ],
+      tips: [
+        "Even 'frost-free' faucets can freeze if a hose is left connected — always disconnect.",
+        "Set a calendar reminder for October 1st every year.",
+        "While you're at it, drain and store any sprinkler system too.",
+      ],
+      toolsNeeded: ["None required", "Optional: faucet insulating cover ($2–$5 at hardware store)"],
+    },
+    proSearchQuery: "plumber Columbus Ohio",
+  },
+  {
+    id: "clean-gutters",
+    title: "Clean Gutters",
+    description: "Clogged gutters cause water damage to your roof, siding, and foundation. Clean twice a year.",
+    howDidIKnow: "Water that can't drain through gutters backs up under your roof shingles, rots the fascia board, and puddles against your foundation. A $200 gutter cleaning prevents a $15,000 foundation repair.",
+    category: "home",
+    season: "fall",
+    difficulty: "medium",
+    timeEstimate: "1–2 hours",
+    requires: "hasOutdoorAccess",
+    diyGuide: {
+      intro: "Gutters channel rainwater away from your home's foundation. When they're clogged with leaves and debris, water backs up and causes major damage. Clean in late fall after leaves drop, and again in spring.",
+      steps: [
+        "Set up a sturdy ladder on level ground. Never lean a ladder against the gutters — it can damage them.",
+        "Wear gloves — gutter debris is dirty, sharp, and sometimes harbors mold or pests.",
+        "Use a gutter scoop or your gloved hands to remove debris, dropping it onto a tarp on the ground.",
+        "Work from one end toward the downspout.",
+        "Once clear, flush the gutters with a garden hose to check for proper drainage.",
+        "Check that water flows freely through the downspout. If it doesn't, it's clogged — push a plumber's snake through it or flush from the bottom up.",
+        "Look for sagging sections or separated joints and press them back together or re-secure with gutter screws.",
+      ],
+      tips: [
+        "If your house is more than one story, hire a pro — ladder falls are one of the most common home injury causes.",
+        "Gutter guards reduce how often you need to clean, but don't eliminate it.",
+        "Check for standing water in gutters after rain — a sign the pitch is off.",
+      ],
+      toolsNeeded: ["Ladder", "Work gloves", "Gutter scoop or trowel", "Garden hose", "Tarp (optional)"],
+    },
+    proSearchQuery: "gutter cleaning Columbus Ohio",
+  },
+  {
+    id: "water-softener",
+    checkInterval: 30,
+    title: "Add Salt to Water Softener",
+    description: "Without salt, your water softener stops working — leading to hard water buildup on fixtures and appliances.",
+    howDidIKnow: "Hard water silently destroys water heaters, clogs showerheads, leaves white crust on everything, and makes soap not lather. The fix is a $7 bag of salt every month — but nobody shows you the tank in the basement.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "10 minutes",
+    requires: "hasWaterSoftener",
+    diyGuide: {
+      intro: "If your home has a water softener (usually a tall tank in the basement or utility room), it needs salt to function. Check it monthly and refill when the salt level drops below halfway.",
+      steps: [
+        "Locate your water softener — it's the cylindrical tank (usually blue, black, or gray) with a lid on top.",
+        "Open the lid and look inside. You'll see a brine tank — it should have salt crystals in it.",
+        "Check the salt level. If it's below the halfway mark, it's time to add more.",
+        "Buy water softener salt pellets at any hardware or grocery store (40 lb bag, $6–$10).",
+        "Pour the salt in until the tank is about 2/3 full. Don't overfill.",
+        "Break up any salt bridges — a hard crust that can form on top and block the salt from dissolving. Use a broom handle to poke through it if needed.",
+        "Replace the lid.",
+      ],
+      tips: [
+        "Use pellet salt, not rock salt — it dissolves more cleanly.",
+        "Check it every 4–6 weeks.",
+        "Signs your softener isn't working: white crusty buildup on faucets, soap not lathering well, water feeling 'hard'.",
+      ],
+      toolsNeeded: ["Water softener salt pellets (40 lb bag)", "Optional: broom handle to break salt bridges"],
+    },
+    proSearchQuery: "water softener service Columbus Ohio",
+  },
+
+  // FINANCES
+  {
+    id: "renters-insurance",
+    title: "Get Renters Insurance",
+    description: "If your apartment floods, burns, or is broken into, renters insurance covers your stuff. It's about $15/month.",
+    howDidIKnow: "Your landlord's insurance covers the building — not your stuff. If there's a fire and you lose everything, you get nothing unless you have your own policy. It's $15/month and most people have never heard of it.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "Renters insurance covers your personal belongings if they're stolen, damaged by fire, or destroyed in a natural disaster. It also covers liability if someone gets hurt in your apartment. Most landlords don't require it — but you'll wish you had it when you need it.",
+      steps: [
+        "Get quotes from 2–3 providers: Lemonade, State Farm, and USAA are well-rated for renters.",
+        "You'll need to estimate the value of your stuff — think laptop, TV, clothes, furniture. Don't underestimate.",
+        "Choose a deductible ($250–$500 is standard). Higher deductible = lower monthly cost.",
+        "Select coverage amount. $15,000–$30,000 in personal property coverage is typical for a first apartment.",
+        "Make sure it includes liability coverage (at least $100,000) — this protects you if someone sues you.",
+        "Purchase online — most policies activate within minutes.",
+        "Save your policy number and the claims number in your phone.",
+      ],
+      tips: [
+        "Lemonade offers policies starting around $5–$10/month for basic coverage.",
+        "Take a video walkthrough of your apartment documenting your belongings — store it in the cloud. Makes claims much easier.",
+        "Bundling with auto insurance often gets you a discount.",
+      ],
+      toolsNeeded: ["Phone or computer to get quotes", "Rough estimate of the value of your belongings"],
+    },
+    proSearchQuery: "renters insurance Columbus Ohio",
+  },
+  {
+    id: "build-credit",
+    title: "Start Building Credit",
+    description: "Good credit unlocks better apartments, car loans, and interest rates. Start now — it takes time.",
+    howDidIKnow: "When you go to rent your first apartment or finance a car, your credit score determines whether you get approved — and what rate you pay. Nobody tells you that you should have started building it at 18.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "1 hour",
+    diyGuide: {
+      intro: "Your credit score affects whether you can rent an apartment, buy a car, or get a loan — and what interest rate you pay. Building credit early gives it time to grow.",
+      steps: [
+        "Check if you have a credit score already — use Credit Karma (free, no impact) to check.",
+        "If you have no credit history, apply for a secured credit card. You deposit $200–$500 as collateral, and it becomes your credit limit. Discover It Secured and Capital One Platinum Secured are highly rated.",
+        "Use the card for one small, recurring purchase — like a streaming subscription.",
+        "Pay the FULL balance every month before the due date. Never carry a balance if you can avoid it.",
+        "After 6 months of on-time payments, you'll have a real credit score.",
+        "Check your score quarterly and watch it grow.",
+      ],
+      tips: [
+        "Payment history is 35% of your score — never miss a payment. Set autopay for the minimum as a safety net.",
+        "Keep your balance below 30% of your limit (called 'utilization').",
+        "Don't open many new cards at once — each application is a small ding on your score.",
+      ],
+      toolsNeeded: ["Phone or computer", "Bank account for secured card deposit"],
+    },
+    proSearchQuery: "credit union Columbus Ohio",
+  },
+
+  // HEALTH
+  {
+    id: "primary-care",
+    title: "Find a Primary Care Doctor",
+    description: "Having a doctor before you're sick means you're not scrambling when you need one.",
+    howDidIKnow: "Most 18-year-olds don't have a doctor because they've always used their parents'. The first time you're actually sick, you'll have no idea who to call — and a new patient appointment is usually weeks out.",
+    category: "health",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "A primary care physician (PCP) is your home base for healthcare — annual physicals, sick visits, referrals to specialists. Most people don't have one and then panic when they actually need one.",
+      steps: [
+        "Log into your health insurance app or website and use their 'Find a Doctor' tool.",
+        "Filter for Primary Care Physicians accepting new patients within 10 miles.",
+        "Check their Google or Healthgrades reviews.",
+        "Call the office to confirm they're accepting new patients and take your insurance.",
+        "Schedule a 'new patient appointment' — these are often several weeks out, so book early.",
+        "At the visit: bring your insurance card, ID, and a list of any medications or health issues.",
+        "After the visit, save the clinic's number and the after-hours line in your phone.",
+      ],
+      tips: [
+        "If you're on a parent's insurance, make sure the doctor is in-network.",
+        "Urgent care is for non-emergency sick visits, not a replacement for a PCP.",
+        "Community health centers (FQHCs) offer sliding-scale fees if you're uninsured.",
+      ],
+      toolsNeeded: ["Health insurance card or app", "Phone to call offices"],
+    },
+    proSearchQuery: "primary care doctor Columbus Ohio",
+  },
+
+  // POOL
+  {
+    id: "pool-open",
+    title: "Open Your Pool for Summer",
+    description: "Get your pool ready for swimming season — water chemistry, equipment check, and a good shock treatment.",
+    howDidIKnow: "You can't just pull off the cover and jump in. Pool water that sat all winter is a swamp — wrong pH burns eyes, wrong chlorine breeds bacteria, and skipping the startup damages equipment that costs thousands to replace.",
+    category: "home",
+    season: "spring",
+    difficulty: "medium",
+    timeEstimate: "2–3 hours",
+    requires: "hasPool",
+    diyGuide: {
+      intro: "Opening your pool correctly sets you up for a whole summer of clean, safe swimming. Do this when nighttime temps stay consistently above 50°F — usually late April to mid-May in Columbus.",
+      steps: [
+        "Remove, clean, and store your winter cover. Hose it down, let it dry, fold it, and store it away from UV exposure.",
+        "Remove any winter plugs from return jets and skimmer lines.",
+        "Reinstall ladders, rails, diving boards, and any other equipment you stored for winter.",
+        "Reconnect and prime the pump and filter. Check all fittings for cracks that may have developed over winter.",
+        "Fill the pool to the middle of the skimmer opening if the level dropped.",
+        "Turn on the pump and let it run for 24 hours to circulate the water.",
+        "Test the water chemistry: pH (7.4–7.6), alkalinity (80–120 ppm), chlorine (1–3 ppm), and stabilizer (30–50 ppm).",
+        "Shock the pool with a large dose of chlorine shock — follow the package directions based on your pool's gallons.",
+        "Run the pump for another 24 hours before swimming.",
+      ],
+      tips: [
+        "Your pool's gallon count matters for chemical dosing — measure length × width × average depth × 7.5 for a rough estimate.",
+        "Test strips are cheap and easy; a digital tester is more accurate.",
+        "If the water is very green, you may need a clarifier or algaecide before shocking.",
+      ],
+      toolsNeeded: ["Water test kit or strips", "Chlorine shock", "pH increaser/decreaser", "Garden hose"],
+    },
+    proSearchQuery: "pool service Columbus Ohio",
+  },
+  {
+    id: "pool-close",
+    title: "Close Your Pool for Winter",
+    description: "Properly winterizing your pool prevents equipment damage and makes spring opening much easier.",
+    howDidIKnow: "Water left in the plumbing lines freezes, expands, and cracks the pipes — underground pipes that cost thousands to dig up and replace. Winterizing takes one afternoon and prevents all of it.",
+    category: "home",
+    season: "fall",
+    difficulty: "medium",
+    timeEstimate: "2–3 hours",
+    requires: "hasPool",
+    diyGuide: {
+      intro: "In Columbus, close your pool when temperatures consistently stay below 65°F — usually late September to mid-October. A proper close prevents freezing damage to pipes and equipment.",
+      steps: [
+        "Balance the water chemistry one last time: pH 7.4–7.6, alkalinity 80–120 ppm, shock with a full dose of chlorine.",
+        "Add a winterizing algaecide to prevent algae growth over the winter.",
+        "Lower the water level 4–6 inches below the skimmer for above-ground pools, or below the return jets for in-ground pools.",
+        "Drain and blow out the plumbing lines using a shop vac or air compressor to prevent freeze cracking.",
+        "Add winter plugs to all return jets and the skimmer.",
+        "Remove, clean, and store all removable equipment: ladder, rails, pump, filter (drain it completely).",
+        "Install your winter cover securely. For above-ground pools, use a cover with a cable and winch. For in-ground, use water bags or cover clips.",
+        "For above-ground: partially deflate any air pillow under the cover to absorb ice expansion.",
+      ],
+      tips: [
+        "Never drain an in-ground pool completely — it can pop out of the ground.",
+        "Label your winter plugs so you know exactly where they go in spring.",
+        "A mesh cover lets rain through but keeps debris out — solid covers collect standing water.",
+      ],
+      toolsNeeded: ["Winterizing chemical kit", "Winter cover", "Shop vac or air compressor", "Winter plugs"],
+    },
+    proSearchQuery: "pool winterizing Columbus Ohio",
+  },
+  {
+    id: "pool-weekly",
+    checkInterval: 7,
+    title: "Weekly Pool Maintenance",
+    description: "Consistent weekly care is what keeps pool water clear and safe all summer long.",
+    howDidIKnow: "A pool can go from crystal clear to green algae swamp in 3 days if the chemistry slips. Once it goes green it takes a week and $100 in chemicals to fix — versus 20 minutes a week to keep it from happening.",
+    category: "home",
+    season: "summer",
+    difficulty: "easy",
+    timeEstimate: "20–30 minutes",
+    requires: "hasPool",
+    diyGuide: {
+      intro: "Green or cloudy water usually means the chemistry got off track. A 20-minute weekly routine prevents 95% of pool problems.",
+      steps: [
+        "Skim the surface to remove leaves, bugs, and debris.",
+        "Brush the walls and floor — especially corners and steps where algae hides.",
+        "Empty the skimmer basket and pump basket.",
+        "Test the water: pH, chlorine, and alkalinity. Adjust as needed.",
+        "Add chlorine tablets to your dispenser or manually dose liquid chlorine.",
+        "Check that the pump is running properly — it should run 8–12 hours per day in summer.",
+        "Backwash or rinse the filter if pressure is 8–10 psi above normal.",
+      ],
+      tips: [
+        "Test water in the morning before the sun burns off chlorine for the most accurate reading.",
+        "Shock the pool once a week in hot weather or after heavy use.",
+        "A robotic pool cleaner automates the brushing and vacuuming steps.",
+      ],
+      toolsNeeded: ["Test strips or kit", "Chlorine tablets", "Skimmer net", "Pool brush"],
+    },
+    proSearchQuery: "pool cleaning service Columbus Ohio",
+  },
+
+  // YARD
+  {
+    id: "lawn-spring",
+    title: "Spring Lawn Startup",
+    description: "Get your lawn off to a strong start — aerate, fertilize, and seed bare patches before weeds take over.",
+    howDidIKnow: "There's a two-week window in spring where you can apply pre-emergent and stop crabgrass before it starts. Miss it and you're pulling weeds all summer. Nobody tells you the window exists.",
+    category: "home",
+    season: "spring",
+    difficulty: "medium",
+    timeEstimate: "2–4 hours",
+    requires: "hasYard",
+    diyGuide: {
+      intro: "Spring is when you set your lawn up for success. Do this when daytime temps are consistently in the 50s and the ground isn't soggy.",
+      steps: [
+        "Rake out any dead matted grass and winter debris — this is called dethatching and lets air and water reach the soil.",
+        "Apply a pre-emergent herbicide if you want to prevent crabgrass — do this BEFORE crabgrass germinates (when forsythia blooms in your area).",
+        "Spread spring lawn fertilizer (look for a balanced NPK like 20-5-10) with a broadcast spreader.",
+        "Overseed any bare or thin patches with grass seed matching your existing lawn type.",
+        "Water newly seeded areas lightly twice a day until seeds germinate (7–14 days).",
+        "Set your mower blade to 3–3.5 inches — taller grass shades out weeds and holds moisture better.",
+        "Make your first mow of the season once grass reaches 4–5 inches.",
+      ],
+      tips: [
+        "Don't use pre-emergent if you're overseeding — it prevents ALL seeds from germinating.",
+        "Soil test kits from a hardware store ($10–$15) tell you exactly what nutrients your lawn lacks.",
+        "Water deeply and infrequently (1 inch per week) rather than lightly every day — it trains deeper roots.",
+      ],
+      toolsNeeded: ["Rake", "Broadcast spreader", "Lawn fertilizer", "Grass seed (matching your lawn type)", "Garden hose or sprinkler"],
+    },
+    proSearchQuery: "lawn care Columbus Ohio",
+  },
+  {
+    id: "lawn-fall",
+    title: "Fall Lawn Care",
+    description: "Fall is actually the best time to improve your lawn. Overseed, fertilize, and mow it down before winter.",
+    howDidIKnow: "Everyone fertilizes in spring. But fall is actually when grass grows deepest roots — fertilizing now means a thicker, stronger lawn next summer. Most people miss the best window of the whole year.",
+    category: "home",
+    season: "fall",
+    difficulty: "medium",
+    timeEstimate: "2–3 hours",
+    requires: "hasYard",
+    diyGuide: {
+      intro: "In Columbus, do this in September–October when temps drop to the 60s. Cool-season grasses (fescue, bluegrass) grow most aggressively in fall — take advantage of it.",
+      steps: [
+        "Aerate your lawn if it's been compacted — rent a core aerator from Home Depot ($75–$90/day). It pulls plugs of soil and lets air, water, and nutrients penetrate.",
+        "Overseed heavily after aerating — the seed falls into the holes and makes excellent contact with soil.",
+        "Apply a fall fertilizer (high in phosphorus and potassium — look for something like 12-12-12 or a 'winterizer' blend).",
+        "Keep watering until the ground freezes.",
+        "Rake or mulch leaves as they fall — a thick layer of leaves smothers grass and promotes disease.",
+        "Do your final mow of the season at 2.5 inches — slightly shorter than normal to prevent snow mold.",
+      ],
+      tips: [
+        "Fall overseeding gives new grass time to establish strong roots before summer heat stress.",
+        "Mulching leaves with your mower (mowing them into tiny pieces) adds nitrogen back to the soil — free fertilizer.",
+        "Don't fertilize too late in fall — if the ground freezes with lush new growth, it can be damaged.",
+      ],
+      toolsNeeded: ["Core aerator (rent)", "Grass seed", "Fall fertilizer", "Spreader", "Rake or mulching mower"],
+    },
+    proSearchQuery: "lawn aeration Columbus Ohio",
+  },
+
+  // FIREPLACE
+  {
+    id: "chimney-cleaning",
+    checkInterval: 365,
+    title: "Get Your Chimney Inspected & Cleaned",
+    description: "Creosote buildup inside chimneys causes house fires. Annual cleaning is essential if you use your fireplace.",
+    howDidIKnow: "Creosote is a tar-like substance that builds up every time you burn wood. It's highly flammable. A chimney fire burns at over 2000°F — hot enough to crack the flue liner and set your house on fire from the inside.",
+    category: "home",
+    season: "fall",
+    difficulty: "hard",
+    timeEstimate: "1–2 hours (pro job)",
+    requires: "hasFireplace",
+    diyGuide: {
+      intro: "Creosote is a tar-like substance that coats the inside of your chimney when wood burns. It's highly flammable and builds up every time you use the fireplace. This is not a DIY task — hire a certified chimney sweep (CSIA certified).",
+      steps: [
+        "Schedule a chimney inspection in early fall before you start using the fireplace for the season.",
+        "A CSIA-certified chimney sweep will inspect the flue, firebox, damper, and cap.",
+        "Level 1 inspection is standard for a regularly used fireplace. Level 2 is needed if you've had a fire, bought a new home, or changed fuel types.",
+        "The sweep will clean out creosote deposits and remove any animal nests or debris.",
+        "Ask them to check the damper — it should seal tightly when closed to prevent heat loss.",
+        "Have the chimney cap inspected — it keeps rain and animals out.",
+        "After cleaning: check that the smoke shelf (ledge inside the firebox) is clear.",
+      ],
+      tips: [
+        "Only burn seasoned (dry) hardwood — green or wet wood produces far more creosote.",
+        "Never burn cardboard, trash, or treated wood — toxic and dangerous.",
+        "Keep a screen or glass doors in front of the firebox to prevent sparks.",
+        "Keep a fire extinguisher rated for wood fires (Class A) within reach.",
+      ],
+      toolsNeeded: ["Professional chimney sweep — find a CSIA-certified sweep at csia.org"],
+    },
+    proSearchQuery: "chimney sweep Columbus Ohio",
+  },
+
+  // GUIDES (special category — informational, not maintenance tasks)
+  {
+    id: "buy-used-car",
+    title: "How to Buy a Used Car Without Getting Ripped Off",
+    description: "A step-by-step inspection checklist and negotiation guide so you know exactly what to look for before you hand over any money.",
+    howDidIKnow: "A used car seller has one goal: get your money before you find the problems. Without knowing what to look for, most first-time buyers are completely on their own — and dealers know it.",
+    category: "guides",
+    season: "year-round",
+    difficulty: "medium",
+    timeEstimate: "Use this before every car you look at",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Buying a used car is one of the biggest purchases you'll make as a young adult — and one of the easiest ways to get burned. Sellers (even dealers) don't always disclose problems. This checklist tells you what to look for before you buy.",
+      steps: [
+        "🔍 BEFORE YOU GO — Run a free Carfax or AutoCheck report using the VIN (Vehicle Identification Number). It shows accidents, title issues, odometer fraud, and how many owners it's had. The VIN is on the dash visible through the windshield.",
+        "📍 MEET AT THE CAR — Never meet at a 'neutral location' without seeing the car first. Inspect in daylight — artificial light hides paint imperfections.",
+        "🚪 WALK AROUND SLOWLY — Look for mismatched paint (sign of repair), wavy body panels, gaps that aren't even between doors and panels (sign of frame damage), rust on the underside, rocker panels, and wheel wells.",
+        "💡 CHECK EVERY LIGHT — Turn on every light: headlights, taillights, turn signals, brake lights, reverse lights, and interior lights. If bulbs are out, ask why they haven't been replaced.",
+        "🔧 POP THE HOOD — Look for oil leaks (brown gunk around the engine), coolant leaks (green or orange residue), corrosion on the battery terminals (white powder). Check the oil dipstick — dark brown is fine, black/gritty means neglect, milky means a serious head gasket issue.",
+        "🪟 CHECK ALL WINDOWS — Roll every window up and down. They should move smoothly and seal completely. Chips or cracks in the windshield can spread.",
+        "💺 SIT IN EVERY SEAT — Test every seat for damage, test seatbelt latches, check all vents, the AC, heat, and every button on the dash. Try every USB port and the stereo.",
+        "🔑 START THE CAR COLD — Ask to arrive before the seller has warmed it up. A cold start reveals problems a warm engine hides. Listen for knocking, ticking, or rough idle in the first 30 seconds.",
+        "🚗 TEST DRIVE — Drive at least 15 minutes including highway speeds. Listen for: vibration at highway speed (unbalanced tires or bent wheel), pulling left or right (alignment or brake issue), grinding when braking (worn brake pads), clunking over bumps (suspension), hesitation when accelerating.",
+        "🔴 RED FLAGS — Walk away from: salvage or rebuilt title (means it was totaled), any car the seller won't let you take to a mechanic, extreme reluctance to share the VIN, odometer reading that doesn't match wear on pedals and seat, seller pushing hard for cash only.",
+        "🔩 GET A PRE-PURCHASE INSPECTION — Before you pay, take it to an independent mechanic (not the seller's mechanic) for a pre-purchase inspection ($100–$150). They put it on a lift and check what you can't see. This single step has saved thousands of people from buying lemons.",
+        "💰 NEGOTIATE — Use any problems found as leverage. Look up the fair market value on Kelley Blue Book (kbb.com) before you go. You should pay BELOW the private party value for a car from a private seller, and at or below the 'fair purchase price' at a dealer.",
+        "📝 PAPERWORK — Get the title signed over to you at time of purchase. In Ohio, take it to the BMV within 30 days to transfer the title into your name. Make sure the name on the title matches the seller's ID.",
+      ],
+      tips: [
+        "The best $150 you'll spend is on a pre-purchase inspection — always do it, no exceptions.",
+        "Certified Pre-Owned (CPO) cars from dealers cost more but come with warranties and have been inspected.",
+        "Avoid buying from someone who can't explain why they're selling ('just need the money' is a red flag with no context).",
+        "High mileage isn't always bad — a well-maintained 120k-mile Honda beats a neglected 60k-mile car.",
+        "If it seems too good to be true (great car, suspiciously low price), it almost certainly is.",
+      ],
+      toolsNeeded: ["Carfax or AutoCheck report (free trial or ~$40)", "Phone flashlight", "Kelley Blue Book on your phone (kbb.com)", "Budget for pre-purchase inspection ($100–$150)"],
+    },
+    proSearchQuery: "used car inspection mechanic Columbus Ohio",
+  },
+
+  // OIL CHANGE
+  {
+    id: "get-oil-change",
+    checkInterval: 90,
+    title: "Get Your Oil Changed",
+    description: "Oil is your engine's lifeblood. Change it on schedule and your engine can last 200,000+ miles. Skip it and you're looking at a repair bill bigger than the car.",
+    howDidIKnow: "Most people wait until the oil life monitor hits 0% or the sticker in the corner of the windshield expires — without knowing what oil type they need, what interval actually applies to them, or that the quick-lube place will try to upsell them on things they don't need.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    requires: "hasCar",
+    timeEstimate: "30–45 minutes at a shop",
+    diyGuide: {
+      intro: "Oil lubricates every moving part inside your engine. Old, dirty oil loses viscosity and stops protecting. The interval depends entirely on what type of oil your car uses — not the old 3,000-mile myth.",
+      steps: [
+        "Find your oil change interval — it's in your owner's manual (glove box) under 'Maintenance Schedule.' NOT the sticker in your windshield. Conventional oil: 3,000–5,000 miles. Synthetic blend: 5,000–7,500 miles. Full synthetic: 7,500–10,000 miles. Many modern cars go 10,000+ miles on full synthetic.",
+        "Know your oil type before you go — it's printed on the oil cap under your hood (e.g., '5W-30'). The shop will ask.",
+        "Track your mileage — look at your odometer right now and note it. Your next change is due at that number plus your interval.",
+        "At the shop: they'll change the oil, replace the filter, and top off fluids. That's the standard service. You don't need the air filter, cabin filter, fuel injection service, or transmission flush they'll offer — those are real services but almost never needed at every oil change.",
+        "After the service: make sure they reset your oil life monitor (if your car has one). Ask them to note the mileage on the windshield sticker.",
+        "Update your mileage here so we can remind you when the next one is due.",
+      ],
+      tips: [
+        "Jiffy Lube, Valvoline, and Firestone are convenient. Dealerships and independent mechanics are often cheaper for the same service.",
+        "Ask if they use the brand of oil specified in your manual — cheap off-brand oil in a high-performance engine matters.",
+        "If your oil light comes on while driving, pull over immediately. Don't drive on it. This is a low-pressure warning, not a 'change soon' reminder.",
+        "Synthetic oil costs $15–$25 more per change but extends intervals — it usually evens out or saves money over time.",
+      ],
+      toolsNeeded: ["Your car", "Owner's manual (to confirm oil type and interval)", "Your current mileage"],
+    },
+    proSearchQuery: "oil change Columbus Ohio",
+  },
+
+  // CAR (continued)
+  {
+    id: "car-insurance",
+    title: "Get Car Insurance (and Know What You're Buying)",
+    description: "Car insurance is legally required — and wildly confusing the first time. Here's what the terms actually mean.",
+    howDidIKnow: "Liability, collision, comprehensive, deductible, UM/UIM — none of it is explained when you buy a policy. People routinely pay for coverage they don't need and skip coverage that would actually protect them.",
+    category: "car",
+    season: "year-round",
+    difficulty: "medium",
+    timeEstimate: "1–2 hours",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Ohio requires minimum liability insurance: 25/50/25 ($25k per person, $50k per accident, $25k property damage). That minimum is often not enough. Here's how to pick real coverage.",
+      steps: [
+        "Liability: covers damage YOU cause to others. Required by law. The state minimum is often too low — consider 100/300/100 if you have any assets.",
+        "Collision: covers YOUR car when you hit something or get hit. Required if you have a car loan. Optional if you own your car outright.",
+        "Comprehensive: covers non-collision damage — theft, hail, deer, fire, flood. Usually cheap ($10–$30/month) and worth having.",
+        "Uninsured/Underinsured Motorist (UM/UIM): covers you if someone hits you with no insurance. Ohio has a lot of uninsured drivers. Add this.",
+        "Deductible: the amount YOU pay before insurance kicks in. $500–$1000 deductible = lower monthly premium. $0 deductible = higher premium.",
+        "Get quotes from at least 3 companies: Progressive, State Farm, and Erie are strong in Ohio.",
+        "Bundle with renters insurance for a 5–15% discount on both.",
+        "Ask about discounts: good student, defensive driving course, low mileage, autopay.",
+      ],
+      tips: [
+        "Your credit score affects your insurance rate in Ohio — improving it over time lowers your premium.",
+        "If your car is worth less than $4,000, dropping collision/comprehensive may make financial sense.",
+        "Save your insurance card in your phone and the glove box.",
+      ],
+      toolsNeeded: ["Phone or computer to get quotes", "Car info: make, model, year, VIN, mileage"],
+    },
+    proSearchQuery: "car insurance agent Columbus Ohio",
+  },
+  {
+    id: "after-accident",
+    title: "What to Do Right After a Car Accident",
+    description: "The first 10 minutes after an accident determine everything — and most people have no idea what to do.",
+    howDidIKnow: "You will absolutely blank out in a panic after a crash. The steps to take — and what NOT to say — are things everyone should memorize before it happens, not learn after.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Know this before you need it",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Accidents are disorienting. Having a mental script ahead of time means you'll handle it calmly and protect yourself legally and financially.",
+      steps: [
+        "STOP — never leave the scene of an accident, even minor ones. Leaving is a crime.",
+        "Check for injuries — ask everyone involved if they're hurt. Call 911 if anyone is injured.",
+        "Move to safety — if the cars are driveable and it's safe, move them to the shoulder or a parking lot.",
+        "Call the police — for any accident with injuries or significant damage. Get a police report number.",
+        "Exchange information: full name, phone number, driver's license number, license plate, insurance company, and policy number.",
+        "Document the scene — take photos of: all cars (all angles), the point of impact, license plates, any injuries, road conditions, and the surrounding area.",
+        "Don't admit fault — say 'I'm glad no one is seriously hurt' but never say 'I'm sorry' or 'it was my fault.' Fault is determined later.",
+        "Contact your insurance company the same day — even if you think it was the other person's fault.",
+        "Get a copy of the police report — ask the officer for the report number and where to get a copy.",
+      ],
+      tips: [
+        "Save your insurance company's claims number in your phone right now so you have it when you need it.",
+        "If the other driver is uncooperative, take a photo of their license plate and call the police.",
+        "Document any pain or injury symptoms in the days following — some injuries (whiplash) don't show up immediately.",
+      ],
+      toolsNeeded: ["Phone (for photos and calls)", "Pen and paper as backup"],
+    },
+    proSearchQuery: "auto body repair Columbus Ohio",
+  },
+  {
+    id: "jump-start",
+    title: "Jump Start a Dead Battery",
+    description: "A dead battery leaves you stranded. Know how to jump start a car — or use a jump pack — before it happens.",
+    howDidIKnow: "A dead battery will happen to you eventually, usually at the worst time. The cables look simple but connect them wrong and you can fry your car's electronics. The order matters.",
+    category: "car",
+    season: "winter",
+    difficulty: "medium",
+    timeEstimate: "15 minutes",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Car batteries die more often in cold weather. Knowing the correct jump start sequence prevents sparks, damage to electronics, and injury. The order is non-negotiable.",
+      steps: [
+        "Park the working car so its battery is close to the dead car's battery — hoods facing each other or side by side.",
+        "Turn OFF the working car before connecting cables.",
+        "Identify the battery terminals: RED = positive (+), BLACK = negative (−).",
+        "Connect cables in this exact order: (1) Red to dead battery (+), (2) Red to good battery (+), (3) Black to good battery (−), (4) Black to an unpainted metal surface on the dead car's engine block — NOT the dead battery's negative terminal. This prevents sparks near the battery.",
+        "Start the working car and let it run for 2–3 minutes.",
+        "Try to start the dead car. If it starts, great.",
+        "Disconnect in REVERSE order: (1) Black from engine block, (2) Black from good battery, (3) Red from good battery, (4) Red from dead battery.",
+        "Drive the jumped car for at least 30 minutes to let the alternator recharge the battery.",
+      ],
+      tips: [
+        "A portable jump pack (lithium jump starter, $40–$80) lives in your trunk and means you never need another car. Worth every penny.",
+        "If a car battery is dead for no apparent reason and the car is less than 5 years old, the battery itself may need replacement ($100–$200).",
+        "In very cold weather (-10°F and below), a battery can freeze — jumping won't help. Needs a warm garage.",
+      ],
+      toolsNeeded: ["Jumper cables (keep a set in your trunk)", "Or: portable jump starter ($40–$80)"],
+    },
+    proSearchQuery: "auto parts store Columbus Ohio",
+  },
+  {
+    id: "change-flat",
+    title: "Change a Flat Tire",
+    description: "Getting a flat on the highway is terrifying if you've never changed a tire. Practice once before you need to.",
+    howDidIKnow: "You get a flat in the rain on the highway at night. You've never touched your spare tire. This is not the moment to figure it out. Spend 20 minutes in your driveway so you know you can do it.",
+    category: "car",
+    season: "year-round",
+    difficulty: "medium",
+    timeEstimate: "30 minutes",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Before you need this skill: locate your spare tire and the jack in your car right now. They're usually under the trunk floor. Also confirm your spare has air in it.",
+      steps: [
+        "Pull completely off the road — as far right as possible. Turn on hazard lights.",
+        "Put the car in Park. If you have wheel wedges, place them behind the rear tires.",
+        "Get the spare tire, jack, and lug wrench from the trunk (usually under the cargo floor).",
+        "Loosen the lug nuts BEFORE jacking the car up — turn counterclockwise. Just break them loose, don't remove yet. (Lug nuts are tighter than you expect — use your body weight.)",
+        "Position the jack under the vehicle frame near the flat tire — check your owner's manual for the jack points (reinforced spots). Using the wrong spot can damage the car.",
+        "Raise the car until the flat tire is about 6 inches off the ground.",
+        "Remove the lug nuts completely and pull the flat tire off.",
+        "Mount the spare tire and hand-tighten the lug nuts in a star/cross pattern (not in a circle).",
+        "Lower the car so the tire touches the ground but doesn't bear full weight, then fully tighten lug nuts in a star pattern.",
+        "Lower the car completely, remove the jack, and stow your flat.",
+        "Check the spare's pressure at the nearest gas station.",
+      ],
+      tips: [
+        "Most spare tires are 'donut' spares — only good for 50–70 miles at max 50 mph. Get your tire fixed ASAP.",
+        "If you can't safely change it (dark, highway, injury), call roadside assistance (AAA, or included with many insurance policies).",
+        "Check your spare tire's air pressure a few times a year — spares go flat sitting in the trunk.",
+      ],
+      toolsNeeded: ["Spare tire (in your trunk)", "Car jack (in your trunk)", "Lug wrench (in your trunk)", "Wheel wedges (optional but smart)"],
+    },
+    proSearchQuery: "tire shop Columbus Ohio",
+  },
+  {
+    id: "tire-rotation",
+    checkInterval: 150,
+    title: "Get Your Tires Rotated",
+    description: "Tires wear unevenly depending on position. Rotating them extends their life by thousands of miles.",
+    howDidIKnow: "Front tires wear much faster than rear tires on most cars — especially front-wheel drive. Skipping rotations means replacing tires years earlier than necessary. It takes 30 minutes and usually costs $20–$30.",
+    category: "car",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes (pro job)",
+    requires: "hasCar",
+    diyGuide: {
+      intro: "Tire rotation means moving tires from one position to another (front to back, or diagonally) so they wear evenly. Most manufacturers recommend every 5,000–7,500 miles — typically every other oil change.",
+      steps: [
+        "Check when you last had tires rotated — it's often recorded on a sticker inside the driver's door frame.",
+        "Schedule a rotation at any tire shop, oil change place, or dealership. Most do it in 20–30 minutes.",
+        "Many places offer free rotations if you bought your tires there — check your receipt.",
+        "Ask them to check tire tread depth while they're at it. Anything below 2/32nds of an inch is legally unsafe.",
+        "Also ask them to balance the tires — costs a little more but prevents vibration at highway speeds.",
+      ],
+      tips: [
+        "The penny test: insert a penny into a tread groove with Lincoln's head upside down. If you can see the top of his head, the tires are legally worn out.",
+        "Get rotations at the same time as oil changes to simplify scheduling.",
+        "Uneven wear can indicate misalignment — worth asking the shop to check.",
+      ],
+      toolsNeeded: ["None — have a shop do it"],
+    },
+    proSearchQuery: "tire rotation Columbus Ohio",
+  },
+
+  // FINANCES (continued)
+  {
+    id: "setup-budget",
+    title: "Set Up Your First Budget",
+    description: "The 50/30/20 rule is the simplest budget that actually works — needs, wants, and savings.",
+    howDidIKnow: "Most people spend everything they make and wonder where it went. A budget isn't about restriction — it's the first time you realize you're in control. Nobody teaches this in school.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "1 hour",
+    diyGuide: {
+      intro: "The 50/30/20 rule: 50% of take-home pay goes to needs (rent, food, utilities, insurance), 30% to wants (eating out, entertainment, subscriptions), 20% to savings and debt payoff.",
+      steps: [
+        "Find your take-home pay (after taxes) — look at your last paycheck's 'net pay' amount.",
+        "List your fixed monthly needs: rent, utilities, car payment, insurance, phone bill, groceries.",
+        "List your variable wants: Spotify, Netflix, eating out, coffee, clothes, fun.",
+        "List your savings goals: emergency fund, car repair fund, vacation.",
+        "Add everything up. If needs + wants + savings don't exceed your income, you're balanced.",
+        "If you're overspending, look at wants first — subscriptions and eating out add up fast.",
+        "Use a free app like Mint, YNAB (paid), or a simple Google Sheets budget template.",
+        "Revisit your budget monthly — income and expenses change.",
+      ],
+      tips: [
+        "Automate your savings: set up an automatic transfer on payday to a separate savings account before you can spend it.",
+        "Track your spending for one month first before budgeting — you'll be surprised what you actually spend.",
+        "Food is the easiest variable to control — cooking at home 4 nights a week vs. eating out saves hundreds per month.",
+      ],
+      toolsNeeded: ["Calculator or phone", "Free budgeting app (Mint, EveryDollar) or Google Sheets"],
+    },
+    proSearchQuery: "financial advisor Columbus Ohio",
+  },
+  {
+    id: "open-savings",
+    title: "Open a High-Yield Savings Account",
+    description: "A regular bank savings account earns almost nothing. A high-yield account earns 10–20x more interest.",
+    howDidIKnow: "Big bank savings accounts pay 0.01% interest — essentially nothing. High-yield savings accounts at online banks pay 4–5%. On $1,000, that's the difference between $0.10 and $50 per year. Nobody tells you to open one.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "20 minutes",
+    diyGuide: {
+      intro: "High-yield savings accounts (HYSAs) are online savings accounts that pay dramatically more interest than traditional bank savings accounts. Your money is FDIC insured just like a regular bank.",
+      steps: [
+        "Compare current rates: Marcus by Goldman Sachs, Ally Bank, and SoFi consistently offer top rates. Search 'best HYSA rates' for current numbers.",
+        "Open an account online — takes about 10–15 minutes. You'll need your SSN, a government ID, and your checking account info for the transfer.",
+        "Transfer your initial deposit ($1 is often all you need to open).",
+        "Set up an automatic monthly transfer from checking to savings — even $25/month builds a habit.",
+        "Keep your emergency fund and saving goals here — not in your checking account where you'll spend it.",
+      ],
+      tips: [
+        "Interest rates change — check a few times a year and switch if a better rate is available. There are no fees to close.",
+        "Keep your spending money in your regular checking account. The HYSA is for savings you don't touch.",
+        "FDIC insured up to $250,000 — just as safe as any big bank.",
+      ],
+      toolsNeeded: ["Phone or computer", "Social Security Number", "Government ID"],
+    },
+    proSearchQuery: "credit union Columbus Ohio",
+  },
+  {
+    id: "understand-paystub",
+    title: "Read Your Pay Stub",
+    description: "Your first paycheck is usually smaller than expected — because nobody explains what all those deductions are.",
+    howDidIKnow: "You accept a job for $15/hour, do the math ($2,400/month), and then your first paycheck is $1,700. Nobody warned you about federal tax, state tax, Social Security, Medicare, and health insurance premiums all coming out before you see a dime.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "Understanding your pay stub means you know exactly where your money is going — and can catch errors.",
+      steps: [
+        "Gross pay: the full amount you earned before any deductions. This is what your hourly rate × hours equals.",
+        "Federal income tax: withheld by your employer, sent to the IRS. Amount depends on your W-4 filing and income bracket.",
+        "State income tax (Ohio): Ohio has a flat income tax. Another withholding from each paycheck.",
+        "Social Security (6.2%): goes toward your future Social Security benefits.",
+        "Medicare (1.45%): funds Medicare. Together with SS, these are called 'FICA taxes.'",
+        "Health insurance premium: your share of the health insurance cost. Deducted pre-tax if through your employer.",
+        "401k contribution: if you opted in, your retirement contribution comes out here — usually pre-tax.",
+        "Net pay: what actually hits your bank account. This is your real take-home number.",
+        "Check that your name, address, and Social Security Number are correct. Errors here can cause tax problems.",
+      ],
+      tips: [
+        "If you worked more than 40 hours in a week, you should see overtime pay (usually 1.5× your rate) as a separate line.",
+        "Your W-4 form (filed when you start a job) controls how much federal tax is withheld. More allowances = smaller withholdings = bigger paychecks but potentially a tax bill at the end of the year.",
+        "Save at least one pay stub from each job for your tax records.",
+      ],
+      toolsNeeded: ["Your pay stub (paper or digital)"],
+    },
+    proSearchQuery: "tax preparer Columbus Ohio",
+  },
+  {
+    id: "file-taxes",
+    title: "File Your Taxes for the First Time",
+    description: "Taxes are due every April 15th. If you worked, you probably need to file — and you might get a refund.",
+    howDidIKnow: "Most 18-year-olds have no idea what a W-2 is, when taxes are due, or that filing late has real financial penalties. The IRS doesn't send reminders. You're just expected to know.",
+    category: "finances",
+    season: "winter",
+    difficulty: "medium",
+    timeEstimate: "1–2 hours",
+    diyGuide: {
+      intro: "If you earned money from a job, you almost certainly need to file federal and Ohio state taxes. The deadline is April 15th. Filing is free if your income is under $73,000 using IRS Free File.",
+      steps: [
+        "Wait for your W-2 — your employer must mail or provide it by January 31st. It shows your total earnings and taxes withheld.",
+        "If you had multiple jobs, collect a W-2 from each employer.",
+        "If you did freelance work or gig work (Uber, DoorDash, etc.), look for a 1099-NEC. Different form, same idea.",
+        "Go to irs.gov and use IRS Free File if your income is under $73,000. It's completely free and walks you through everything.",
+        "TurboTax and H&R Block also have free tiers for simple returns.",
+        "File your Ohio state return too — Ohio has its own income tax. Most free federal tools include state filing.",
+        "If you're owed a refund, choose direct deposit — it arrives in 1–3 weeks vs. 6–8 weeks for a check.",
+        "File by April 15th. If you can't, file for an extension (Form 4868) — but you still need to PAY by April 15th if you owe.",
+      ],
+      tips: [
+        "If your parents claim you as a dependent, you still need to file if you earned more than $13,850 (2024 threshold).",
+        "Keep a copy of your filed return and W-2s for at least 3 years.",
+        "A tax refund means you overpaid — it's not a bonus. Adjust your W-4 if you want more money each paycheck.",
+      ],
+      toolsNeeded: ["W-2 from your employer", "SSN", "Bank account info for direct deposit"],
+    },
+    proSearchQuery: "tax preparer Columbus Ohio",
+  },
+  {
+    id: "emergency-fund",
+    title: "Build an Emergency Fund",
+    description: "An emergency fund is 3–6 months of expenses in a savings account you don't touch unless the car breaks down or you lose your job.",
+    howDidIKnow: "Without an emergency fund, one bad month — a car repair, a medical bill, a lost job — sends you into credit card debt that takes years to climb out of. The fund isn't for fun. It's a firewall.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Ongoing — start today",
+    diyGuide: {
+      intro: "An emergency fund is simply money set aside for unexpected expenses — car repairs, medical bills, job loss. Without it, every surprise becomes a debt spiral. Start small and build consistently.",
+      steps: [
+        "Calculate your monthly expenses: rent, food, utilities, insurance, phone. That's your monthly number.",
+        "Your goal: 3 months of expenses for starters. 6 months eventually. If you spend $1,500/month, that's $4,500–$9,000.",
+        "Open a separate high-yield savings account specifically for this (don't mix it with checking).",
+        "Start with $500 as a quick goal — this covers most car repairs and minor emergencies.",
+        "Automate a fixed transfer from your paycheck — even $25 or $50 per paycheck. Small and consistent beats large and sporadic.",
+        "Don't touch it for non-emergencies. 'I want new shoes' is not an emergency.",
+        "When you use it, replace it as fast as you can.",
+      ],
+      tips: [
+        "Tax refunds and birthday money are the fastest way to jump-start an emergency fund.",
+        "If you have high-interest debt (credit card), pay it off first — the interest rate beats any savings rate.",
+        "A $1,000 emergency fund is the single biggest thing that separates people who go into debt every year from people who don't.",
+      ],
+      toolsNeeded: ["High-yield savings account (separate from checking)", "Automatic transfer setup"],
+    },
+    proSearchQuery: "financial planner Columbus Ohio",
+  },
+  {
+    id: "understand-health-insurance",
+    title: "Understand Your Health Insurance",
+    description: "Deductible, copay, coinsurance, out-of-pocket max — here's what they actually mean in plain English.",
+    howDidIKnow: "People pick the cheapest health insurance plan without understanding it, then get surprised by a $3,000 bill after surgery that they thought insurance would cover. The terminology is intentionally confusing.",
+    category: "finances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "Health insurance terms are designed by lawyers. Here are the 6 you actually need to understand.",
+      steps: [
+        "Premium: the monthly amount you pay for insurance regardless of whether you use it. Like a subscription fee.",
+        "Deductible: the amount you pay out of pocket before insurance starts covering things. If your deductible is $1,500, you pay the first $1,500 of medical bills yourself each year.",
+        "Copay: a fixed fee you pay for a specific service (like $30 for a doctor visit) after your deductible. Simple and predictable.",
+        "Coinsurance: after your deductible, some plans split costs — e.g., you pay 20%, insurance pays 80%. This is coinsurance.",
+        "Out-of-pocket maximum: the most you'll ever pay in a single year. After this, insurance covers 100%. Usually $5,000–$9,000. This is your protection against catastrophic bills.",
+        "In-network vs. out-of-network: in-network providers have a contract with your insurer and charge set rates. Out-of-network can cost 2–5× more. Always confirm a doctor is in-network before your appointment.",
+        "Summary of Benefits: every plan has one — a plain-language breakdown of what's covered and what you'll pay. Read it before you choose a plan.",
+      ],
+      tips: [
+        "If you're young and healthy, a high-deductible health plan (HDHP) paired with an HSA often makes financial sense — lower premiums and the HSA saves pre-tax money for medical costs.",
+        "Preventive care (annual physicals, vaccines) is covered at 100% under the ACA even before you hit your deductible.",
+        "You can stay on a parent's insurance until age 26 — check if that's an option.",
+      ],
+      toolsNeeded: ["Your insurance card or plan documents"],
+    },
+    proSearchQuery: "health insurance broker Columbus Ohio",
+  },
+
+  // HEALTH (continued)
+  {
+    id: "dental-checkup",
+    checkInterval: 180,
+    title: "Get a Dental Checkup",
+    description: "Dental problems caught early cost $100. Ignored, the same problem costs $2,000. Go every 6 months.",
+    howDidIKnow: "A small cavity takes 20 minutes and $150 to fill. An ignored cavity becomes a root canal ($1,200) or extraction and implant ($3,000–$5,000). Dental care is entirely preventive if you just show up twice a year.",
+    category: "health",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "1 hour every 6 months",
+    diyGuide: {
+      intro: "Preventive dental care (cleanings and checkups) is almost always covered at 100% by dental insurance. Skipping it is one of the most expensive things you can do.",
+      steps: [
+        "Check your dental insurance — most plans cover 2 cleanings per year at 100%.",
+        "Find an in-network dentist using your insurance company's provider search.",
+        "Call and schedule a 'new patient exam and cleaning' — these often take longer to get, so book 2–3 weeks out.",
+        "Bring your insurance card and ID to the appointment.",
+        "At the exam: X-rays, cleaning, check for cavities, check your gums.",
+        "If any issues are found: don't ignore them. Schedule the follow-up before you leave.",
+        "Set a reminder to schedule your next cleaning 6 months out.",
+      ],
+      tips: [
+        "If you don't have dental insurance: dental schools offer cleanings at 50–70% discount with supervised dental students.",
+        "Flossing before bed is more important than brushing — most dental disease starts between teeth where brushes can't reach.",
+        "Electric toothbrushes clean significantly better than manual ones. A basic Oral-B goes for $20–$30.",
+      ],
+      toolsNeeded: ["Dental insurance card (or phone number to check coverage)", "Phone to call and book"],
+    },
+    proSearchQuery: "dentist Columbus Ohio",
+  },
+  {
+    id: "when-to-go-er",
+    title: "ER vs. Urgent Care vs. Wait It Out",
+    description: "Knowing which to use can save you thousands. The ER costs 5–10× more than urgent care for the same problem.",
+    howDidIKnow: "Millions of people go to the ER for things that urgent care handles perfectly well — strep throat, ear infections, stitches, UTIs, sprained ankles. An urgent care visit is $100–$200. An ER visit for the same thing is $1,000–$3,000.",
+    category: "health",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Read this now, use it when you need it",
+    diyGuide: {
+      intro: "The right choice depends on severity, not convenience. Knowing the difference protects your health and your wallet.",
+      steps: [
+        "CALL 911 or GO TO THE ER for: chest pain, difficulty breathing, severe allergic reaction (throat closing), stroke symptoms (FAST: Face drooping, Arm weakness, Speech difficulty, Time to call 911), uncontrolled heavy bleeding, loss of consciousness, severe head injury, possible broken bone with bone visible.",
+        "GO TO URGENT CARE for: fever without other serious symptoms, minor cuts needing stitches, ear or sinus infections, UTI, sprained ankle or wrist, strep throat, flu symptoms, minor burns, rashes.",
+        "WAIT AND CALL YOUR DOCTOR for: mild cold, sore throat without fever, stomach bug lasting less than 48 hours, headache (mild), low-grade fever in adults.",
+        "TELEHEALTH (video visit) is great for: prescriptions, UTIs, minor infections, mental health, follow-ups. Often $20–$75 and works from your couch.",
+        "PHARMACIES now offer care: CVS MinuteClinic and Walgreens Health offer walk-in care for common issues. Often faster and cheaper than urgent care.",
+      ],
+      tips: [
+        "If your gut says ER, go to the ER. When in doubt, go. This guide is for clearly non-emergency situations.",
+        "Save the phone number for a nurse hotline — many insurance plans have 24/7 nurse lines that can help you decide.",
+        "The ER is required to treat you regardless of ability to pay — but they will bill you. Payment plans are almost always available.",
+      ],
+      toolsNeeded: ["Your health insurance card", "Your primary care doctor's phone number saved in your phone"],
+    },
+    proSearchQuery: "urgent care Columbus Ohio",
+  },
+  {
+    id: "eye-exam",
+    checkInterval: 365,
+    title: "Get an Annual Eye Exam",
+    description: "Eye exams check more than your vision — they screen for diabetes, high blood pressure, and glaucoma.",
+    howDidIKnow: "A lot of people assume they just need glasses or contacts to see and skip eye exams for years. Eye doctors actually spot signs of diabetes, high blood pressure, and neurological issues through the eye that no other exam catches.",
+    category: "health",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "1 hour",
+    diyGuide: {
+      intro: "Annual eye exams are covered by most vision insurance plans. Even if you think your vision is fine, exams detect conditions you can't feel or see.",
+      steps: [
+        "Check your vision insurance coverage — most plans cover one exam per year at no cost.",
+        "Find an in-network optometrist using your insurance's provider search.",
+        "Book at least 1–2 weeks in advance — popular practices book quickly.",
+        "Bring your current glasses or contacts if you have them.",
+        "At the exam: vision test, eye pressure check (glaucoma screening), retinal exam.",
+        "If a prescription is written, you can fill it anywhere — you're not required to buy glasses/contacts at the doctor's office. Online retailers (Zenni, Warby Parker) are significantly cheaper.",
+      ],
+      tips: [
+        "If you wear contacts, you need a contact lens fitting in addition to the standard eye exam — ask when you book.",
+        "Eye strain from screens is real — the 20-20-20 rule: every 20 minutes, look at something 20 feet away for 20 seconds.",
+        "Costco Optical has excellent prices on frames and lenses even without a membership for the optical department.",
+      ],
+      toolsNeeded: ["Vision insurance card", "Phone to book appointment"],
+    },
+    proSearchQuery: "eye doctor optometrist Columbus Ohio",
+  },
+
+  // HOME (continued)
+  {
+    id: "unclog-drain",
+    title: "Unclog a Slow Drain",
+    description: "A slow drain is a clog building up — ignore it and eventually nothing drains. It's a 10-minute fix.",
+    howDidIKnow: "Most people pour Drano on slow drains for years. That's fine, but Drano is caustic and can damage pipes over time. A $5 drain snake and 5 minutes of work removes the actual clog — hair — permanently.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "10–15 minutes",
+    diyGuide: {
+      intro: "Shower and bathroom sink drains slow down because of hair buildup on the drain stopper or in the P-trap below. This is almost always a DIY fix that takes under 15 minutes.",
+      steps: [
+        "First try: remove the drain cover if possible (some unscrew, some pull straight up). Look for a hair clog right at the drain and pull it out with your fingers or tweezers. Gross but effective.",
+        "Second try: use a drain snake (also called a drain hair tool) — a thin plastic stick with barbs. Insert it into the drain, twist and pull. You'll be amazed at what comes out.",
+        "Third try: pour 1/2 cup baking soda followed by 1/2 cup white vinegar into the drain. Wait 30 minutes, then flush with hot water. This dissolves soap scum and minor organic buildup.",
+        "Last resort: Drano or similar chemical drain cleaner. Follow directions exactly and don't mix with other chemicals.",
+        "If none of these work, the clog may be in the P-trap (the curved pipe under the sink) — that's still a DIY job but requires a bucket and removing the pipe.",
+      ],
+      tips: [
+        "A $3 mesh drain screen catches hair before it can clog. Worth putting in every shower.",
+        "Never pour grease down a kitchen drain — it solidifies in pipes. Let it cool and throw it in the trash.",
+        "If multiple drains in your home are slow simultaneously, the clog may be in the main line — call a plumber.",
+      ],
+      toolsNeeded: ["Drain hair removal tool ($3–$5 at any hardware or dollar store)", "Baking soda and vinegar (optional)", "Bucket (if removing P-trap)"],
+    },
+    proSearchQuery: "plumber Columbus Ohio",
+  },
+  {
+    id: "fix-running-toilet",
+    title: "Fix a Running Toilet",
+    description: "A constantly running toilet wastes 200 gallons of water per day and adds $50–$100/month to your water bill.",
+    howDidIKnow: "That sound of water constantly trickling in the toilet tank? That's money leaving your account 24 hours a day. A $10 flapper from the hardware store fixes 90% of running toilets. Most people rent for years paying for the leak.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "A running toilet is almost always caused by one of three things: a worn flapper, a faulty fill valve, or a misadjusted float. 90% of the time, it's the flapper.",
+      steps: [
+        "Lift the tank lid off and set it aside safely.",
+        "Diagnose: put a few drops of food coloring in the tank. If color appears in the bowl without flushing, the flapper is leaking.",
+        "The flapper is the rubber piece at the bottom of the tank that covers the drain hole. It should form a watertight seal.",
+        "Turn off the water supply valve behind/below the toilet (turn clockwise).",
+        "Flush the toilet to drain the tank.",
+        "Unhook the old flapper from the two ears on the overflow tube and disconnect the chain from the flush handle arm.",
+        "Take the old flapper to the hardware store for a match ($5–$10).",
+        "Attach the new flapper — same ears, same chain connection. Leave about 1/2 inch of slack in the chain.",
+        "Turn the water supply back on and let the tank refill.",
+        "Flush and confirm it seals properly (no running sound after about 30 seconds).",
+      ],
+      tips: [
+        "If replacing the flapper doesn't stop the running, the fill valve may need replacement — also a DIY job, slightly more involved.",
+        "Check that the float ball or float cup isn't set too high — water should stop filling about 1 inch below the top of the overflow tube.",
+        "Both flapper and fill valve kits are available at any hardware store for under $15 total.",
+      ],
+      toolsNeeded: ["Replacement flapper ($5–$10)", "Optional: towels for any spills"],
+    },
+    proSearchQuery: "plumber Columbus Ohio",
+  },
+  {
+    id: "move-in-document",
+    title: "Document Your Apartment at Move-In",
+    description: "Before unpacking a single box, photograph every scratch, stain, and ding. This is how you get your deposit back.",
+    howDidIKnow: "Landlords routinely charge move-out tenants for pre-existing damage. Without move-in documentation, it's your word against theirs. A 20-minute photo session when you move in protects hundreds or thousands of dollars.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "Security deposits are $500 to $2,000+ — and landlords can legally keep them for 'damage' that existed before you moved in. Documentation is your proof.",
+      steps: [
+        "Before moving any furniture in, walk through every room with your phone camera.",
+        "Photograph every wall, ceiling, floor, and window — especially any existing marks, stains, scratches, chips, or damage.",
+        "Open every cabinet, closet, and appliance and photograph the interior.",
+        "Test every switch, outlet, faucet, appliance, and door. Document anything that doesn't work.",
+        "Note it on the move-in checklist if your landlord provides one — make sure they sign it and you keep a copy.",
+        "Email the photos to yourself and your landlord the same day you move in. This creates a date-stamped record.",
+        "If your landlord won't acknowledge the move-in photos, send them via certified mail so there's a paper trail.",
+      ],
+      tips: [
+        "In Ohio, landlords must return your security deposit within 30 days of move-out, with an itemized list of any deductions.",
+        "If they miss the 30-day deadline, you're entitled to the full deposit back under Ohio law — regardless of damage.",
+        "Keep copies of all rental payments, especially if you pay cash (always get a receipt).",
+      ],
+      toolsNeeded: ["Phone with camera", "Email (to send photos to yourself and landlord)"],
+    },
+    proSearchQuery: "tenant rights Ohio",
+  },
+  {
+    id: "mold-prevention",
+    title: "Prevent Mold in Your Bathroom",
+    description: "Mold grows invisibly in damp bathrooms — and breathing it long-term causes real health problems.",
+    howDidIKnow: "Black mold in apartments is more common than people realize, especially in bathrooms with poor ventilation. By the time you can smell it, it's already deep in the grout and walls. Prevention is a 2-minute habit.",
+    category: "home",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "5 minutes per week",
+    diyGuide: {
+      intro: "Mold needs moisture to grow. Controlling bathroom humidity is the entire game.",
+      steps: [
+        "Run the exhaust fan during every shower and for 30 minutes after. If you don't have one, open a window.",
+        "Wipe down shower walls and the tub ledge after showering — a squeegee ($5) takes 30 seconds and removes 75% of moisture.",
+        "Leave the shower curtain spread open (not bunched) after showering to dry completely.",
+        "Weekly: spray a mold-prevention tile cleaner (like Tilex or a diluted bleach spray) on grout and tile, let sit 5 minutes, rinse.",
+        "Check the caulk around the tub and sink. Cracked or discolored caulk lets water get behind walls. Replace it if it's peeling or black.",
+        "If you see existing mold: clean with a bleach solution (1 cup bleach per gallon of water). Wear gloves and ventilate the room.",
+        "If there's mold behind walls or on the ceiling: tell your landlord in writing — that's a habitability issue they're required to fix.",
+      ],
+      tips: [
+        "A cheap humidity gauge ($10) shows you whether your bathroom humidity is staying below 60% (the threshold for mold).",
+        "Under-sink areas and toilet bases are common hidden mold spots — check quarterly.",
+        "Mold on a ceiling usually means a leak from above, not just humidity. Notify your landlord.",
+      ],
+      toolsNeeded: ["Squeegee ($5)", "Bleach spray or mold cleaner", "Exhaust fan (existing) or window"],
+    },
+    proSearchQuery: "mold remediation Columbus Ohio",
+  },
+
+  // APPLIANCES (continued)
+  {
+    id: "clean-washing-machine",
+    checkInterval: 30,
+    title: "Clean Your Washing Machine",
+    description: "Washers grow mold and mildew inside — which then transfers onto your clothes. Clean it monthly.",
+    howDidIKnow: "People assume the machine that washes clothes is self-cleaning. It's not. Moisture, detergent residue, and lint build up inside and the rubber seal around the drum is a notorious mold trap. That musty smell on your clothes? That's your washing machine.",
+    category: "appliances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "15 minutes active, 1 hour total",
+    diyGuide: {
+      intro: "Front-loading washers are especially prone to mold in the rubber door seal. Top loaders accumulate detergent residue and mineral deposits. Both need monthly cleaning.",
+      steps: [
+        "For front loaders: wipe the rubber door gasket thoroughly with a cloth soaked in a 10:1 water/bleach solution. Pull back the folds and clean inside — this is where mold hides.",
+        "Add 2 cups of white vinegar to the detergent dispenser. Run a hot water cycle (most washers have a 'clean washer' setting).",
+        "After that cycle: add 1/2 cup baking soda directly into the drum and run another hot cycle.",
+        "Wipe down the interior drum, door glass, and gasket after the cycles.",
+        "Clean the detergent dispenser drawer — pull it out (it usually slides out) and rinse under hot water.",
+        "Leave the door open between washes to allow the drum and seal to dry completely.",
+        "Do this monthly.",
+      ],
+      tips: [
+        "Use HE (High Efficiency) detergent in HE washers — using regular detergent produces too many suds and leaves more residue.",
+        "Use less detergent than the cap says — most people use 2–4× too much, which leaves residue that feeds mold.",
+        "Washing Machine Cleaner tablets (Affresh) are a convenient alternative — one tablet per month.",
+      ],
+      toolsNeeded: ["White vinegar", "Baking soda or Affresh tablets", "Cloth or sponge"],
+    },
+    proSearchQuery: "appliance repair Columbus Ohio",
+  },
+  {
+    id: "laundry-basics",
+    title: "Do Laundry Without Ruining Your Clothes",
+    description: "Read the label. Sort your colors. Know your temperatures. These three habits prevent most laundry disasters.",
+    howDidIKnow: "Shrinking a favorite sweater or turning all your white socks pink are rites of passage — but they're completely avoidable. The instructions are literally printed inside your clothes. Nobody tells you to read them.",
+    category: "appliances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Learn once, use forever",
+    diyGuide: {
+      intro: "Laundry disasters are almost always caused by the wrong temperature or not sorting colors. Here's the complete beginner system.",
+      steps: [
+        "Sort into three piles: darks (black, navy, dark green), lights (white, cream, pastels), and colors (reds, oranges, bright colors). Wash each separately the first few times.",
+        "Read the care label inside the garment. The symbols tell you: washing temperature, whether to use a dryer, dry clean only, or hand wash only.",
+        "Cold water: safe for almost everything, saves energy, prevents shrinking and color bleeding. When in doubt, use cold.",
+        "Warm water: for lightly soiled items and most everyday fabrics.",
+        "Hot water: only for white cotton items like towels, sheets, and undershirts where sanitizing matters.",
+        "NEVER put these in the dryer: wool, cashmere, silk, anything labeled 'lay flat to dry', bras with underwire, rayon.",
+        "Check pockets before washing — a tissue becomes confetti on everything; a lip balm ruins an entire load.",
+        "Use the correct amount of detergent — usually 1.5 tablespoons for a regular load in an HE washer. The cap is oversized on purpose.",
+      ],
+      tips: [
+        "Turn dark jeans and clothes inside out before washing — reduces fading dramatically.",
+        "Use a mesh laundry bag ($5) for delicates, bras, and socks — prevents tangling and damage.",
+        "Remove clothes from the dryer promptly or hang them immediately to prevent wrinkles.",
+      ],
+      toolsNeeded: ["Laundry detergent (HE formula for HE machines)", "Optional: mesh laundry bag ($5)", "Optional: stain stick for pre-treating stains"],
+    },
+    proSearchQuery: "laundromat Columbus Ohio",
+  },
+
+  // COOKING
+  {
+    id: "cook-chicken-safe",
+    title: "Cook Chicken to a Safe Temperature",
+    description: "Undercooked chicken causes salmonella. A $15 meat thermometer eliminates all guessing.",
+    howDidIKnow: "Every year, 1 million Americans get salmonella from poultry. You cannot tell chicken is done by looking at it or cutting it open — the color is not reliable. The only safe method is temperature: 165°F internal. Nobody teaches this.",
+    category: "cooking",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Ongoing kitchen skill",
+    diyGuide: {
+      intro: "Chicken must reach 165°F at its thickest point to be safe. This kills salmonella and all other poultry-borne pathogens. A meat thermometer costs $12–$20 and is the only reliable method.",
+      steps: [
+        "Buy a digital instant-read meat thermometer ($12–$20). ThermoWorks ThermoPop and the $12 Amazon Basics version are both excellent.",
+        "Insert the thermometer into the thickest part of the chicken — not touching bone, not near the surface.",
+        "Target temperature: 165°F for all poultry (chicken and turkey).",
+        "For bone-in chicken: the area near the bone takes longest to cook — check there.",
+        "Chicken is fully cooked when juices run clear AND the thermometer reads 165°F.",
+        "Rest chicken for 3–5 minutes after cooking — it continues cooking slightly and juices redistribute.",
+        "Safe handling: wash your hands and any surface that touched raw chicken with soap and water. Raw chicken juice can contaminate other foods.",
+      ],
+      tips: [
+        "Don't wash raw chicken — the USDA says this spreads bacteria around your sink. Cooking to temperature kills everything.",
+        "Frozen chicken takes about 50% longer to cook than thawed — always check temperature.",
+        "Meal prepping? Cooked chicken keeps 4 days in the fridge, 4 months in the freezer.",
+      ],
+      toolsNeeded: ["Digital meat thermometer ($12–$20)", "Pan, grill, or oven"],
+    },
+    proSearchQuery: "cooking class Columbus Ohio",
+  },
+  {
+    id: "food-storage",
+    title: "Store Food Properly",
+    description: "Wrong storage causes food to spoil faster, waste money, and cause food poisoning.",
+    howDidIKnow: "Nobody explains fridge zones. Your leftovers sitting on the top shelf in a warm spot may not be safe after 24 hours. Meat on the wrong shelf can drip onto vegetables and contaminate them. Food storage has real rules.",
+    category: "cooking",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes to learn, then habit",
+    diyGuide: {
+      intro: "The right spot in your fridge, the right container, and the right timeline prevent food poisoning and food waste.",
+      steps: [
+        "Fridge zones — colder at the bottom, warmer at the top and door: Top shelf = leftovers, drinks, ready-to-eat foods. Middle shelf = dairy (milk, cheese, yogurt). Bottom shelf = raw meat and fish (coldest, and contained if they leak). Drawers = produce (separate drawers for fruits and vegetables if possible). Door = condiments only (warmest zone — never store milk or eggs here).",
+        "Raw meat: always store on the bottom shelf in a container or on a plate so juices can't drip on other food.",
+        "Leftovers: cool to room temp within 2 hours, then refrigerate. Safe for 3–4 days in the fridge.",
+        "Use airtight containers — open bowls and plastic wrap don't extend life as well and let odors transfer.",
+        "Danger zone: bacteria multiply fastest between 40°F and 140°F. Never leave perishable food out for more than 2 hours (1 hour if it's above 90°F outside).",
+        "Freezer storage: properly wrapped meat is safe in the freezer for 4–12 months. Anything frozen is technically safe to eat indefinitely — but quality degrades after 1 year.",
+      ],
+      tips: [
+        "Best By vs. Use By vs. Sell By: 'Best By' is about quality, not safety — foods are often still fine days or weeks after. 'Use By' on meat is a harder deadline. 'Sell By' is for the store, not you.",
+        "Bread goes stale fastest at fridge temperature (40–50°F) — store at room temp or freeze it.",
+        "The 'sniff test' for leftovers is unreliable — some bacteria (like staph) don't produce odor. Trust the time, not just the smell.",
+      ],
+      toolsNeeded: ["Airtight food storage containers", "Permanent marker for labeling dates"],
+    },
+    proSearchQuery: "cooking class Columbus Ohio",
+  },
+  {
+    id: "knife-skills",
+    title: "Learn Basic Knife Skills",
+    description: "A sharp knife used correctly is safer than a dull one. Learn the two cuts that cover 90% of cooking.",
+    howDidIKnow: "Dull knives cause more injuries than sharp ones — they require more force, which means more slipping. And most people have never been shown how to hold a knife properly or anchor a cutting board. Two skills change everything.",
+    category: "cooking",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes to practice",
+    diyGuide: {
+      intro: "You need to know two things: how to hold a knife so you don't slice your fingers off, and how to stabilize what you're cutting. Everything else is practice.",
+      steps: [
+        "Knife grip: pinch the blade itself (the flat part just above the handle) between your thumb and index finger. Wrap the other three fingers around the handle. This is the 'pinch grip' — it gives control and keeps the knife from twisting.",
+        "Curl your guiding hand fingers into a 'claw' on the food you're cutting — fingertips bent, knuckles forward. The blade rests against your knuckles as you cut. Your fingertips are never exposed.",
+        "Anchor your cutting board: put a damp paper towel or dish towel under it. A sliding cutting board is how you get hurt.",
+        "The rock chop: keep the tip of the knife on the board and rock the heel up and down while moving forward through the food. Good for herbs, garlic, and onions.",
+        "The push cut: push the knife forward and slightly down through food. Good for tomatoes, mushrooms, and anything soft.",
+        "For onions: cut in half through the root, peel it, make horizontal and vertical cuts toward the root (don't cut through the root — it holds everything together), then slice down. Perfectly diced onion.",
+      ],
+      tips: [
+        "A sharp knife is essential. Get a $15 whetstone or a pull-through sharpener and hone your knife monthly.",
+        "You only really need two knives: an 8-inch chef's knife and a small 3–4 inch paring knife.",
+        "Don't put good knives in the dishwasher — it dulls them and warps handles. Wash by hand.",
+      ],
+      toolsNeeded: ["Chef's knife", "Cutting board", "Damp cloth to anchor the board"],
+    },
+    proSearchQuery: "cooking class Columbus Ohio",
+  },
+  {
+    id: "kitchen-fire",
+    title: "What to Do if There's a Kitchen Fire",
+    description: "Grease fires are the most common kitchen emergency — and water makes them dramatically worse.",
+    howDidIKnow: "Throwing water on a grease fire turns it into a fireball. This is the most dangerous thing you can do and most people's first instinct. Knowing the two-second response to a pan fire could save your life — and your apartment.",
+    category: "cooking",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Read this before you ever need it",
+    diyGuide: {
+      intro: "Kitchen fires escalate fast. Most can be stopped in the first 15 seconds with the right response. After that, get out and call 911.",
+      steps: [
+        "Pan fire (grease fire): NEVER use water. Slide a lid over the pan to cut off oxygen. Turn off the heat. Leave the lid on until the pan cools completely — removing it lets oxygen back in.",
+        "Oven fire: turn off the oven and keep the door closed. Fire needs oxygen — keeping the door closed smothers it. If it doesn't go out in 2–3 minutes, evacuate and call 911.",
+        "Microwave fire: turn it off and unplug it. Keep the door closed. Don't open until it's completely cool.",
+        "If a fire spreads beyond the pan or oven: get out. Close doors behind you (slows fire spread). Call 911 from outside.",
+        "Fire extinguisher use (PASS): Pull the pin, Aim at the base of the fire, Squeeze the handle, Sweep side to side. Extinguishers are for small, contained fires only — not an engulfed room.",
+        "Baking soda can smother a small grease fire — but a lid is faster and more reliable.",
+      ],
+      tips: [
+        "Keep a Class K fire extinguisher in your kitchen ($30–$50). It's rated specifically for grease fires. Check it annually.",
+        "Never leave cooking oil unattended on a stove. Grease fires start in seconds.",
+        "Smoke detectors save lives — if yours goes off while cooking, open a window, not the oven door.",
+      ],
+      toolsNeeded: ["Pot lid that fits your pans (store nearby when cooking)", "Fire extinguisher rated Class K for kitchens"],
+    },
+    proSearchQuery: "fire extinguisher service Columbus Ohio",
+  },
+  {
+    id: "meal-prep-basics",
+    title: "Basic Meal Prep — Eat Cheaper and Better",
+    description: "Preparing a few staple foods on Sunday cuts your weekly food cost in half and ends the 'what do I eat?' paralysis.",
+    howDidIKnow: "Buying groceries and then eating out anyway because you're tired and don't know what to make with the groceries is an extremely common expensive loop. Prepping 3 base items on Sunday breaks it for the whole week.",
+    category: "cooking",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "1–2 hours on Sunday",
+    diyGuide: {
+      intro: "You don't need to prep entire meals. Prepping three base ingredients — a protein, a grain, and roasted vegetables — gives you 15+ meal combinations for the week.",
+      steps: [
+        "Pick a protein: bake 4–6 chicken thighs or breasts at 400°F for 25–30 minutes (season with olive oil, salt, pepper, garlic powder). Or cook a batch of ground beef or hard-boiled eggs.",
+        "Cook a grain: rice, quinoa, or farro. One cup dry = 3 cups cooked = about 4 servings. Rice cookers make this foolproof ($20).",
+        "Roast vegetables: chop any vegetables (broccoli, sweet potatoes, bell peppers, zucchini), toss with olive oil and salt, spread on a baking sheet at 400°F for 20–25 minutes until caramelized.",
+        "Store everything in separate containers in the fridge (3–4 days).",
+        "Combinations for the week: grain bowl (protein + grain + veg + any sauce), stir-fry, tacos, salad topper, scrambled eggs with veg.",
+        "Also prep: wash and cut fruit for snacking, hard-boil a batch of eggs, portion out snacks.",
+      ],
+      tips: [
+        "The 'Sunday prep' mindset changes your relationship with eating — you stop making decisions when you're hungry and tired.",
+        "A rice cooker ($20–$30) is the best cheap kitchen appliance — set it and forget it, perfect rice every time.",
+        "Frozen vegetables are nutritionally equal to fresh and dramatically cheaper. Stock your freezer.",
+      ],
+      toolsNeeded: ["Baking sheet", "Pots and pans", "Food storage containers (airtight)", "Optional: rice cooker"],
+    },
+    proSearchQuery: "grocery store Columbus Ohio",
+  },
+
+  // GUIDES (continued)
+  {
+    id: "renter-rights",
+    title: "Know Your Renter Rights in Ohio",
+    description: "Ohio law protects tenants in specific ways — but you have to know your rights to exercise them.",
+    howDidIKnow: "Most renters don't know their landlord is legally required to maintain heat, running water, and working locks — and that withholding rent is actually legal in Ohio under specific conditions. Not knowing this costs renters money and keeps them in unsafe situations.",
+    category: "guides",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes to read",
+    diyGuide: {
+      intro: "Ohio Revised Code Chapter 5321 outlines landlord and tenant rights. Here are the ones that actually matter to most renters.",
+      steps: [
+        "LANDLORD MUST PROVIDE: working heat (68°F minimum Oct 1–Apr 15), running hot and cold water, working plumbing and electricity, locks that work, weatherproof structure, pest-free premises.",
+        "SECURITY DEPOSIT: landlord must return within 30 days of move-out with an itemized list of deductions. Miss the deadline and they owe you the full amount plus attorney fees.",
+        "NOTICE TO ENTER: in Ohio, landlords must give 24 hours notice before entering your unit (except emergencies).",
+        "RENT WITHHOLDING: if your landlord fails to fix a habitability issue (like no heat), you can withhold rent — but ONLY after sending written notice and waiting 30 days. You must deposit the rent into escrow. Do not just stop paying.",
+        "RETALIATION: it is illegal for a landlord to evict or raise rent in retaliation for a tenant reporting code violations or requesting repairs.",
+        "EVICTION: requires a 3-day notice to vacate, then court process. You cannot be removed without a court order — a landlord cannot change your locks or remove your belongings without a court judgment.",
+        "30-DAY NOTICE: month-to-month leases require a 30-day notice from either party to end tenancy.",
+      ],
+      tips: [
+        "Always communicate with your landlord in writing (text or email) so you have a record.",
+        "Ohio Legal Help (ohiolegalhelp.org) has free resources and connects you with legal aid.",
+        "Columbus has a Tenant Rights Hotline: 614-241-2001.",
+      ],
+      toolsNeeded: ["Written record of all landlord communications", "Ohio Legal Help: ohiolegalhelp.org"],
+    },
+    proSearchQuery: "tenant rights attorney Columbus Ohio",
+  },
+  {
+    id: "first-apartment-checklist",
+    title: "First Apartment Essentials Checklist",
+    description: "Everything you actually need for your first apartment — and what can wait.",
+    howDidIKnow: "First-time renters often either buy too much stuff immediately (spending $3,000+ before a paycheck) or live without basic necessities for months. This list separates what you need day one from what can wait.",
+    category: "guides",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "Use this before you move in",
+    diyGuide: {
+      intro: "Prioritized by urgency — get the Day 1 items first, buy the rest over time. You don't need to have everything perfect when you move in.",
+      steps: [
+        "DAY 1 ESSENTIALS: Bedding (sheets, pillow, blanket/comforter), Towels (at least 2 bath, 2 hand), Toilet paper (get a 12-pack), Hand soap for every sink, Dish soap and a sponge, One set of plates/bowls/glasses and silverware, A pot and a pan, Trash bags, Basic cleaning supplies (all-purpose spray, toilet brush), Phone charger and power strip.",
+        "WEEK 1: A shower curtain and rings if not provided, Hangers, Basic pantry staples (olive oil, salt, pepper, garlic, pasta, rice, canned goods), Laundry detergent, Paper towels, A shower caddy.",
+        "FIRST MONTH: More kitchen tools (cutting board, chef's knife, mixing bowls), A plunger (you will need it), An 8-outlet power strip, Extra sets of sheets, A hamper, Basic tools (hammer, screwdrivers, measuring tape, level for hanging things).",
+        "CAN WAIT: A couch (use camping chairs or floor pillows), A coffee maker (buy coffee out until you know your routine), Fancy kitchen appliances, Decorations, A TV (your laptop works fine for a month).",
+        "BUY SECONDHAND: Furniture (Facebook Marketplace, Craigslist, thrift stores) — don't pay retail for your first apartment furniture.",
+      ],
+      tips: [
+        "Facebook Marketplace and Craigslist are the best sources for cheap, good-quality furniture. Couches, dressers, and bookshelves routinely sell for $10–$50.",
+        "Check if your apartment has a shared washer/dryer before buying laundry equipment.",
+        "The Dollar Tree and dollar sections at Target have surprisingly decent kitchen basics — no need to spend $40 on spatulas.",
+      ],
+      toolsNeeded: ["This list and a budget"],
+    },
+    proSearchQuery: "thrift store Columbus Ohio",
+  },
+
+  // APPLIANCES (continued)
+  {
+    id: "dryer-vent",
+    checkInterval: 365,
+    title: "Clean Dryer Vent",
+    description: "Clogged dryer vents are a leading cause of house fires. Clean it once a year.",
+    howDidIKnow: "Lint is incredibly flammable and it builds up inside the duct behind your dryer every single load. The lint trap only catches some of it. Dryers start nearly 3,000 house fires a year — almost all from vents nobody ever cleaned.",
+    category: "appliances",
+    season: "year-round",
+    difficulty: "medium",
+    timeEstimate: "30–45 minutes",
+    requires: "hasDryer",
+    diyGuide: {
+      intro: "Lint escapes through your dryer's exhaust vent and builds up over time. This is a serious fire hazard — the U.S. Fire Administration says dryers cause about 2,900 home fires per year, and most are lint-related.",
+      steps: [
+        "Unplug the dryer from the wall outlet.",
+        "Pull the dryer away from the wall to access the exhaust vent hose in the back.",
+        "Disconnect the vent hose from the back of the dryer (usually held by a clamp).",
+        "Use a dryer vent cleaning brush kit (long flexible brush) to clean inside the duct from both the dryer end and the exterior vent exit.",
+        "Vacuum up any lint that falls out.",
+        "Go outside and remove the exterior vent cover if possible, and clean from that end too.",
+        "Reconnect the hose, push the dryer back, plug it in.",
+        "Run the dryer empty for 10 minutes and check that warm air is flowing from the outside vent.",
+      ],
+      tips: [
+        "Signs of a clogged vent: clothes take 2+ cycles to dry, dryer feels very hot, burning smell.",
+        "Also clean the lint trap after every single load — this is the main line of defense.",
+        "Rigid metal duct is safer than flexible foil — it resists crushing and lint buildup.",
+      ],
+      toolsNeeded: ["Dryer vent cleaning brush kit ($15–$25)", "Vacuum", "Screwdriver (for vent clamp)"],
+    },
+    proSearchQuery: "appliance repair Columbus Ohio",
+  },
+  {
+    id: "fridge-coils",
+    checkInterval: 365,
+    title: "Clean Refrigerator Coils",
+    description: "Dirty coils make your fridge work harder, shortening its life and raising your electric bill.",
+    howDidIKnow: "There are coils under or behind your fridge that release heat. When they're caked in dust the fridge runs constantly, your electric bill goes up, and the compressor burns out early. Nobody tells you to vacuum under the fridge once a year.",
+    category: "appliances",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "20 minutes",
+    diyGuide: {
+      intro: "Your refrigerator has condenser coils that release heat — usually on the bottom or back. When coated in dust, they can't dissipate heat efficiently, so the compressor runs constantly. This shortens the fridge's life and increases energy use.",
+      steps: [
+        "Unplug the refrigerator.",
+        "If coils are on the back: pull the fridge away from the wall. You'll see coils or a grid.",
+        "If coils are on the bottom: snap off or slide out the front grille at the base of the fridge.",
+        "Use a coil cleaning brush (long, flexible) or a vacuum with a brush attachment to gently remove dust.",
+        "Vacuum up the loosened debris.",
+        "Replace the grille or push the fridge back.",
+        "Plug it back in.",
+      ],
+      tips: [
+        "Do this once a year, or every 6 months if you have pets (pet hair clogs coils fast).",
+        "If the fridge is running constantly or not keeping food cold, dirty coils are often the culprit.",
+        "A coil cleaning brush costs about $8 and lasts forever.",
+      ],
+      toolsNeeded: ["Coil cleaning brush ($8–$12) or vacuum with brush attachment"],
+    },
+    proSearchQuery: "appliance repair Columbus Ohio",
+  },
+];
+
+export function getCurrentSeason(): Season {
+  const month = new Date().getMonth();
+  if (month >= 2 && month <= 4) return "spring";
+  if (month >= 5 && month <= 7) return "summer";
+  if (month >= 8 && month <= 10) return "fall";
+  return "winter";
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function taskMatchesProfile(task: Task, profile: any): boolean {
+  if (!task.requires) return true;
+  if (!profile) return true; // no profile = show everything
+  switch (task.requires) {
+    case "hasCar": return !!profile.hasCar;
+    case "hasPool": return !!profile.hasPool;
+    case "hasYard": return !!profile.hasYard;
+    case "hasWaterSoftener": return !!profile.hasWaterSoftener;
+    case "hasDryer": return !!profile.hasDryer;
+    case "hasFireplace": return !!profile.hasFireplace;
+    case "homeOwner": return profile.homeType === "own-house";
+    case "hasOutdoorAccess": return profile.homeType === "rent-house" || profile.homeType === "own-house";
+    default: return true;
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getTasksByCategory(category: Category, profile?: any): Task[] {
+  return TASKS.filter((t) => t.category === category && taskMatchesProfile(t, profile));
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function getSeasonalTasks(profile?: any): Task[] {
+  const season = getCurrentSeason();
+  return TASKS.filter(
+    (t) =>
+      t.category !== "guides" &&
+      (t.season === season || t.season === "year-round") &&
+      taskMatchesProfile(t, profile)
+  ).slice(0, 6);
+}
+
+export function searchTasks(query: string): Task[] {
+  const q = query.toLowerCase().trim();
+  if (!q) return [];
+  return TASKS.filter(
+    (t) =>
+      t.title.toLowerCase().includes(q) ||
+      t.description.toLowerCase().includes(q) ||
+      t.howDidIKnow.toLowerCase().includes(q) ||
+      t.category.toLowerCase().includes(q)
+  );
+}
