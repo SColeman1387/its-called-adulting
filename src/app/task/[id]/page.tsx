@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { TASKS, CATEGORIES } from "@/lib/data";
 import { recordCompletion, getTaskStreak, getCompletionCount, getLastCompletion } from "@/lib/streaks";
 import { awardPoints } from "@/lib/points";
+import { TASK_SUPPLIES } from "@/lib/supplies";
 
 export default function TaskPage() {
   const { id } = useParams();
@@ -182,6 +183,32 @@ export default function TaskPage() {
               </button>
             ))}
           </div>
+
+          {/* Supplies you'll need */}
+          {TASK_SUPPLIES[task.id] && (
+            <div className="bg-white border border-gray-100 rounded-2xl p-4 mb-6 shadow-sm">
+              <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">🛒 You'll Need</h3>
+              <div className="space-y-3">
+                {TASK_SUPPLIES[task.id].map((supply) => (
+                  <div key={supply.name} className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-900">{supply.name}</p>
+                      <p className="text-xs text-gray-400 mt-0.5">{supply.note}</p>
+                    </div>
+                    <a
+                      href={supply.amazonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shrink-0 bg-[#FF9900] text-white text-xs font-bold px-3 py-1.5 rounded-lg hover:bg-[#e88a00] transition-colors"
+                    >
+                      {supply.price}
+                    </a>
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-gray-300 mt-3 text-center">Amazon links · We may earn a small commission</p>
+            </div>
+          )}
 
           {/* Tips */}
           <div className="bg-orange-50 rounded-2xl p-4 mb-6">
