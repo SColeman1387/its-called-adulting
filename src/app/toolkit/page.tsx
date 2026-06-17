@@ -221,7 +221,16 @@ export default function ToolkitPage() {
               {/* Where to buy */}
               <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4">
                 <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-2">Where to Buy</h3>
-                <p className="text-sm text-gray-700">{selected.whereToBuy}</p>
+                <p className="text-sm text-gray-700 mb-3">{selected.whereToBuy}</p>
+                <a
+                  href={selected.amazonUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 bg-[#FF9900] text-white font-bold rounded-xl text-sm hover:bg-[#e88a00] transition-colors"
+                >
+                  <span>🛒</span> Buy on Amazon →
+                </a>
+                <p className="text-xs text-gray-400 text-center mt-2">We may earn a small commission — at no extra cost to you.</p>
               </div>
 
               {/* Mark as acquired */}

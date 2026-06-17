@@ -7,6 +7,7 @@ export interface Tool {
   whyItMatters: string;     // the HWISTKT moment
   cost: string;             // typical price range
   whereToBuy: string;
+  amazonUrl: string;
   usedFor: string[];        // bullet list of what you'd use it for
   proTip: string;
   tasksItHelpsIn?: string[]; // task IDs this tool is relevant to
@@ -22,6 +23,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Gas station air pumps don't tell you when to stop — they just pump. Without a gauge you're guessing. Over- or under-inflated tires wear unevenly, reduce gas mileage, and fail in the heat. This takes 30 seconds to use.",
     cost: "$8–$15",
     whereToBuy: "Any auto parts store, Walmart, or Amazon. Get a digital one — analog gauges lose accuracy over time.",
+    amazonUrl: "https://www.amazon.com/s?k=digital+tire+pressure+gauge&tag=itscalledadul-20",
     usedFor: [
       "Monthly tire pressure check on all 4 tires",
       "Before every road trip",
@@ -40,6 +42,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "A dead battery always happens at night, in a parking garage, in the cold. Without cables you're completely at the mercy of whoever's nearby — or a $100 tow. With cables you're the person who saves someone else.",
     cost: "$25–$40",
     whereToBuy: "AutoZone, O'Reilly, Walmart. Get at least 12-foot cables — 20-foot is better because not every car can be parked bumper-to-bumper.",
+    amazonUrl: "https://www.amazon.com/s?k=jumper+cables+20+foot&tag=itscalledadul-20",
     usedFor: [
       "Starting your own dead battery",
       "Helping someone else whose battery died",
@@ -57,6 +60,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Phillips head (#2) and flathead — those two cover almost everything. Furniture assembly, outlet covers, cabinet hinges, light switch plates, battery compartments, tightening door handles. You will reach for this set weekly.",
     cost: "$12–$25",
     whereToBuy: "Home Depot, Amazon. Get a 6-piece set: #1, #2, #3 Phillips and small, medium, large flathead. A magnetic tip is worth $3 more.",
+    amazonUrl: "https://www.amazon.com/s?k=magnetic+screwdriver+set+6+piece&tag=itscalledadul-20",
     usedFor: [
       "Assembling furniture",
       "Tightening door hinges and handles",
@@ -76,6 +80,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "The number one reason people return furniture is that it doesn't fit. Measuring before you buy a couch, a desk, a rug, or a TV stand takes two minutes and saves hours of returning heavy stuff. Also essential for hanging anything straight.",
     cost: "$10–$20",
     whereToBuy: "Home Depot, Walmart, Amazon. Get a 25-foot, 1-inch wide blade — wider blades stay stiff further out so you can measure alone.",
+    amazonUrl: "https://www.amazon.com/s?k=tape+measure+25+foot+1+inch&tag=itscalledadul-20",
     usedFor: [
       "Checking furniture will fit before buying",
       "Measuring wall space for TVs and shelves",
@@ -95,6 +100,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Hanging art, assembling furniture, driving a nail for a hanger, tapping a stuck drawer back into track — you reach for a hammer constantly without realizing it. Using a shoe or a wine bottle works exactly once before you regret it.",
     cost: "$15–$25",
     whereToBuy: "Home Depot, Walmart, any hardware store. A 16 oz curved-claw hammer handles everything a first apartment needs.",
+    amazonUrl: "https://www.amazon.com/s?k=16oz+curved+claw+hammer&tag=itscalledadul-20",
     usedFor: [
       "Hanging pictures and mirrors",
       "Driving picture nails and wall anchors",
@@ -113,6 +119,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Water supply shutoff valves, leaky faucet connections, showerhead replacement — these all need a wrench. One good adjustable wrench replaces a whole set of fixed wrenches for basic home use.",
     cost: "$15–$30",
     whereToBuy: "Home Depot, Walmart. Get an 8-inch or 10-inch Crescent wrench. Brands that matter: Channellock, Irwin, Craftsman.",
+    amazonUrl: "https://www.amazon.com/s?k=adjustable+crescent+wrench+10+inch&tag=itscalledadul-20",
     usedFor: [
       "Turning off water supply valves (toilet, sink)",
       "Replacing showerheads",
@@ -132,6 +139,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Needle-nose pliers let you grab small things in tight spaces — the clip inside a drain, the end of a wire, a broken key in a lock. Slip-joint (channel-lock) pliers grip pipes, fixtures, and rounded surfaces that a wrench slides off.",
     cost: "$15–$25 for a pair",
     whereToBuy: "Home Depot, Walmart, Amazon. Get one needle-nose and one 8-inch slip-joint. Channellock brand is worth the extra $5.",
+    amazonUrl: "https://www.amazon.com/s?k=channellock+needle+nose+pliers+set&tag=itscalledadul-20",
     usedFor: [
       "Pulling hair clogs from drains",
       "Gripping slippery pipes",
@@ -151,6 +159,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Assembling furniture by hand takes 2 hours. A drill takes 20 minutes. Mounting a TV, building a shelf, installing a curtain rod — all go from annoying to easy. A drill also doubles as a powered screwdriver for any job with lots of screws.",
     cost: "$60–$120 for a starter kit",
     whereToBuy: "Home Depot, Lowe's. Ryobi and Ridgid are the best value brands. Get a kit that includes a drill, driver, two batteries, and a charger. Avoid cheap no-name brands — the battery dies within a year.",
+    amazonUrl: "https://www.amazon.com/s?k=ryobi+cordless+drill+kit+two+batteries&tag=itscalledadul-20",
     usedFor: [
       "Assembling furniture (IKEA, flat-pack anything)",
       "Mounting TVs, shelves, curtain rods",
@@ -169,6 +178,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "A socket set is what you need when a wrench won't fit or won't get enough torque. Lug nuts on a spare tire, oil drain plugs, furniture bolts, bicycle maintenance — none of these work well with an adjustable wrench. Sockets do.",
     cost: "$30–$60",
     whereToBuy: "Home Depot, AutoZone, Amazon. Get a 3/8-inch drive set with both metric and standard (SAE) sockets. Craftsman, Husky, or Stanley are solid brands. Avoid socket sets under $15 — they crack.",
+    amazonUrl: "https://www.amazon.com/s?k=craftsman+socket+set+3/8+metric+SAE&tag=itscalledadul-20",
     usedFor: [
       "Removing and installing lug nuts (spare tire)",
       "Oil drain plug removal",
@@ -187,6 +197,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Breaking down cardboard boxes alone makes this worth owning. But it also scores drywall, strips insulation from wire, cuts rope and zip ties, opens stuck paint cans, and trims everything that scissors can't handle cleanly.",
     cost: "$8–$15",
     whereToBuy: "Home Depot, Walmart, hardware stores. Get a retractable blade — safety first. Milwaukee and Stanley make excellent ones. Buy a 10-pack of replacement blades.",
+    amazonUrl: "https://www.amazon.com/s?k=milwaukee+retractable+utility+knife+blades&tag=itscalledadul-20",
     usedFor: [
       "Breaking down moving boxes",
       "Opening packages (cleaner than scissors)",
@@ -206,6 +217,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "A shelf that's 2 degrees off looks visually wrong even if you can't explain why. A crooked picture frame annoys you every time you look at it. A 24-inch level makes everything straight in seconds.",
     cost: "$10–$20",
     whereToBuy: "Home Depot, Walmart. A basic 24-inch bubble level works for everything at home. Digital levels are more precise but not necessary.",
+    amazonUrl: "https://www.amazon.com/s?k=24+inch+bubble+level&tag=itscalledadul-20",
     usedFor: [
       "Hanging shelves perfectly level",
       "Mounting TVs straight",
@@ -225,6 +237,7 @@ export const TOOLS: Tool[] = [
     whyItMatters: "Drywall can't hold weight on its own — it crumbles. Heavy shelves, TVs, mirrors, and towel bars need to be anchored into studs (the wood framing behind the drywall). Without a stud finder you're guessing, and guessing wrong leaves holes and drops heavy things.",
     cost: "$15–$35",
     whereToBuy: "Home Depot, Walmart, Amazon. The $20 Franklin ProSensor is significantly better than cheap magnetic ones and is a bestseller for good reason.",
+    amazonUrl: "https://www.amazon.com/s?k=franklin+prosensor+stud+finder&tag=itscalledadul-20",
     usedFor: [
       "Finding studs before mounting a TV",
       "Locating studs for heavy shelves",
