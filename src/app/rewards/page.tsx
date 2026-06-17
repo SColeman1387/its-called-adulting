@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getTotalPoints, getLedgerEntries, deductPoints, GIFT_CARD_TIERS, POINT_VALUES, PointEvent } from "@/lib/points";
 import { getSupabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
+import { useSubscription } from "@/lib/useSubscription";
 
 const TYPE_LABELS: Record<PointEvent["type"], string> = {
   task_complete:   "✅ Completed a task",
@@ -15,6 +16,7 @@ const TYPE_LABELS: Record<PointEvent["type"], string> = {
 
 export default function RewardsPage() {
   const { user } = useAuth();
+  const { status: subStatus, stripeCustomerId } = useSubscription();
   const [points, setPoints] = useState(0);
   const [ledger, setLedger] = useState<PointEvent[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
@@ -73,7 +75,67 @@ export default function RewardsPage() {
         <p className="text-gray-400 text-sm mt-1">Earn points, redeem for Amazon gift cards.</p>
       </div>
 
-      {/* Balance card */}
+      {/* Paywall for non-subscribers */}
+      {subStatus !== "loading" && subStatus !== "active" && (
+        <div className="bg-[#0f1f3d] rounded-3xl p-7 mt-4 mb-2 text-white text-center">
+          <div className="text-4xl mb-3">⭐</div>
+          <h2 className="text-xl font-black mb-2">Adulting Pro — $4.99/mo</h2>
+          <p className="text-blue-200 text-sm leading-relaxed mb-5">
+            Earn Adulting Bucks for every task, lesson, and tool. Redeem for real Amazon gift cards — automatically sent to your inbox.
+          </p>
+          <ul className="text-left space-y-2 mb-6">
+            {[
+              "Earn points for every task completed",
+              "Earn points for weekly lessons",
+              "Redeem for Amazon gift cards",
+              "Gift cards sent automatically — no waiting",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-2 text-sm text-white/90">
+                <span className="text-orange-400 font-bold mt-0.5">✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={async () => {
+              const res = await fetch("/api/stripe/checkout", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ userId: user?.id, email: user?.email, redirectUrl: window.location.origin }),
+              });
+              const { url } = await res.json();
+              if (url) window.location.href = url;
+            }}
+            className="w-full py-4 bg-orange-500 text-white font-black rounded-2xl hover:bg-orange-600 transition-colors text-base"
+          >
+            Start Adulting Pro — $4.99/mo →
+          </button>
+          <p className="text-xs text-blue-300 mt-3">Cancel anytime. No contracts.</p>
+        </div>
+      )}
+
+      {/* Manage subscription link for active subscribers */}
+      {subStatus === "active" && stripeCustomerId && (
+        <div className="mt-4 mb-2 text-center">
+          <button
+            onClick={async () => {
+              const res = await fetch("/api/stripe/portal", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ customerId: stripeCustomerId }),
+              });
+              const { url } = await res.json();
+              if (url) window.location.href = url;
+            }}
+            className="text-xs text-gray-400 underline"
+          >
+            Manage or cancel subscription
+          </button>
+        </div>
+      )}
+
+      {/* Subscriber content */}
+      {subStatus === "active" && <>
       <div className="bg-[#0f1f3d] rounded-3xl p-6 mt-4 mb-6 text-white text-center">
         <p className="text-sm text-blue-300 font-semibold uppercase tracking-widest mb-1">Your balance</p>
         <p className="text-6xl font-black mb-1">{points.toLocaleString()}</p>
@@ -216,6 +278,7 @@ export default function RewardsPage() {
           )}
         </div>
       )}
+      </>}
 
     </main>
   );
