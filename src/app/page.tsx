@@ -30,8 +30,8 @@ export default function LandingPage() {
           <span className="text-orange-500">to adult?</span>
         </h1>
         <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-lg mx-auto">
-          It&apos;s Called Adulting teaches 18–25 year olds the practical skills
-          nobody ever taught them — from changing a tire to understanding their first lease.
+          The app that replaces the midnight &ldquo;Mom, I locked my keys in the car&rdquo; call.
+          Practical life skills nobody taught them — all in one place.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -75,9 +75,9 @@ export default function LandingPage() {
             You can&apos;t be there<br />for every moment.
           </h2>
           <p className="text-blue-200 leading-relaxed mb-6 text-base">
-            When your kid locks their keys in the car at midnight, gets their first
-            weird landlord letter, or doesn&apos;t know if that noise their car is making
-            is serious — this app is the next best thing to calling you.
+            The next time your kid locks their keys in the car at midnight,
+            gets a weird landlord letter, or doesn&apos;t know if that noise their car
+            is making is serious — they&apos;ll have answers before they even call you.
           </p>
           <ul className="space-y-3 mb-8">
             {[
