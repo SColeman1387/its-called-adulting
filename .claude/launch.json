@@ -3,9 +3,9 @@
   "configurations": [
     {
       "name": "its-called-adulting",
-      "runtimeExecutable": "/Users/sheacoleman/Desktop/its-called-adulting/start-dev.sh",
-      "runtimeArgs": [],
-      "port": 3000
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "port": 3001
     }
   ]
 }

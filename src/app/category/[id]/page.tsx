@@ -29,7 +29,7 @@ export default function CategoryPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 pb-16">
       <div className="pt-8 pb-6">
-        <Link href="/" className="text-sm text-orange-600 font-medium mb-4 inline-block">
+        <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">
           ← Back
         </Link>
         <div className={`inline-flex items-center gap-3 px-4 py-2 rounded-2xl ${category.bgColor} mb-2`}>

@@ -117,7 +117,7 @@ export default function RewardsPage() {
         <p className="text-gray-500 text-sm mb-6 leading-relaxed">
           We&apos;ll process your order and ship it to the address you provided. You&apos;ll hear from us within a few days.
         </p>
-        <Link href="/" className="inline-block bg-orange-500 text-white font-bold px-6 py-3 rounded-2xl text-sm">
+        <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-6 py-3 rounded-2xl text-sm">
           Back to home →
         </Link>
       </main>
@@ -127,7 +127,7 @@ export default function RewardsPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">
       <div className="pt-8 pb-4">
-        <Link href="/" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
+        <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
         <h1 className="text-2xl font-bold text-gray-900">Rewards</h1>
         <p className="text-gray-500 text-sm mt-1">Build your toolkit, earn real tools — on us.</p>
       </div>

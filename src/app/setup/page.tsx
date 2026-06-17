@@ -23,7 +23,7 @@ export default function SetupPage() {
 
   const finish = () => {
     saveProfile({ ...profile, setupComplete: true });
-    router.push("/");
+    router.push("/home");
   };
 
   return (

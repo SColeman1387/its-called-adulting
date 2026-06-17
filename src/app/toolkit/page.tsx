@@ -45,7 +45,7 @@ export default function ToolkitPage() {
     <main className="max-w-2xl mx-auto px-4 pb-24">
       {/* Header */}
       <div className="pt-8 pb-4">
-        <Link href="/" className="text-sm text-orange-600 font-medium mb-4 inline-block">
+        <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">
           ← Home
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">Your Toolkit</h1>

@@ -67,7 +67,7 @@ export default function SharePage() {
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">
       <div className="pt-8 pb-4">
-        <Link href="/" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
+        <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
         <h1 className="text-2xl font-bold text-gray-900">Share the App</h1>
         <p className="text-gray-500 text-sm mt-1">
           Every friend who joins counts toward your rewards. Parents — this is the perfect gift for a kid heading into the real world.

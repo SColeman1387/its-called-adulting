@@ -1,322 +1,182 @@
-"use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
-import { CATEGORIES, getSeasonalTasks, getCurrentSeason } from "@/lib/data";
-import { getProfile, UserProfile, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
-import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/learning";
-import { Task } from "@/lib/data";
 
-const seasonEmoji: Record<string, string> = {
-  spring: "🌱",
-  summer: "☀️",
-  fall: "🍂",
-  winter: "❄️",
-};
-
-const difficultyColor: Record<string, string> = {
-  easy: "bg-green-100 text-green-700",
-  medium: "bg-yellow-100 text-yellow-700",
-  hard: "bg-red-100 text-red-700",
-};
-
-export default function Home() {
-  const season = getCurrentSeason();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loaded, setLoaded] = useState(false);
-  const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
-  const [weeklyLesson, setWeeklyLesson] = useState<Task | null>(null);
-  const [lessonDone, setLessonDone] = useState(false);
-  const [learningStreak, setLearningStreak] = useState(0);
-
-  useEffect(() => {
-    const p = getProfile();
-    setProfile(p);
-    const raw = localStorage.getItem("ica_completed_tasks");
-    if (raw) {
-      try { setCompletedTasks(new Set(JSON.parse(raw))); } catch { /* ignore */ }
-    }
-    const lesson = getWeeklyLesson(p ?? undefined);
-    setWeeklyLesson(lesson);
-    const record = getThisWeekRecord();
-    setLessonDone(!!record?.response);
-    setLearningStreak(getLearningStreak());
-    setLoaded(true);
-  }, []);
-
-  const seasonalTasks = getSeasonalTasks(profile);
-  const oilStatus = profile ? getOilChangeStatus(profile) : null;
-  const milesUntilOil = profile ? getMilesUntilOilChange(profile) : null;
-
-  if (!loaded) return null;
-
+export default function LandingPage() {
   return (
-    <main className="max-w-2xl mx-auto px-4 pb-24">
-      {/* Header */}
-      <div className="pt-12 pb-6 text-center">
-        <div className="text-5xl mb-3">🏠</div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">
-          It&apos;s Called Adulting
-        </h1>
-        <p className="text-gray-500 text-sm">
-          &ldquo;How was I supposed to know that?&rdquo;
-        </p>
-        <p className="text-gray-400 text-xs mt-1">
-          Everything your dad would have taught you — all in one place.
-        </p>
-        <div className="mt-4 inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 text-xs font-medium px-3 py-1.5 rounded-full">
-          <span>{seasonEmoji[season]}</span>
-          <span>Showing tasks for {season} in Columbus, OH</span>
-        </div>
-      </div>
+    <main className="min-h-screen bg-white text-gray-900">
 
-      {/* Search bar */}
-      <Link
-        href="/search"
-        className="flex items-center gap-3 mb-6 px-4 py-3 bg-white rounded-2xl border border-gray-200 hover:border-orange-300 transition-colors shadow-sm"
-      >
-        <span className="text-gray-400">🔍</span>
-        <span className="text-gray-400 text-sm">Search tasks…</span>
-      </Link>
-
-      {/* Weekly Lesson Card */}
-      {weeklyLesson && (
-        <Link
-          href="/learn"
-          className={`block mb-6 rounded-2xl border-2 p-5 transition-all hover:shadow-md ${
-            lessonDone
-              ? "bg-gray-50 border-gray-200"
-              : "bg-gradient-to-br from-orange-500 to-amber-500 border-orange-400"
-          }`}
-        >
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <span className={`text-xs font-bold uppercase tracking-widest ${lessonDone ? "text-gray-400" : "text-orange-100"}`}>
-                This Week&apos;s Lesson
-              </span>
-              {learningStreak > 1 && (
-                <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${lessonDone ? "bg-orange-100 text-orange-600" : "bg-white bg-opacity-20 text-white"}`}>
-                  🔥 {learningStreak} weeks
-                </span>
-              )}
-            </div>
-            {lessonDone && <span className="text-xs text-green-600 font-bold">✓ Done</span>}
-          </div>
-          <h3 className={`text-base font-bold mb-1 leading-snug ${lessonDone ? "text-gray-700" : "text-white"}`}>
-            {weeklyLesson.title}
-          </h3>
-          <p className={`text-xs leading-relaxed line-clamp-2 ${lessonDone ? "text-gray-400" : "text-orange-100"}`}>
-            💡 {weeklyLesson.howDidIKnow}
-          </p>
-          {!lessonDone && (
-            <div className="mt-3 inline-flex items-center gap-1 bg-white bg-opacity-20 text-white text-xs font-bold px-3 py-1.5 rounded-full">
-              Open lesson →
-            </div>
-          )}
-        </Link>
-      )}
-
-      {/* Setup prompt for new users */}
-      {!profile?.setupComplete && (
-        <div className="mb-6 bg-gradient-to-r from-orange-500 to-amber-500 rounded-2xl p-5 text-white">
-          <div className="text-2xl mb-1">👋 Welcome!</div>
-          <div className="font-bold text-lg mb-1">Tell us what you own</div>
-          <p className="text-orange-100 text-sm mb-4">
-            Takes 2 minutes. We&apos;ll only show tasks that apply to you.
-          </p>
-          <Link
-            href="/setup"
-            className="inline-block bg-white text-orange-600 font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-orange-50 transition-colors"
-          >
-            Set up my profile →
-          </Link>
-        </div>
-      )}
-
-      {/* Profile summary if setup complete */}
-      {profile?.setupComplete && (
-        <div className="mb-6 flex items-center justify-between bg-white rounded-2xl border border-gray-100 px-4 py-3">
-          <div className="text-sm text-gray-600">
-            <span className="font-semibold text-gray-900">Your profile:</span>{" "}
-            {profile.homeType === "apartment" ? "Apartment" : profile.homeType === "rent-house" ? "Renting a house" : "Homeowner"}
-            {profile.hasCar ? " · Car" : ""}
-            {profile.hasPool ? " · Pool" : ""}
-            {profile.hasYard ? " · Yard" : ""}
-          </div>
-          <Link href="/setup" className="text-xs text-orange-500 font-medium ml-2 shrink-0">
-            Edit
-          </Link>
-        </div>
-      )}
-
-      {/* Oil change alert */}
-      {oilStatus && oilStatus !== "ok" && milesUntilOil !== null && (
-        <Link
-          href="/car"
-          className={`flex items-center gap-3 mb-4 px-4 py-3 rounded-2xl border ${
-            oilStatus === "overdue"
-              ? "bg-red-50 border-red-200"
-              : "bg-orange-50 border-orange-200"
-          }`}
-        >
-          <span className="text-xl">🛢️</span>
-          <div className="flex-1">
-            <p className={`text-sm font-bold ${oilStatus === "overdue" ? "text-red-700" : "text-orange-700"}`}>
-              Oil change {oilStatus === "overdue" ? "overdue" : "due soon"}
-            </p>
-            <p className="text-xs text-gray-500">
-              {oilStatus === "overdue"
-                ? `${Math.abs(milesUntilOil).toLocaleString()} miles past due — tap to schedule`
-                : `${milesUntilOil.toLocaleString()} miles remaining — tap to schedule`}
-            </p>
-          </div>
-          <span className="text-gray-300 text-lg">›</span>
-        </Link>
-      )}
-
-      {/* Completed tasks badge */}
-      {completedTasks.size > 0 && (
-        <div className="mb-6 flex items-center gap-2 bg-green-50 border border-green-100 rounded-2xl px-4 py-3">
-          <span className="text-green-600 text-lg">✓</span>
-          <span className="text-sm text-green-700 font-medium">
-            {completedTasks.size} task{completedTasks.size !== 1 ? "s" : ""} completed
+      {/* Nav */}
+      <nav className="flex items-center justify-between px-6 py-4 max-w-5xl mx-auto">
+        <div className="flex items-center gap-2">
+          <span className="text-2xl">💡</span>
+          <span className="font-bold text-gray-900 text-sm leading-tight">
+            It&apos;s Called<br />Adulting
           </span>
         </div>
-      )}
+        <Link
+          href="/home"
+          className="bg-orange-500 text-white text-sm font-bold px-5 py-2.5 rounded-full hover:bg-orange-600 transition-colors"
+        >
+          Open App →
+        </Link>
+      </nav>
 
-      {/* Toolkit shortcut */}
-      <Link
-        href="/toolkit"
-        className="flex items-center gap-4 mb-6 p-4 bg-gradient-to-r from-slate-800 to-gray-900 rounded-2xl hover:opacity-90 transition-opacity"
-      >
-        <span className="text-3xl">🔧</span>
-        <div className="flex-1">
-          <div className="font-bold text-white text-sm">Your Adulting Toolkit</div>
-          <div className="text-gray-400 text-xs mt-0.5">12 essential tools — one unlocks each month</div>
+      {/* Hero */}
+      <section className="max-w-2xl mx-auto px-6 pt-12 pb-16 text-center">
+        <div className="inline-block bg-orange-100 text-orange-700 text-xs font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wide">
+          Free · No download required
         </div>
-        <span className="text-gray-500 text-lg">›</span>
-      </Link>
+        <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
+          Is your kid ready<br />
+          <span className="text-orange-500">to adult?</span>
+        </h1>
+        <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-lg mx-auto">
+          It&apos;s Called Adulting teaches 18–25 year olds the practical skills
+          nobody ever taught them — from changing a tire to understanding their first lease.
+        </p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link
+            href="/home"
+            className="bg-orange-500 text-white font-bold px-8 py-4 rounded-2xl text-base hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200"
+          >
+            Start learning free →
+          </Link>
+          <Link
+            href="/share"
+            className="bg-gray-100 text-gray-700 font-bold px-8 py-4 rounded-2xl text-base hover:bg-gray-200 transition-colors"
+          >
+            Send to your kid
+          </Link>
+        </div>
+        <p className="text-xs text-gray-400 mt-4">Works on any phone or computer. No app store needed.</p>
+      </section>
 
-      {/* Categories */}
-      <section className="mb-8">
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-          Browse by Category
-        </h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {CATEGORIES.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/category/${cat.id}`}
-              className={`flex items-center gap-3 p-4 rounded-2xl ${cat.bgColor} hover:opacity-80 transition-opacity`}
-            >
-              <span className="text-2xl">{cat.icon}</span>
-              <span className={`font-semibold text-sm ${cat.color}`}>
-                {cat.label}
-              </span>
-            </Link>
+      {/* Social proof bar */}
+      <section className="bg-gray-50 border-y border-gray-100 py-6">
+        <div className="max-w-3xl mx-auto px-6 flex flex-wrap justify-center gap-8 text-center">
+          {[
+            { stat: "100+", label: "Life skills covered" },
+            { stat: "Free", label: "Always free to use" },
+            { stat: "12", label: "Real tools to earn" },
+            { stat: "5 min", label: "Lessons per week" },
+          ].map(({ stat, label }) => (
+            <div key={label}>
+              <div className="text-2xl font-black text-orange-500">{stat}</div>
+              <div className="text-xs text-gray-500 font-medium mt-0.5">{label}</div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Seasonal tasks */}
-      <section>
-        <h2 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">
-          {seasonEmoji[season]} Right Now — {season.charAt(0).toUpperCase() + season.slice(1)} Tasks
-        </h2>
-        {seasonalTasks.length === 0 ? (
-          <div className="text-center py-8 text-gray-400 text-sm">
-            No tasks match your current profile for this season.
-            <br />
-            <Link href="/setup" className="text-orange-500 font-medium mt-1 inline-block">Update your profile →</Link>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {seasonalTasks.map((task) => (
-              <Link
-                key={task.id}
-                href={`/task/${task.id}`}
-                className={`flex items-start gap-4 p-4 rounded-2xl transition-shadow border ${
-                  completedTasks.has(task.id)
-                    ? "bg-green-50 border-green-100 opacity-60"
-                    : "bg-white shadow-sm hover:shadow-md border-gray-100"
-                }`}
-              >
-                <span className="text-2xl mt-0.5">
-                  {CATEGORIES.find((c) => c.id === task.category)?.icon}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`font-semibold text-sm ${completedTasks.has(task.id) ? "text-gray-400 line-through" : "text-gray-900"}`}>
-                      {task.title}
-                    </span>
-                    {completedTasks.has(task.id) ? (
-                      <span className="text-xs text-green-600 font-semibold">✓ Done</span>
-                    ) : (
-                      <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColor[task.difficulty]}`}>
-                        {task.difficulty}
-                      </span>
-                    )}
-                  </div>
-                  {!completedTasks.has(task.id) && (
-                    <p className="text-orange-600 text-xs mt-1 line-clamp-2 font-medium leading-relaxed">
-                      💡 {task.howDidIKnow}
-                    </p>
-                  )}
-                  <p className="text-gray-400 text-xs mt-1">⏱ {task.timeEstimate}</p>
-                </div>
-                <span className="text-gray-300 text-lg self-center">›</span>
-              </Link>
+      {/* For parents section */}
+      <section className="max-w-3xl mx-auto px-6 py-16">
+        <div className="bg-[#0f1f3d] rounded-3xl p-8 sm:p-10 text-white">
+          <div className="text-3xl mb-4">👨‍👧</div>
+          <h2 className="text-2xl sm:text-3xl font-black mb-4 leading-tight">
+            You can&apos;t be there<br />for every moment.
+          </h2>
+          <p className="text-blue-200 leading-relaxed mb-6 text-base">
+            When your kid locks their keys in the car at midnight, gets their first
+            weird landlord letter, or doesn&apos;t know if that noise their car is making
+            is serious — this app is the next best thing to calling you.
+          </p>
+          <ul className="space-y-3 mb-8">
+            {[
+              "Step-by-step guides for every adulting emergency",
+              "A toolkit they build over their first year on their own",
+              "Parent mode — see their progress from your phone",
+              "Weekly micro-lessons, 5 minutes or less",
+            ].map((item) => (
+              <li key={item} className="flex items-start gap-3 text-sm text-white/90">
+                <span className="text-orange-400 font-bold mt-0.5">✓</span>
+                {item}
+              </li>
             ))}
-          </div>
-        )}
-        <Link
-          href="/category/home"
-          className="mt-4 block text-center text-sm text-orange-600 font-medium py-3"
-        >
-          Browse all tasks →
-        </Link>
+          </ul>
+          <Link
+            href="/share"
+            className="inline-block bg-orange-500 text-white font-bold px-6 py-3.5 rounded-2xl text-sm hover:bg-orange-600 transition-colors"
+          >
+            Send to your kid →
+          </Link>
+        </div>
       </section>
 
-      {/* What else didn't you know? */}
-      <section className="mt-6">
-        <Link
-          href="/suggest"
-          className="flex items-center gap-4 p-5 bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl hover:opacity-90 transition-opacity"
-        >
-          <span className="text-3xl">💡</span>
-          <div className="flex-1">
-            <div className="font-bold text-white text-sm">What else didn&apos;t you know?</div>
-            <div className="text-gray-400 text-xs mt-0.5">
-              Tell us what blindsided you — good submissions become guides
+      {/* Categories preview */}
+      <section className="max-w-3xl mx-auto px-6 pb-16">
+        <h2 className="text-2xl font-black text-gray-900 mb-2">What they&apos;ll learn</h2>
+        <p className="text-gray-400 text-sm mb-8">Real skills. Real situations. No fluff.</p>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          {[
+            { emoji: "🚗", name: "Car Basics", desc: "Tires, oil, warnings" },
+            { emoji: "🏠", name: "Home & Renting", desc: "Leases, repairs, utilities" },
+            { emoji: "💰", name: "Money", desc: "Budgeting, credit, taxes" },
+            { emoji: "🩺", name: "Health", desc: "Insurance, appointments" },
+            { emoji: "⚡", name: "Emergencies", desc: "What to do right now" },
+            { emoji: "📦", name: "Moving", desc: "Packing, deposits, mail" },
+          ].map(({ emoji, name, desc }) => (
+            <div key={name} className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
+              <div className="text-2xl mb-2">{emoji}</div>
+              <div className="font-bold text-gray-900 text-sm">{name}</div>
+              <div className="text-xs text-gray-400 mt-0.5">{desc}</div>
             </div>
-          </div>
-          <span className="text-gray-500 text-lg">›</span>
+          ))}
+        </div>
+        <div className="mt-6 text-center">
+          <Link href="/home" className="text-sm text-orange-600 font-semibold hover:underline">
+            See all categories →
+          </Link>
+        </div>
+      </section>
+
+      {/* Toolkit teaser */}
+      <section className="bg-orange-50 border-y border-orange-100 py-14">
+        <div className="max-w-2xl mx-auto px-6 text-center">
+          <div className="text-4xl mb-4">🔧</div>
+          <h2 className="text-2xl font-black text-gray-900 mb-3">Earn a real toolkit</h2>
+          <p className="text-gray-500 text-base leading-relaxed mb-6">
+            Complete milestones and unlock 12 essential tools over your first year —
+            from a tire pressure gauge to a cordless drill. Real rewards, shipped to your door.
+          </p>
+          <Link
+            href="/toolkit"
+            className="inline-block bg-orange-500 text-white font-bold px-6 py-3.5 rounded-2xl text-sm hover:bg-orange-600 transition-colors"
+          >
+            See the toolkit →
+          </Link>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="max-w-lg mx-auto px-6 py-16 text-center">
+        <h2 className="text-3xl font-black text-gray-900 mb-4">
+          Start adulting today.
+        </h2>
+        <p className="text-gray-400 mb-8 text-base">
+          Free forever. No app store. Works on any device.
+        </p>
+        <Link
+          href="/home"
+          className="inline-block bg-orange-500 text-white font-bold px-10 py-4 rounded-2xl text-base hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200"
+        >
+          Open the app free →
         </Link>
       </section>
 
-      {/* Bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex items-center justify-around px-2 py-2 z-50">
-        <Link href="/" className="flex flex-col items-center gap-0.5 px-3 py-1 text-orange-500">
-          <span className="text-xl">🏠</span>
-          <span className="text-xs font-medium">Home</span>
-        </Link>
-        <Link href="/learn" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600 relative">
-          <span className="text-xl">📚</span>
-          <span className="text-xs font-medium">Learn</span>
-          {!lessonDone && <span className="absolute top-0 right-2 w-2 h-2 bg-orange-500 rounded-full" />}
-        </Link>
-        <Link href="/toolkit" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600">
-          <span className="text-xl">🔧</span>
-          <span className="text-xs font-medium">Toolkit</span>
-        </Link>
-        <Link href="/rewards" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600">
-          <span className="text-xl">🏆</span>
-          <span className="text-xs font-medium">Rewards</span>
-        </Link>
-        <Link href="/share" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600">
-          <span className="text-xl">🔗</span>
-          <span className="text-xs font-medium">Share</span>
-        </Link>
-      </nav>
+      {/* Footer */}
+      <footer className="border-t border-gray-100 py-8">
+        <div className="max-w-3xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+          <div className="flex items-center gap-2">
+            <span>💡</span>
+            <span>It&apos;s Called Adulting</span>
+          </div>
+          <div className="flex gap-6">
+            <Link href="/about" className="hover:text-gray-600">About</Link>
+            <Link href="/home" className="hover:text-gray-600">App</Link>
+            <Link href="/share" className="hover:text-gray-600">Share</Link>
+          </div>
+        </div>
+      </footer>
+
     </main>
   );
 }

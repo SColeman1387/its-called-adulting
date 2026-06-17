@@ -9,7 +9,7 @@ function AuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = searchParams.get("ref"); // referral code from share link
-  const redirect = searchParams.get("redirect") || "/";
+  const redirect = searchParams.get("redirect") || "/home";
 
   const [mode, setMode] = useState<Mode>("signup");
   const [email, setEmail] = useState("");

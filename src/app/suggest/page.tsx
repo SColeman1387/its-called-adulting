@@ -69,7 +69,7 @@ export default function SuggestPage() {
     return (
       <main className="max-w-lg mx-auto px-4 pb-16">
         <div className="pt-8 pb-4">
-          <Link href="/" className="text-sm text-orange-600 font-medium">← Home</Link>
+          <Link href="/home" className="text-sm text-orange-600 font-medium">← Home</Link>
         </div>
         <div className="text-center py-12">
           <div className="text-6xl mb-4">💡</div>
@@ -99,7 +99,7 @@ export default function SuggestPage() {
               Submit another →
             </button>
             <Link
-              href="/"
+              href="/home"
               className="block w-full py-3 border border-gray-200 rounded-2xl text-sm text-gray-600 text-center hover:bg-gray-50"
             >
               Back to tasks
@@ -113,7 +113,7 @@ export default function SuggestPage() {
   return (
     <main className="max-w-lg mx-auto px-4 pb-16">
       <div className="pt-8 pb-2">
-        <Link href="/" className="text-sm text-orange-600 font-medium">← Home</Link>
+        <Link href="/home" className="text-sm text-orange-600 font-medium">← Home</Link>
       </div>
 
       {/* Header */}

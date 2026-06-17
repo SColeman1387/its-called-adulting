@@ -40,7 +40,7 @@ export default function LearnPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">
       <div className="pt-8 pb-2 flex items-center justify-between">
-        <Link href="/" className="text-sm text-orange-600 font-medium">← Home</Link>
+        <Link href="/home" className="text-sm text-orange-600 font-medium">← Home</Link>
         <Link href="/learn/history" className="text-sm text-gray-400 hover:text-gray-600">History →</Link>
       </div>
 

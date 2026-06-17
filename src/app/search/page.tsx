@@ -16,7 +16,7 @@ export default function SearchPage() {
   return (
     <main className="max-w-2xl mx-auto px-4 pb-16">
       <div className="pt-8 pb-4">
-        <Link href="/" className="text-sm text-orange-600 font-medium">← Home</Link>
+        <Link href="/home" className="text-sm text-orange-600 font-medium">← Home</Link>
       </div>
 
       <div className="mb-6">
