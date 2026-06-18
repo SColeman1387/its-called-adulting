@@ -49,6 +49,16 @@ export default function AdminPage() {
         <Link href="/home" className="text-sm text-orange-600 font-medium">← Home</Link>
       </div>
 
+      {/* Admin nav */}
+      <div className="flex gap-3 mb-2">
+        <Link href="/admin/verify-tools" className="flex-1 bg-orange-500 text-white font-bold text-sm py-3 rounded-2xl text-center hover:bg-orange-600 transition-colors">
+          📸 Tool Verifications
+        </Link>
+        <Link href="/admin/redemptions" className="flex-1 bg-[#0f1f3d] text-white font-bold text-sm py-3 rounded-2xl text-center hover:bg-[#1a2f55] transition-colors">
+          🎁 Redemptions
+        </Link>
+      </div>
+
       <div className="pt-4 pb-6 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900 mb-1">Submissions</h1>
