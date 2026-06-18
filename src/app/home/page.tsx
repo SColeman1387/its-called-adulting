@@ -5,6 +5,7 @@ import { CATEGORIES, getSeasonalTasks, getCurrentSeason } from "@/lib/data";
 import { getProfile, UserProfile, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
 import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/learning";
 import { getTotalPoints } from "@/lib/points";
+import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
 
 const seasonEmoji: Record<string, string> = {
@@ -271,6 +272,17 @@ export default function Home() {
                     </p>
                   )}
                   <p className="text-gray-400 text-xs mt-1">⏱ {task.timeEstimate}</p>
+                  {!completedTasks.has(task.id) && TASK_SUPPLIES[task.id] && (
+                    <a
+                      href={TASK_SUPPLIES[task.id][0].amazonUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => e.stopPropagation()}
+                      className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-[#FF9900] hover:underline"
+                    >
+                      🛒 Need supplies for this? →
+                    </a>
+                  )}
                 </div>
                 <span className="text-gray-300 text-lg self-center">›</span>
               </Link>
