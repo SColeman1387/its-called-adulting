@@ -20,12 +20,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ colorScheme: "light" }}>
       <head>
         <meta name="theme-color" content="#f97316" />
         <link rel="apple-touch-icon" href="/favicon.ico" />
       </head>
-      <body className={`${geist.className} bg-gray-50 min-h-screen`}>
+      <body className={`${geist.className} bg-gray-50 min-h-screen`} style={{ colorScheme: "light" }}>
         {children}
       </body>
     </html>
