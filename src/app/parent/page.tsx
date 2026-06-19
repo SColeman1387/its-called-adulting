@@ -89,14 +89,19 @@ export default function ParentPage() {
       .eq("email", inviteEmail)
       .single();
 
-    if (childProfile) {
-      await supabase.from("parent_links").insert({
-        parent_id: user.id,
-        child_id: childProfile.id,
-        status: "pending",
-        invite_token: token,
-      });
+    if (!childProfile) {
+      setInviting(false);
+      alert("No account found with that email. Make sure they've already signed up for It's Called Adulting.");
+      return;
     }
+
+    await supabase.from("parent_links").upsert({
+      parent_id: user.id,
+      child_id: childProfile.id,
+      status: "pending",
+      invite_token: token,
+    }, { onConflict: "parent_id,child_id" });
+
     setInviting(false);
     setInviteSent(true);
     setInviteEmail("");

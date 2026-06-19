@@ -8,6 +8,7 @@ import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
 import { createClient } from "@supabase/supabase-js";
+import { migrateLocalStorageToSupabase } from "@/lib/migrateLocalStorage";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,6 +42,7 @@ export default function Home() {
   const [trashDay, setTrashDay] = useState<number | null>(null);
   const [trashDone, setTrashDone] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
+  const [pendingInvite, setPendingInvite] = useState<{ token: string; parentName: string } | null>(null);
 
   useEffect(() => {
     const p = getProfile();
@@ -60,6 +62,24 @@ export default function Home() {
     supabase.auth.getUser().then(({ data }) => {
       if (!data.user) return;
       setUserId(data.user.id);
+      migrateLocalStorageToSupabase(supabase, data.user.id);
+      // Check for pending parent invite
+      supabase.from("parent_links")
+        .select("invite_token, profiles!parent_links_parent_id_fkey(display_name, email)")
+        .eq("child_id", data.user.id)
+        .eq("status", "pending")
+        .single()
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        .then(({ data: invite }: { data: any }) => {
+          if (invite?.invite_token) {
+            const p = invite.profiles;
+            setPendingInvite({
+              token: invite.invite_token,
+              parentName: p?.display_name ?? p?.email ?? "A parent",
+            });
+          }
+        });
+
       supabase.from("profiles").select("trash_day, trash_done_week").eq("id", data.user.id).single().then(({ data: prof }) => {
         if (prof?.trash_day != null) setTrashDay(prof.trash_day);
         const now = new Date();
@@ -84,6 +104,20 @@ export default function Home() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">
+      {/* Pending parent invite banner */}
+      {pendingInvite && (
+        <Link
+          href={`/parent/accept?token=${pendingInvite.token}`}
+          className="flex items-center gap-3 bg-blue-50 border border-blue-200 rounded-2xl px-4 py-3 mt-4 mb-2"
+        >
+          <span className="text-2xl">👨‍👩‍👧</span>
+          <div className="flex-1">
+            <p className="text-sm font-bold text-blue-900">{pendingInvite.parentName} wants to link with you</p>
+            <p className="text-xs text-blue-600">Tap to accept or decline →</p>
+          </div>
+        </Link>
+      )}
+
       {/* Header */}
       <div className="pt-12 pb-6 text-center">
         <div className="text-5xl mb-3">🏠</div>
