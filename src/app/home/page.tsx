@@ -7,6 +7,14 @@ import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/lea
 import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 const seasonEmoji: Record<string, string> = {
   spring: "🌱",
@@ -30,6 +38,9 @@ export default function Home() {
   const [lessonDone, setLessonDone] = useState(false);
   const [learningStreak, setLearningStreak] = useState(0);
   const [points, setPoints] = useState(0);
+  const [trashDay, setTrashDay] = useState<number | null>(null);
+  const [trashDone, setTrashDone] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
     const p = getProfile();
@@ -44,6 +55,24 @@ export default function Home() {
     setLessonDone(!!record?.response);
     setLearningStreak(getLearningStreak());
     setPoints(getTotalPoints());
+
+    // Trash reminder state
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return;
+      setUserId(data.user.id);
+      supabase.from("profiles").select("trash_day, trash_done_week").eq("id", data.user.id).single().then(({ data: prof }) => {
+        if (prof?.trash_day != null) setTrashDay(prof.trash_day);
+        const now = new Date();
+        const weekKey = `${now.getFullYear()}-W${Math.ceil((now.getDate() - now.getDay() + 1 + 6) / 7)}`;
+        if (prof?.trash_done_week === weekKey) setTrashDone(true);
+      });
+    });
+
+    // Handle trash=done from push notification tap
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("trash") === "done") {
+      setTrashDone(true);
+    }
+
     setLoaded(true);
   }, []);
 
@@ -75,6 +104,10 @@ export default function Home() {
           <Link href="/rewards" className="inline-flex items-center gap-1.5 bg-[#0f1f3d] text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-[#1a2f55] transition-colors">
             <span>⭐</span>
             <span>{points.toLocaleString()} Adulting Bucks</span>
+          </Link>
+          <Link href="/settings/trash" className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-medium px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors">
+            <span>🗑️</span>
+            <span>{trashDay !== null ? `Trash: ${DAYS[trashDay]}s` : "Set trash day"}</span>
           </Link>
         </div>
       </div>
@@ -157,6 +190,44 @@ export default function Home() {
           </Link>
         </div>
       )}
+
+      {/* Trash reminder card */}
+      {trashDay !== null && !trashDone && (() => {
+        const now = new Date();
+        const today = now.getDay();
+        const tomorrow = (today + 1) % 7;
+        const isToday = today === trashDay;
+        const isTomorrow = tomorrow === trashDay;
+        if (!isToday && !isTomorrow) return null;
+        return (
+          <div className="flex items-center gap-3 mb-4 px-4 py-3 rounded-2xl border bg-blue-50 border-blue-200">
+            <span className="text-xl">🗑️</span>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-blue-800">
+                {isToday ? "Trash day today!" : "Trash day tomorrow!"}
+              </p>
+              <p className="text-xs text-blue-600">
+                {isToday ? "Have you set out your bins?" : "Don't forget to set out your bins tonight."}
+              </p>
+            </div>
+            <button
+              onClick={async () => {
+                setTrashDone(true);
+                if (userId) {
+                  await fetch("/api/push/trash-done", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ userId }),
+                  });
+                }
+              }}
+              className="shrink-0 bg-blue-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl hover:bg-blue-700"
+            >
+              ✓ Done!
+            </button>
+          </div>
+        );
+      })()}
 
       {/* Oil change alert */}
       {oilStatus && oilStatus !== "ok" && milesUntilOil !== null && (
