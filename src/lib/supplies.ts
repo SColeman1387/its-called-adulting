@@ -98,4 +98,34 @@ export const TASK_SUPPLIES: Record<string, Supply[]> = {
     { name: "Basic Tool Kit", price: "$25–$40", note: "Hammer, screwdrivers, tape measure — the first-apartment essentials.", amazonUrl: "https://www.amazon.com/s?k=basic+home+tool+kit+starter&tag=itscalledadul-20" },
     { name: "Surge Protector Power Strip", price: "$15–$25", note: "Protects electronics and adds outlets. Get one with USB ports.", amazonUrl: "https://www.amazon.com/s?k=surge+protector+power+strip+usb&tag=itscalledadul-20" },
   ],
+
+  "pet-food-routine": [
+    { name: "Dry Dog Food (large breed)", price: "$40–$65 / 30 lb", note: "Look for real meat as the first ingredient. Avoid corn syrup and artificial preservatives.", amazonUrl: "https://www.amazon.com/s?k=dry+dog+food+large+breed+real+meat&tag=itscalledadul-20" },
+    { name: "Dry Cat Food", price: "$25–$45 / 16 lb", note: "High-protein, low-carb formulas are best for cats. Avoid plant-based proteins as primary ingredient.", amazonUrl: "https://www.amazon.com/s?k=dry+cat+food+high+protein&tag=itscalledadul-20" },
+    { name: "Wet Dog Food (variety pack)", price: "$20–$35 / 12 cans", note: "Great for mixing with dry food or picky eaters. Boosts hydration too.", amazonUrl: "https://www.amazon.com/s?k=wet+dog+food+variety+pack&tag=itscalledadul-20" },
+    { name: "Wet Cat Food (variety pack)", price: "$18–$30 / 12 cans", note: "Cats especially benefit from wet food — it adds moisture to their diet.", amazonUrl: "https://www.amazon.com/s?k=wet+cat+food+variety+pack&tag=itscalledadul-20" },
+    { name: "Stainless Steel Pet Bowls (set of 2)", price: "$12–$20", note: "Easier to clean and more hygienic than plastic. Get two — one for food, one for water.", amazonUrl: "https://www.amazon.com/s?k=stainless+steel+dog+bowls+set&tag=itscalledadul-20" },
+    { name: "Pet Water Fountain", price: "$25–$45", note: "Encourages cats especially to drink more water. Filters keep it fresh.", amazonUrl: "https://www.amazon.com/s?k=pet+water+fountain+cat+dog&tag=itscalledadul-20" },
+    { name: "Airtight Pet Food Storage Container", price: "$15–$30", note: "Keeps food fresh and keeps pests out. Get one sized for your bag.", amazonUrl: "https://www.amazon.com/s?k=airtight+pet+food+storage+container&tag=itscalledadul-20" },
+  ],
+
+  "pet-flea-tick": [
+    { name: "Frontline Plus Flea & Tick (Dogs)", price: "$35–$55 / 3 months", note: "Topical — apply between shoulder blades monthly. Waterproof after 24 hrs.", amazonUrl: "https://www.amazon.com/s?k=frontline+plus+flea+tick+dogs&tag=itscalledadul-20" },
+    { name: "Frontline Plus Flea & Tick (Cats)", price: "$30–$50 / 3 months", note: "Never use dog products on cats — cat-specific formula only.", amazonUrl: "https://www.amazon.com/s?k=frontline+plus+flea+tick+cats&tag=itscalledadul-20" },
+    { name: "Seresto Flea & Tick Collar (Dog)", price: "$50–$65", note: "Lasts 8 months — easiest set-and-forget option for dogs.", amazonUrl: "https://www.amazon.com/s?k=seresto+flea+tick+collar+dog&tag=itscalledadul-20" },
+    { name: "Fine-Tooth Flea Comb", price: "$5–$8", note: "Run through fur after outdoor time. Dip in soapy water to trap fleas.", amazonUrl: "https://www.amazon.com/s?k=fine+tooth+flea+comb+pet&tag=itscalledadul-20" },
+  ],
+
+  "pet-dental": [
+    { name: "Pet Toothbrush & Toothpaste Kit", price: "$8–$14", note: "Get enzymatic toothpaste — never use human toothpaste (xylitol is toxic to pets).", amazonUrl: "https://www.amazon.com/s?k=pet+toothbrush+toothpaste+kit+enzymatic&tag=itscalledadul-20" },
+    { name: "Dental Chews for Dogs (Greenies)", price: "$20–$35 / 27 count", note: "VOHC-accepted. Give one daily — they actually work to reduce tartar.", amazonUrl: "https://www.amazon.com/s?k=greenies+dental+chews+dogs&tag=itscalledadul-20" },
+    { name: "Dental Water Additive for Pets", price: "$10–$15", note: "Add to water bowl daily — odorless and tasteless. Reduces plaque without brushing.", amazonUrl: "https://www.amazon.com/s?k=dental+water+additive+pets&tag=itscalledadul-20" },
+  ],
+
+  "pet-emergency-kit": [
+    { name: "Pet First Aid Kit", price: "$20–$35", note: "Pre-assembled kits include gauze, wrap, antiseptic, and a guide. Great starting point.", amazonUrl: "https://www.amazon.com/s?k=pet+first+aid+kit+dog+cat&tag=itscalledadul-20" },
+    { name: "Self-Adhesive Bandage Wrap (Vet Wrap)", price: "$8–$12 / 6 pack", note: "Sticks to itself, not fur. Essential for wrapping wounds before vet visit.", amazonUrl: "https://www.amazon.com/s?k=vet+wrap+self+adhesive+bandage+pet&tag=itscalledadul-20" },
+    { name: "Soft Pet Muzzle", price: "$8–$15", note: "Even the gentlest pet may bite when in pain. Get one that fits your pet's snout size.", amazonUrl: "https://www.amazon.com/s?k=soft+pet+muzzle+dog&tag=itscalledadul-20" },
+    { name: "Digital Pet Thermometer", price: "$10–$18", note: "Normal dog temp: 101–102.5°F. Normal cat temp: 100.5–102.5°F. Know before you go to the vet.", amazonUrl: "https://www.amazon.com/s?k=digital+pet+thermometer+rectal&tag=itscalledadul-20" },
+  ],
 };

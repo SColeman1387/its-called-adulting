@@ -1,5 +1,5 @@
 export type Season = "spring" | "summer" | "fall" | "winter" | "year-round";
-export type Category = "car" | "home" | "finances" | "health" | "appliances" | "cooking" | "guides";
+export type Category = "car" | "home" | "finances" | "health" | "appliances" | "cooking" | "guides" | "pets";
 
 // Profile flags that gate task visibility
 export type TaskRequires =
@@ -48,6 +48,7 @@ export const CATEGORIES: Category_[] = [
   { id: "appliances", label: "Appliances", icon: "🔧", color: "text-purple-600", bgColor: "bg-purple-50" },
   { id: "cooking", label: "Cooking", icon: "🍳", color: "text-orange-600", bgColor: "bg-orange-50" },
   { id: "guides", label: "Guides", icon: "📖", color: "text-indigo-600", bgColor: "bg-indigo-50" },
+  { id: "pets", label: "Pets", icon: "🐾", color: "text-pink-600", bgColor: "bg-pink-50" },
 ];
 
 export const TASKS: Task[] = [
@@ -1548,6 +1549,155 @@ export const TASKS: Task[] = [
       toolsNeeded: ["Coil cleaning brush ($8–$12) or vacuum with brush attachment"],
     },
     proSearchQuery: "appliance repair Columbus Ohio",
+  },
+
+  // PETS
+  {
+    id: "pet-food-routine",
+    title: "Set Up a Pet Feeding Routine",
+    description: "Consistent feeding times keep your pet healthy, regulate digestion, and prevent begging and anxiety.",
+    howDidIKnow: "Most first-time pet owners just fill the bowl whenever — but free feeding leads to obesity, blood sugar swings, and a pet that panics every time you walk near the kitchen.",
+    category: "pets",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "15 minutes to set up",
+    checkInterval: 30,
+    diyGuide: {
+      intro: "Feeding your pet at the same times every day is one of the most important things you can do for their health. It regulates digestion, helps with training, and makes it easy to notice when something is wrong (a pet that skips a meal is telling you something).",
+      steps: [
+        "Look up the recommended daily amount on your pet food bag — it's based on your pet's weight.",
+        "Divide that into 2 meals per day (morning and evening work well for most pets).",
+        "Pick feeding times you can stick to consistently, even on weekends.",
+        "Measure the food — don't eyeball it. A measuring cup makes a big difference over time.",
+        "Put the bowl down, give them 15–20 minutes to eat, then pick it up.",
+        "Refresh water daily — most pets need more water than owners realize.",
+        "Reassess portions every 3 months or if your vet recommends a weight change.",
+      ],
+      tips: [
+        "If switching food brands, mix old and new food over 7–10 days to avoid stomach upset.",
+        "Cats are especially prone to urinary issues from dehydration — a pet water fountain helps them drink more.",
+        "Write your pet's feeding schedule on the fridge so roommates or pet sitters know.",
+      ],
+      toolsNeeded: ["Measuring cup", "Food storage container with lid"],
+    },
+    proSearchQuery: "veterinarian Columbus Ohio",
+  },
+  {
+    id: "pet-vet-schedule",
+    title: "Schedule Annual Vet Visits",
+    description: "Annual wellness exams catch problems early and keep vaccines and preventatives up to date.",
+    howDidIKnow: "Most young adults only take their pet to the vet when something is obviously wrong — by then, problems that could have been caught early are expensive emergencies.",
+    category: "pets",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "30 minutes to schedule",
+    checkInterval: 365,
+    diyGuide: {
+      intro: "Your pet can't tell you when something hurts. A yearly vet visit is how you find out before it becomes a $2,000 emergency. Most vets recommend annual exams for dogs and cats, plus vaccines on a schedule.",
+      steps: [
+        "Find a vet near you — ask neighbors or search Google Maps for 'veterinarian near me' with good reviews.",
+        "Call or book online for an annual wellness exam.",
+        "Bring any previous vaccine records if you have them.",
+        "Ask the vet about heartworm prevention (dogs), flea/tick prevention, and dental health.",
+        "Set a calendar reminder for the same month next year.",
+        "Get pet insurance if you don't have it — even basic plans save hundreds on unexpected visits.",
+      ],
+      tips: [
+        "Many vets offer payment plans or wellness plans that bundle annual visits for a flat monthly fee.",
+        "Spay/neuter if you haven't — it reduces cancer risk and behavioral issues significantly.",
+        "Keep a simple folder (physical or digital) with your pet's vaccine history and vet records.",
+      ],
+      toolsNeeded: ["Pet carrier for transport"],
+    },
+    proSearchQuery: "veterinarian Columbus Ohio",
+  },
+  {
+    id: "pet-flea-tick",
+    title: "Set Up Flea & Tick Prevention",
+    description: "Monthly prevention is far cheaper and easier than treating an infestation after it starts.",
+    howDidIKnow: "A single flea can lay 50 eggs per day. By the time you see fleas on your pet, there are already hundreds in your carpet and furniture. Prevention costs $15/month. Treatment costs hundreds.",
+    category: "pets",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "10 minutes",
+    checkInterval: 30,
+    diyGuide: {
+      intro: "Flea and tick prevention is one of those things that pays for itself many times over. The topical treatments or chewables you give monthly are inexpensive. An active infestation requires treating your pet, your home, and sometimes your yard.",
+      steps: [
+        "Ask your vet which flea/tick prevention they recommend for your pet's size and lifestyle.",
+        "Common options: monthly chewables (Nexgard, Simparica), topical spot treatments (Frontline, Advantage), or flea collars (Seresto).",
+        "Apply or administer on the same day each month — set a phone reminder.",
+        "Check your pet for ticks after walks in wooded or grassy areas — run your fingers through their fur.",
+        "Wash your pet's bedding monthly in hot water.",
+        "Vacuum frequently, especially in areas where your pet sleeps.",
+      ],
+      tips: [
+        "Don't use dog flea products on cats — some ingredients are toxic to cats.",
+        "Ticks can carry Lyme disease — if you find an embedded tick, use tweezers to pull straight out (don't twist), then monitor for a bullseye rash.",
+        "Year-round prevention is recommended in most of the US, even in winter.",
+      ],
+      toolsNeeded: ["Flea/tick prevention product (vet recommended)", "Fine-tooth flea comb ($5)"],
+    },
+    proSearchQuery: "veterinarian Columbus Ohio",
+  },
+  {
+    id: "pet-dental",
+    title: "Take Care of Your Pet's Teeth",
+    description: "Dental disease affects 80% of dogs and cats by age 3 — it's painful and leads to heart and kidney problems.",
+    howDidIKnow: "Nobody tells you that bad breath in your pet isn't normal — it's a sign of dental disease. Most owners never brush their pet's teeth and then face a $500–$1,500 dental cleaning bill at the vet.",
+    category: "pets",
+    season: "year-round",
+    difficulty: "medium",
+    timeEstimate: "5 minutes daily",
+    checkInterval: 30,
+    diyGuide: {
+      intro: "Pet dental disease is the most common health problem vets see — and the most preventable. Brushing a few times a week dramatically reduces plaque buildup and keeps professional cleanings less frequent.",
+      steps: [
+        "Get a pet toothbrush and pet-safe toothpaste (never use human toothpaste — xylitol is toxic to dogs).",
+        "Start by letting your pet lick the toothpaste off your finger to get used to the taste.",
+        "Gradually introduce the brush — just the front teeth first.",
+        "Work up to brushing all teeth in small circular motions, focusing on the gumline.",
+        "Aim for 3–4 times per week minimum.",
+        "Supplement with dental chews, water additives, or dental toys on off days.",
+        "Ask your vet to check teeth at annual visits and schedule a professional cleaning if recommended.",
+      ],
+      tips: [
+        "Start when your pet is young — it's much harder to introduce brushing to an older pet.",
+        "Enzymatic toothpastes work even without brushing — the enzymes break down plaque.",
+        "Rope toys and chews help mechanically scrape plaque off teeth.",
+      ],
+      toolsNeeded: ["Pet toothbrush ($5)", "Pet-safe enzymatic toothpaste ($8–$12)"],
+    },
+    proSearchQuery: "veterinary dentist Columbus Ohio",
+  },
+  {
+    id: "pet-emergency-kit",
+    title: "Build a Pet Emergency Kit",
+    description: "When your pet gets hurt or sick, you need supplies on hand — not a panicked trip to find an open store.",
+    howDidIKnow: "Most pet owners have nothing ready for a pet emergency. A basic kit costs under $30 and can stabilize a situation before you get to the vet.",
+    category: "pets",
+    season: "year-round",
+    difficulty: "easy",
+    timeEstimate: "20 minutes",
+    diyGuide: {
+      intro: "Accidents happen — your dog eats something, your cat gets a cut, a storm sends you to a shelter. Having a pet first aid kit means you're ready instead of panicking.",
+      steps: [
+        "Get a small plastic bin or zip bag to store everything together.",
+        "Add: gauze pads, self-adhesive bandage wrap, antiseptic wipes, tweezers (for splinters or ticks), a digital thermometer, and a muzzle or strips of fabric (injured animals bite).",
+        "Include a 3-day supply of your pet's food and any medications.",
+        "Write down your vet's number and the nearest 24-hour emergency vet.",
+        "Add a copy of vaccine records (photo on your phone works).",
+        "Know the ASPCA Animal Poison Control number: (888) 426-4435.",
+        "Check and restock the kit every 6 months.",
+      ],
+      tips: [
+        "Hydrogen peroxide can induce vomiting in dogs if they eat something toxic — but call poison control first before using it.",
+        "Never give pets ibuprofen, acetaminophen, or most human medications — many are toxic.",
+        "A blanket in the kit doubles as a stretcher for transporting an injured pet.",
+      ],
+      toolsNeeded: ["Small storage container", "Basic first aid supplies"],
+    },
+    proSearchQuery: "emergency veterinarian Columbus Ohio",
   },
 ];
 
