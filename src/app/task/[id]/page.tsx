@@ -6,6 +6,8 @@ import { TASKS, CATEGORIES } from "@/lib/data";
 import { recordCompletion, getTaskStreak, getCompletionCount, getLastCompletion } from "@/lib/streaks";
 import { awardPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
+import TipSubmitter from "@/components/TipSubmitter";
+import CommunityTips from "@/components/CommunityTips";
 
 export default function TaskPage() {
   const { id } = useParams();
@@ -210,6 +212,9 @@ export default function TaskPage() {
             </div>
           )}
 
+          {/* Community tips */}
+          <CommunityTips taskId={task.id} userLocation="Columbus, OH" />
+
           {/* Tips */}
           <div className="bg-orange-50 rounded-2xl p-4 mb-6">
             <h3 className="text-xs font-semibold text-orange-800 uppercase tracking-wide mb-2">💡 Pro Tips</h3>
@@ -256,6 +261,10 @@ export default function TaskPage() {
               <span className="text-green-600 font-bold text-sm">✓ Completed — nice work!</span>
             </div>
           )}
+
+          <div className="mt-4">
+            <TipSubmitter taskId={task.id} taskTitle={task.title} />
+          </div>
         </div>
       )}
 
