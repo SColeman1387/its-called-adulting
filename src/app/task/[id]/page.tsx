@@ -213,7 +213,7 @@ export default function TaskPage() {
           )}
 
           {/* Community tips */}
-          <CommunityTips taskId={task.id} userLocation="Columbus, OH" />
+          <CommunityTips taskId={task.id} />
 
           {/* Tips */}
           <div className="bg-orange-50 rounded-2xl p-4 mb-6">

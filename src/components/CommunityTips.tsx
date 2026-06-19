@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { getProfile } from "@/lib/profile";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,8 +16,9 @@ interface Tip {
   created_at: string;
 }
 
-export default function CommunityTips({ taskId, userLocation }: { taskId: string; userLocation?: string }) {
+export default function CommunityTips({ taskId, userLocation: propLocation }: { taskId: string; userLocation?: string }) {
   const [tips, setTips] = useState<Tip[]>([]);
+  const userLocation = propLocation ?? getProfile()?.city ?? undefined;
 
   useEffect(() => {
     supabase

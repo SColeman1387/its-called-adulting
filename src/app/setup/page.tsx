@@ -3,9 +3,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserProfile, DEFAULT_PROFILE, saveProfile } from "@/lib/profile";
 
-type Step = "home" | "car" | "outdoor" | "indoor" | "done";
+type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "done";
 
-const STEPS: Step[] = ["home", "car", "outdoor", "indoor", "done"];
+const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "done"];
 
 export default function SetupPage() {
   const router = useRouter();
@@ -78,6 +78,27 @@ export default function SetupPage() {
               </button>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* Step: City */}
+      {step === "city" && (
+        <div>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">What city are you in?</h2>
+          <p className="text-sm text-gray-500 mb-5">We use this to show community tips and advice that's relevant to where you live.</p>
+          <input
+            type="text"
+            value={profile.city ?? ""}
+            onChange={(e) => update({ city: e.target.value })}
+            placeholder="e.g. Columbus, OH"
+            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400 mb-4"
+          />
+          <button
+            onClick={next}
+            className="w-full py-3.5 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600"
+          >
+            {profile.city?.trim() ? "Continue →" : "Skip for now →"}
+          </button>
         </div>
       )}
 

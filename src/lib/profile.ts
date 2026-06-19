@@ -12,6 +12,7 @@ export interface UserProfile {
   poolType?: "above-ground" | "in-ground";
   hasYard: boolean;
   hasPets: boolean;
+  city?: string;
   hasWaterSoftener: boolean;
   hasDryer: boolean;
   hasFireplace: boolean;
