@@ -39,20 +39,19 @@ export default function RewardsPage() {
     setSubmitting(true);
     setError(null);
 
-    const supabase = getSupabase();
-    const { error: dbError } = await supabase.from("rewards").insert({
-      user_id: user?.id ?? null,
-      tier: selectedTier.id,
-      reward_choice: selectedTier.label,
-      status: "pending",
-      ship_name: email.trim(),
-      ship_address: "digital",
-      ship_city: "digital",
-      ship_state: "digital",
-      ship_zip: "00000",
+    const res = await fetch("/api/rewards/redeem", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userId: user?.id ?? null,
+        tierId: selectedTier.id,
+        tierLabel: selectedTier.label,
+        points: selectedTier.points,
+        email: email.trim(),
+      }),
     });
 
-    if (dbError) {
+    if (!res.ok) {
       setError("Something went wrong. Try again.");
       setSubmitting(false);
       return;
@@ -242,7 +241,7 @@ export default function RewardsPage() {
           <div className="text-5xl mb-3">🎉</div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Request submitted!</h2>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
-            You&apos;ll receive your Amazon gift card code at <strong>{email}</strong> within 2 business days.
+            Your Amazon gift card is on its way to <strong>{email}</strong> — check your inbox in a few minutes!
           </p>
           <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-8 py-3 rounded-2xl text-sm">
             Back to home →
