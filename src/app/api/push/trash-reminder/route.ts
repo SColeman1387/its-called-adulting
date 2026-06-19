@@ -14,7 +14,6 @@ const supabase = createClient(
 );
 
 export async function GET(req: NextRequest) {
-  // Verify cron secret to prevent unauthorized calls
   const secret = req.nextUrl.searchParams.get("secret");
   if (secret !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -23,12 +22,10 @@ export async function GET(req: NextRequest) {
   const now = new Date();
   const todayDay = now.getDay(); // 0=Sun, 1=Mon ... 6=Sat
   const tomorrowDay = (todayDay + 1) % 7;
-  const nowHour = now.getUTCHours();
 
-  // Fetch all users with trash reminders enabled
   const { data: profiles } = await supabase
     .from("profiles")
-    .select("id, trash_day, trash_reminder_time, trash_done_week")
+    .select("id, trash_day, trash_done_week")
     .not("trash_day", "is", null);
 
   if (!profiles?.length) return NextResponse.json({ sent: 0 });
@@ -38,18 +35,14 @@ export async function GET(req: NextRequest) {
   let sent = 0;
   for (const profile of profiles) {
     const trashDay = profile.trash_day; // 0-6
-    const reminderHour = profile.trash_reminder_time ?? 19; // default 7pm UTC
 
-    // Already marked done this week
     if (profile.trash_done_week === weekKey) continue;
 
-    // Send reminder the evening before trash day OR on the morning of trash day (repeat)
-    const isEveningBefore = tomorrowDay === trashDay && nowHour === reminderHour;
-    const isMorningOf = todayDay === trashDay && nowHour === 8; // 8am UTC repeat
+    const isDayBefore = tomorrowDay === trashDay;
+    const isDayOf = todayDay === trashDay;
 
-    if (!isEveningBefore && !isMorningOf) continue;
+    if (!isDayBefore && !isDayOf) continue;
 
-    // Get push subscription
     const { data: sub } = await supabase
       .from("push_subscriptions")
       .select("subscription")
@@ -59,12 +52,11 @@ export async function GET(req: NextRequest) {
     if (!sub) continue;
 
     try {
-      const isEvening = isEveningBefore;
       await webpush.sendNotification(
         JSON.parse(sub.subscription),
         JSON.stringify({
-          title: isEvening ? "🗑️ Trash day tomorrow!" : "🗑️ Don't forget trash today!",
-          body: isEvening
+          title: isDayBefore ? "🗑️ Trash day tomorrow!" : "🗑️ Don't forget trash today!",
+          body: isDayBefore
             ? "Set out your trash & recycling tonight before bed."
             : "Have you set out your trash & recycling yet?",
           url: "/home?trash=reminder",
