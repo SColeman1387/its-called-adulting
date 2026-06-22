@@ -50,6 +50,76 @@ export default function LandingPage() {
         <p className="text-xs text-gray-400 mt-4">Works on any phone or computer. No app store needed.</p>
       </section>
 
+      {/* Never forget again — reminders hook */}
+      <section className="bg-gray-900 py-14">
+        <div className="max-w-3xl mx-auto px-6">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-black text-white mb-3">
+              Never get caught off guard again.
+            </h2>
+            <p className="text-gray-400 text-base max-w-xl mx-auto">
+              The app reminds you before it becomes a problem — not after your car breaks down,
+              your pipes freeze, or you&apos;re stuck on the side of the road without jumper cables.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { icon: "🔧", text: "Change your furnace filter", sub: "Every 90 days — before your heating bill spikes" },
+              { icon: "🚗", text: "Change your oil", sub: "Based on your actual mileage, not a generic sticker" },
+              { icon: "🧂", text: "Add water softener salt", sub: "Before your water starts feeling wrong" },
+              { icon: "📄", text: "Gather your tax documents", sub: "In January — not April 14th at midnight" },
+              { icon: "🏊", text: "Open your pool for summer", sub: "Before the Memorial Day rush hits" },
+              { icon: "🔌", text: "Test your smoke detectors", sub: "Every 6 months — it takes 30 seconds" },
+            ].map(({ icon, text, sub }) => (
+              <div key={text} className="flex items-start gap-3 bg-gray-800 rounded-2xl p-4">
+                <span className="text-2xl shrink-0">{icon}</span>
+                <div>
+                  <div className="font-semibold text-white text-sm">{text}</div>
+                  <div className="text-gray-400 text-xs mt-0.5">{sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-center text-gray-500 text-xs mt-6">
+            + dozens more reminders, timed to your home, your car, and your life.
+          </p>
+        </div>
+      </section>
+
+      {/* Toolkit — have it before you need it */}
+      <section className="max-w-3xl mx-auto px-6 py-16">
+        <div className="text-center mb-10">
+          <h2 className="text-2xl font-black text-gray-900 mb-3">
+            Build your toolkit before you need it.
+          </h2>
+          <p className="text-gray-400 text-base max-w-xl mx-auto">
+            Jumper cables. A socket set. Duct tape. The stuff you don&apos;t think about until
+            you&apos;re standing in a parking lot at 9pm wishing you had it.
+            Complete tasks, earn points, get the tools — shipped to your door.
+          </p>
+        </div>
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-8">
+          {[
+            { emoji: "🔋", name: "Jump starter" },
+            { emoji: "🔧", name: "Socket set" },
+            { emoji: "📏", name: "Tape measure" },
+            { emoji: "🌡️", name: "Tire gauge" },
+            { emoji: "🔦", name: "Flashlight" },
+            { emoji: "⚡", name: "Extension cord" },
+            { emoji: "🩹", name: "First aid kit" },
+            { emoji: "🪛", name: "Screwdriver set" },
+          ].map(({ emoji, name }) => (
+            <div key={name} className="bg-orange-50 border border-orange-100 rounded-2xl p-3 text-center">
+              <div className="text-2xl mb-1">{emoji}</div>
+              <div className="text-xs text-gray-600 font-medium leading-tight">{name}</div>
+            </div>
+          ))}
+        </div>
+        <p className="text-center text-xs text-gray-400">
+          Earn one tool per month for your first year. Real gear, shipped free.
+        </p>
+      </section>
+
       {/* Social proof bar */}
       <section className="bg-gray-50 border-y border-gray-100 py-6">
         <div className="max-w-3xl mx-auto px-6 flex flex-wrap justify-center gap-8 text-center">
