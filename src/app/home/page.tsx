@@ -41,6 +41,7 @@ export default function Home() {
   const [points, setPoints] = useState(0);
   const [trashDay, setTrashDay] = useState<number | null>(null);
   const [trashDone, setTrashDone] = useState(false);
+  const [recyclingDay, setRecyclingDay] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [pendingInvite, setPendingInvite] = useState<{ token: string; parentName: string } | null>(null);
 
@@ -84,8 +85,9 @@ export default function Home() {
           }
         });
 
-      supabase.from("profiles").select("trash_day, trash_done_week").eq("id", data.user.id).single().then(({ data: prof }) => {
+      supabase.from("profiles").select("trash_day, trash_done_week, recycling_day").eq("id", data.user.id).single().then(({ data: prof }) => {
         if (prof?.trash_day != null) setTrashDay(prof.trash_day);
+        if (prof?.recycling_day != null) setRecyclingDay(prof.recycling_day);
         const now = new Date();
         const weekKey = `${now.getFullYear()}-W${Math.ceil((now.getDate() - now.getDay() + 1 + 6) / 7)}`;
         if (prof?.trash_done_week === weekKey) setTrashDone(true);
@@ -263,6 +265,29 @@ export default function Home() {
             >
               ✓ Done!
             </button>
+          </div>
+        );
+      })()}
+
+      {/* Recycling reminder card */}
+      {recyclingDay !== null && (() => {
+        const now = new Date();
+        const today = now.getDay();
+        const tomorrow = (today + 1) % 7;
+        const isToday = today === recyclingDay;
+        const isTomorrow = tomorrow === recyclingDay;
+        if (!isToday && !isTomorrow) return null;
+        return (
+          <div className="flex items-center gap-3 mb-4 px-4 py-3 rounded-2xl border bg-green-50 border-green-200">
+            <span className="text-xl">♻️</span>
+            <div className="flex-1">
+              <p className="text-sm font-bold text-green-800">
+                {isToday ? "Recycling day today!" : "Recycling day tomorrow!"}
+              </p>
+              <p className="text-xs text-green-600">
+                {isToday ? "Have you set out your recycling bins?" : "Don't forget to set out your recycling tonight."}
+              </p>
+            </div>
           </div>
         );
       })()}

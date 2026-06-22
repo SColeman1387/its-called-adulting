@@ -2,6 +2,12 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserProfile, DEFAULT_PROFILE, saveProfile } from "@/lib/profile";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 async function detectLocation(): Promise<{ city?: string; state?: string }> {
   return new Promise((resolve) => {
@@ -24,15 +30,19 @@ async function detectLocation(): Promise<{ city?: string; state?: string }> {
   });
 }
 
-type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "done";
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "done"];
+type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "trash" | "done";
+
+const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "trash", "done"];
 
 export default function SetupPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("home");
   const [profile, setProfile] = useState<UserProfile>({ ...DEFAULT_PROFILE });
   const [showUpsell, setShowUpsell] = useState(false);
+  const [trashDay, setTrashDay] = useState<number | null>(null);
+  const [recyclingDay, setRecyclingDay] = useState<number | null>(null);
 
   const stepIndex = STEPS.indexOf(step);
   const progress = Math.round((stepIndex / (STEPS.length - 1)) * 100);
@@ -43,8 +53,18 @@ export default function SetupPage() {
   const next = () => setStep(STEPS[stepIndex + 1]);
   const back = () => setStep(STEPS[stepIndex - 1]);
 
-  const finish = () => {
+  const finish = async () => {
     saveProfile({ ...profile, setupComplete: true });
+    // Save trash/recycling days to Supabase if user set them
+    if (trashDay !== null || recyclingDay !== null) {
+      const { data } = await supabase.auth.getUser();
+      if (data.user) {
+        await supabase.from("profiles").update({
+          ...(trashDay !== null ? { trash_day: trashDay } : {}),
+          ...(recyclingDay !== null ? { recycling_day: recyclingDay } : {}),
+        }).eq("id", data.user.id);
+      }
+    }
     setShowUpsell(true);
   };
 
@@ -439,6 +459,60 @@ export default function SetupPage() {
         </div>
       )}
 
+      {/* Step: Trash & Recycling */}
+      {step === "trash" && (
+        <div>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">🗑️ Trash & Recycling</h2>
+          <p className="text-sm text-gray-500 mb-5">We'll remind you the night before so you never miss pickup day.</p>
+
+          <div className="space-y-5 mb-6">
+            <div>
+              <label className="block text-sm font-bold text-gray-800 mb-3">What day is trash picked up?</label>
+              <div className="grid grid-cols-4 gap-2">
+                {DAYS.map((day, i) => (
+                  <button
+                    key={day}
+                    onClick={() => setTrashDay(trashDay === i ? null : i)}
+                    className={`py-2.5 rounded-xl text-xs font-bold transition-all ${
+                      trashDay === i ? "bg-orange-500 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {day.slice(0, 3)}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-bold text-gray-800 mb-3">What day is recycling picked up?</label>
+              <div className="grid grid-cols-4 gap-2">
+                {DAYS.map((day, i) => (
+                  <button
+                    key={day}
+                    onClick={() => setRecyclingDay(recyclingDay === i ? null : i)}
+                    className={`py-2.5 rounded-xl text-xs font-bold transition-all ${
+                      recyclingDay === i ? "bg-blue-500 text-white shadow-sm" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    }`}
+                  >
+                    {day.slice(0, 3)}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-gray-400 mt-2">Skip if same day as trash or no recycling service</p>
+            </div>
+          </div>
+
+          <div className="flex gap-3">
+            <button onClick={back} className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">
+              ← Back
+            </button>
+            <button onClick={next} className="flex-1 py-3 rounded-2xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600">
+              {trashDay !== null || recyclingDay !== null ? "Save & Continue →" : "Skip →"}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Done */}
       {step === "done" && (
         <div className="text-center py-8">
@@ -462,6 +536,8 @@ export default function SetupPage() {
             {profile.hasWaterSoftener && <div className="text-sm text-orange-700">💧 Water softener</div>}
             {profile.hasDryer && <div className="text-sm text-orange-700">👕 Washer & dryer</div>}
             {profile.hasFireplace && <div className="text-sm text-orange-700">🔥 Fireplace</div>}
+            {trashDay !== null && <div className="text-sm text-orange-700">🗑️ Trash pickup: {DAYS[trashDay]}s</div>}
+            {recyclingDay !== null && <div className="text-sm text-orange-700">♻️ Recycling pickup: {DAYS[recyclingDay]}s</div>}
           </div>
           <button
             onClick={finish}
