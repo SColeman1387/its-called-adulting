@@ -32,6 +32,7 @@ export default function SetupPage() {
   const router = useRouter();
   const [step, setStep] = useState<Step>("home");
   const [profile, setProfile] = useState<UserProfile>({ ...DEFAULT_PROFILE });
+  const [showUpsell, setShowUpsell] = useState(false);
 
   const stepIndex = STEPS.indexOf(step);
   const progress = Math.round((stepIndex / (STEPS.length - 1)) * 100);
@@ -44,11 +45,57 @@ export default function SetupPage() {
 
   const finish = () => {
     saveProfile({ ...profile, setupComplete: true });
-    router.push("/home");
+    setShowUpsell(true);
   };
+
+  const goHome = () => router.push("/home");
 
   return (
     <main className="max-w-lg mx-auto px-4 pb-16">
+
+      {/* Subscription upsell modal shown after setup completes */}
+      {showUpsell && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">⭐</div>
+              <h2 className="text-xl font-black text-gray-900 mb-1">You&apos;re all set up.</h2>
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Subscribe now and get <span className="font-bold text-orange-500">100 bonus Adulting Bucks</span> — that&apos;s a head start toward your first gift card.
+              </p>
+            </div>
+            <div className="bg-orange-50 rounded-2xl p-4 mb-5 space-y-2">
+              {[
+                "Earn Adulting Bucks on every task you complete",
+                "Redeem for real Amazon gift cards",
+                "100 bonus points just for subscribing today",
+                "Cancel anytime",
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2 text-sm text-orange-900">
+                  <span className="text-orange-500 font-bold shrink-0">✓</span>
+                  {item}
+                </div>
+              ))}
+            </div>
+            <div className="text-center mb-3">
+              <span className="text-2xl font-black text-gray-900">$4.99</span>
+              <span className="text-sm text-gray-400">/month</span>
+            </div>
+            <a
+              href="/rewards"
+              className="block w-full py-4 bg-orange-500 text-white font-bold rounded-2xl text-center hover:bg-orange-600 transition-colors mb-3"
+            >
+              Start earning → Get 100 bonus points
+            </a>
+            <button
+              onClick={goHome}
+              className="w-full text-sm text-gray-400 hover:text-gray-600 py-2"
+            >
+              Skip for now — take me to the app
+            </button>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="pt-10 pb-6 text-center">
         <div className="text-4xl mb-2">🏠</div>

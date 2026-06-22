@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getProfile } from "@/lib/profile";
 import Link from "next/link";
 import {
   INSPECTION_GROUPS,
@@ -95,6 +96,13 @@ export default function CarInspectorPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [carName, setCarName] = useState("");
+  const [locationStr, setLocationStr] = useState("near me");
+
+  useEffect(() => {
+    const p = getProfile();
+    if (p?.city) setLocationStr(`${p.city}${p.state ? ` ${p.state}` : ""}`);
+    else if (p?.state) setLocationStr(p.state);
+  }, []);
 
   const currentGroup = INSPECTION_GROUPS[currentGroupIndex];
   const groupQuestions = INSPECTION_QUESTIONS.filter(
@@ -526,7 +534,7 @@ export default function CarInspectorPage() {
 
         {/* Find a mechanic CTA */}
         <a
-          href="https://www.google.com/search?q=pre+purchase+car+inspection+Columbus+Ohio&tbm=lcl"
+          href={`https://www.google.com/search?q=${encodeURIComponent("pre purchase car inspection " + locationStr)}&tbm=lcl`}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full py-4 bg-blue-600 text-white font-bold text-sm rounded-2xl text-center hover:bg-blue-700 transition-colors mb-3"

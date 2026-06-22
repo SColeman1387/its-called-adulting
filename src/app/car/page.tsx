@@ -99,7 +99,8 @@ export default function CarDashboardPage() {
 
   const flash = () => { setJustSaved(true); setTimeout(() => setJustSaved(false), 1800); };
 
-  const googleUrl = `https://www.google.com/search?q=${encodeURIComponent((profile.preferredOilShop || "oil change") + " Columbus Ohio")}`;
+  const locationStr = profile.city ? `${profile.city} ${profile.state ?? ""}`.trim() : profile.state ?? "near me";
+  const googleUrl = `https://www.google.com/search?q=${encodeURIComponent((profile.preferredOilShop || "oil change") + " " + locationStr)}`;
 
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">

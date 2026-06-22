@@ -81,7 +81,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Tire pressure gauge ($5–$10)", "Air pump (at most gas stations)"],
     },
-    proSearchQuery: "tire shop Columbus Ohio",
+    proSearchQuery: "tire shop",
   },
   {
     id: "oil-check",
@@ -112,7 +112,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Clean rag or paper towels", "Correct motor oil for your car (check manual)"],
     },
-    proSearchQuery: "oil change Columbus Ohio",
+    proSearchQuery: "oil change",
   },
   {
     id: "wiper-blades",
@@ -142,7 +142,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["New wiper blades (measure first — check your manual)", "No tools needed"],
     },
-    proSearchQuery: "auto parts store Columbus Ohio",
+    proSearchQuery: "auto parts store",
   },
   {
     id: "coolant-check",
@@ -170,7 +170,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Coolant (check your manual for type)", "Distilled water (if not using pre-mix)"],
     },
-    proSearchQuery: "auto repair Columbus Ohio",
+    proSearchQuery: "auto repair",
   },
 
   // HOME
@@ -202,7 +202,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Replacement filter (note the size on the old one)", "Optional: marker to write the date"],
     },
-    proSearchQuery: "HVAC service Columbus Ohio",
+    proSearchQuery: "HVAC service",
   },
   {
     id: "smoke-detector",
@@ -232,7 +232,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["9V batteries", "Step stool or ladder if needed"],
     },
-    proSearchQuery: "handyman Columbus Ohio",
+    proSearchQuery: "handyman",
   },
   {
     id: "winterize-hoses",
@@ -245,7 +245,7 @@ export const TASKS: Task[] = [
     timeEstimate: "20 minutes",
     requires: "hasOutdoorAccess",
     diyGuide: {
-      intro: "When temps drop below 32°F, water left in outdoor faucet lines can freeze, expand, and crack pipes inside your walls. Do this before the first hard freeze — typically mid-October in Columbus.",
+      intro: "When temps drop below 32°F, water left in outdoor faucet lines can freeze, expand, and crack pipes inside your walls. Do this before the first hard freeze in your area — typically mid-October in colder climates.",
       steps: [
         "Turn off the indoor shutoff valve for your outdoor faucet (usually in the basement or crawl space, on the pipe that leads outside).",
         "Go outside and open the outdoor faucet to drain any remaining water.",
@@ -262,7 +262,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["None required", "Optional: faucet insulating cover ($2–$5 at hardware store)"],
     },
-    proSearchQuery: "plumber Columbus Ohio",
+    proSearchQuery: "plumber",
   },
   {
     id: "clean-gutters",
@@ -292,7 +292,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Ladder", "Work gloves", "Gutter scoop or trowel", "Garden hose", "Tarp (optional)"],
     },
-    proSearchQuery: "gutter cleaning Columbus Ohio",
+    proSearchQuery: "gutter cleaning",
   },
   {
     id: "water-softener",
@@ -323,7 +323,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Water softener salt pellets (40 lb bag)", "Optional: broom handle to break salt bridges"],
     },
-    proSearchQuery: "water softener service Columbus Ohio",
+    proSearchQuery: "water softener service",
   },
 
   // FINANCES
@@ -354,7 +354,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Phone or computer to get quotes", "Rough estimate of the value of your belongings"],
     },
-    proSearchQuery: "renters insurance Columbus Ohio",
+    proSearchQuery: "renters insurance",
   },
   {
     id: "build-credit",
@@ -382,7 +382,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Phone or computer", "Bank account for secured card deposit"],
     },
-    proSearchQuery: "credit union Columbus Ohio",
+    proSearchQuery: "credit union",
   },
 
   // HEALTH
@@ -413,7 +413,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Health insurance card or app", "Phone to call offices"],
     },
-    proSearchQuery: "primary care doctor Columbus Ohio",
+    proSearchQuery: "primary care doctor",
   },
 
   // POOL
@@ -428,7 +428,7 @@ export const TASKS: Task[] = [
     timeEstimate: "2–3 hours",
     requires: "hasPool",
     diyGuide: {
-      intro: "Opening your pool correctly sets you up for a whole summer of clean, safe swimming. Do this when nighttime temps stay consistently above 50°F — usually late April to mid-May in Columbus.",
+      intro: "Opening your pool correctly sets you up for a whole summer of clean, safe swimming. Do this when nighttime temps stay consistently above 50°F — usually late April to mid-May in most climates.",
       steps: [
         "Remove, clean, and store your winter cover. Hose it down, let it dry, fold it, and store it away from UV exposure.",
         "Remove any winter plugs from return jets and skimmer lines.",
@@ -447,7 +447,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Water test kit or strips", "Chlorine shock", "pH increaser/decreaser", "Garden hose"],
     },
-    proSearchQuery: "pool service Columbus Ohio",
+    proSearchQuery: "pool service",
   },
   {
     id: "pool-close",
@@ -460,7 +460,7 @@ export const TASKS: Task[] = [
     timeEstimate: "2–3 hours",
     requires: "hasPool",
     diyGuide: {
-      intro: "In Columbus, close your pool when temperatures consistently stay below 65°F — usually late September to mid-October. A proper close prevents freezing damage to pipes and equipment.",
+      intro: "Close your pool when temperatures consistently stay below 65°F — usually late September to mid-October in most areas. A proper close prevents freezing damage to pipes and equipment.",
       steps: [
         "Balance the water chemistry one last time: pH 7.4–7.6, alkalinity 80–120 ppm, shock with a full dose of chlorine.",
         "Add a winterizing algaecide to prevent algae growth over the winter.",
@@ -478,7 +478,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Winterizing chemical kit", "Winter cover", "Shop vac or air compressor", "Winter plugs"],
     },
-    proSearchQuery: "pool winterizing Columbus Ohio",
+    proSearchQuery: "pool winterizing",
   },
   {
     id: "pool-weekly",
@@ -509,7 +509,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Test strips or kit", "Chlorine tablets", "Skimmer net", "Pool brush"],
     },
-    proSearchQuery: "pool cleaning service Columbus Ohio",
+    proSearchQuery: "pool cleaning service",
   },
 
   // YARD
@@ -541,7 +541,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Rake", "Broadcast spreader", "Lawn fertilizer", "Grass seed (matching your lawn type)", "Garden hose or sprinkler"],
     },
-    proSearchQuery: "lawn care Columbus Ohio",
+    proSearchQuery: "lawn care",
   },
   {
     id: "lawn-fall",
@@ -554,7 +554,7 @@ export const TASKS: Task[] = [
     timeEstimate: "2–3 hours",
     requires: "hasYard",
     diyGuide: {
-      intro: "In Columbus, do this in September–October when temps drop to the 60s. Cool-season grasses (fescue, bluegrass) grow most aggressively in fall — take advantage of it.",
+      intro: "Do this in September–October when temps drop to the 60s. Cool-season grasses (fescue, bluegrass) grow most aggressively in fall — take advantage of it.",
       steps: [
         "Aerate your lawn if it's been compacted — rent a core aerator from Home Depot ($75–$90/day). It pulls plugs of soil and lets air, water, and nutrients penetrate.",
         "Overseed heavily after aerating — the seed falls into the holes and makes excellent contact with soil.",
@@ -570,7 +570,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Core aerator (rent)", "Grass seed", "Fall fertilizer", "Spreader", "Rake or mulching mower"],
     },
-    proSearchQuery: "lawn aeration Columbus Ohio",
+    proSearchQuery: "lawn aeration",
   },
 
   // FIREPLACE
@@ -604,7 +604,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Professional chimney sweep — find a CSIA-certified sweep at csia.org"],
     },
-    proSearchQuery: "chimney sweep Columbus Ohio",
+    proSearchQuery: "chimney sweep",
   },
 
   // GUIDES (special category — informational, not maintenance tasks)
@@ -644,7 +644,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Carfax or AutoCheck report (free trial or ~$40)", "Phone flashlight", "Kelley Blue Book on your phone (kbb.com)", "Budget for pre-purchase inspection ($100–$150)"],
     },
-    proSearchQuery: "used car inspection mechanic Columbus Ohio",
+    proSearchQuery: "used car inspection mechanic",
   },
 
   // OIL CHANGE
@@ -677,7 +677,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Your car", "Owner's manual (to confirm oil type and interval)", "Your current mileage"],
     },
-    proSearchQuery: "oil change Columbus Ohio",
+    proSearchQuery: "oil change",
   },
 
   // CAR (continued)
@@ -710,7 +710,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Phone or computer to get quotes", "Car info: make, model, year, VIN, mileage"],
     },
-    proSearchQuery: "car insurance agent Columbus Ohio",
+    proSearchQuery: "car insurance agent",
   },
   {
     id: "after-accident",
@@ -742,7 +742,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Phone (for photos and calls)", "Pen and paper as backup"],
     },
-    proSearchQuery: "auto body repair Columbus Ohio",
+    proSearchQuery: "auto body repair",
   },
   {
     id: "jump-start",
@@ -773,7 +773,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Jumper cables (keep a set in your trunk)", "Or: portable jump starter ($40–$80)"],
     },
-    proSearchQuery: "auto parts store Columbus Ohio",
+    proSearchQuery: "auto parts store",
   },
   {
     id: "change-flat",
@@ -807,7 +807,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Spare tire (in your trunk)", "Car jack (in your trunk)", "Lug wrench (in your trunk)", "Wheel wedges (optional but smart)"],
     },
-    proSearchQuery: "tire shop Columbus Ohio",
+    proSearchQuery: "tire shop",
   },
   {
     id: "tire-rotation",
@@ -836,7 +836,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["None — have a shop do it"],
     },
-    proSearchQuery: "tire rotation Columbus Ohio",
+    proSearchQuery: "tire rotation",
   },
 
   // FINANCES (continued)
@@ -868,7 +868,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Calculator or phone", "Free budgeting app (Mint, EveryDollar) or Google Sheets"],
     },
-    proSearchQuery: "financial advisor Columbus Ohio",
+    proSearchQuery: "financial advisor",
   },
   {
     id: "open-savings",
@@ -895,7 +895,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Phone or computer", "Social Security Number", "Government ID"],
     },
-    proSearchQuery: "credit union Columbus Ohio",
+    proSearchQuery: "credit union",
   },
   {
     id: "understand-paystub",
@@ -926,7 +926,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Your pay stub (paper or digital)"],
     },
-    proSearchQuery: "tax preparer Columbus Ohio",
+    proSearchQuery: "tax preparer",
   },
   {
     id: "file-taxes",
@@ -956,7 +956,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["W-2 from your employer", "SSN", "Bank account info for direct deposit"],
     },
-    proSearchQuery: "tax preparer Columbus Ohio",
+    proSearchQuery: "tax preparer",
   },
   {
     id: "emergency-fund",
@@ -985,7 +985,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["High-yield savings account (separate from checking)", "Automatic transfer setup"],
     },
-    proSearchQuery: "financial planner Columbus Ohio",
+    proSearchQuery: "financial planner",
   },
   {
     id: "understand-health-insurance",
@@ -1014,7 +1014,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Your insurance card or plan documents"],
     },
-    proSearchQuery: "health insurance broker Columbus Ohio",
+    proSearchQuery: "health insurance broker",
   },
 
   // HEALTH (continued)
@@ -1046,7 +1046,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Dental insurance card (or phone number to check coverage)", "Phone to call and book"],
     },
-    proSearchQuery: "dentist Columbus Ohio",
+    proSearchQuery: "dentist",
   },
   {
     id: "when-to-go-er",
@@ -1073,7 +1073,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Your health insurance card", "Your primary care doctor's phone number saved in your phone"],
     },
-    proSearchQuery: "urgent care Columbus Ohio",
+    proSearchQuery: "urgent care",
   },
   {
     id: "eye-exam",
@@ -1102,7 +1102,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Vision insurance card", "Phone to book appointment"],
     },
-    proSearchQuery: "eye doctor optometrist Columbus Ohio",
+    proSearchQuery: "eye doctor optometrist",
   },
 
   // HOME (continued)
@@ -1131,7 +1131,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Drain hair removal tool ($3–$5 at any hardware or dollar store)", "Baking soda and vinegar (optional)", "Bucket (if removing P-trap)"],
     },
-    proSearchQuery: "plumber Columbus Ohio",
+    proSearchQuery: "plumber",
   },
   {
     id: "fix-running-toilet",
@@ -1163,7 +1163,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Replacement flapper ($5–$10)", "Optional: towels for any spills"],
     },
-    proSearchQuery: "plumber Columbus Ohio",
+    proSearchQuery: "plumber",
   },
   {
     id: "move-in-document",
@@ -1221,7 +1221,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Squeegee ($5)", "Bleach spray or mold cleaner", "Exhaust fan (existing) or window"],
     },
-    proSearchQuery: "mold remediation Columbus Ohio",
+    proSearchQuery: "mold remediation",
   },
 
   // APPLIANCES (continued)
@@ -1253,7 +1253,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["White vinegar", "Baking soda or Affresh tablets", "Cloth or sponge"],
     },
-    proSearchQuery: "appliance repair Columbus Ohio",
+    proSearchQuery: "appliance repair",
   },
   {
     id: "laundry-basics",
@@ -1283,7 +1283,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Laundry detergent (HE formula for HE machines)", "Optional: mesh laundry bag ($5)", "Optional: stain stick for pre-treating stains"],
     },
-    proSearchQuery: "laundromat Columbus Ohio",
+    proSearchQuery: "laundromat",
   },
 
   // COOKING
@@ -1314,7 +1314,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Digital meat thermometer ($12–$20)", "Pan, grill, or oven"],
     },
-    proSearchQuery: "cooking class Columbus Ohio",
+    proSearchQuery: "cooking class",
   },
   {
     id: "food-storage",
@@ -1342,7 +1342,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Airtight food storage containers", "Permanent marker for labeling dates"],
     },
-    proSearchQuery: "cooking class Columbus Ohio",
+    proSearchQuery: "cooking class",
   },
   {
     id: "knife-skills",
@@ -1370,7 +1370,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Chef's knife", "Cutting board", "Damp cloth to anchor the board"],
     },
-    proSearchQuery: "cooking class Columbus Ohio",
+    proSearchQuery: "cooking class",
   },
   {
     id: "kitchen-fire",
@@ -1398,7 +1398,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Pot lid that fits your pans (store nearby when cooking)", "Fire extinguisher rated Class K for kitchens"],
     },
-    proSearchQuery: "fire extinguisher service Columbus Ohio",
+    proSearchQuery: "fire extinguisher service",
   },
   {
     id: "meal-prep-basics",
@@ -1426,7 +1426,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Baking sheet", "Pots and pans", "Food storage containers (airtight)", "Optional: rice cooker"],
     },
-    proSearchQuery: "grocery store Columbus Ohio",
+    proSearchQuery: "grocery store",
   },
 
   // GUIDES (continued)
@@ -1453,11 +1453,11 @@ export const TASKS: Task[] = [
       tips: [
         "Always communicate with your landlord in writing (text or email) so you have a record.",
         "Ohio Legal Help (ohiolegalhelp.org) has free resources and connects you with legal aid.",
-        "Columbus has a Tenant Rights Hotline: 614-241-2001.",
+        "Search '[your city] tenant rights hotline' — most cities have free legal aid for renters.",
       ],
       toolsNeeded: ["Written record of all landlord communications", "Ohio Legal Help: ohiolegalhelp.org"],
     },
-    proSearchQuery: "tenant rights attorney Columbus Ohio",
+    proSearchQuery: "tenant rights attorney",
   },
   {
     id: "first-apartment-checklist",
@@ -1484,7 +1484,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["This list and a budget"],
     },
-    proSearchQuery: "thrift store Columbus Ohio",
+    proSearchQuery: "thrift store",
   },
 
   // APPLIANCES (continued)
@@ -1518,7 +1518,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Dryer vent cleaning brush kit ($15–$25)", "Vacuum", "Screwdriver (for vent clamp)"],
     },
-    proSearchQuery: "appliance repair Columbus Ohio",
+    proSearchQuery: "appliance repair",
   },
   {
     id: "fridge-coils",
@@ -1548,7 +1548,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Coil cleaning brush ($8–$12) or vacuum with brush attachment"],
     },
-    proSearchQuery: "appliance repair Columbus Ohio",
+    proSearchQuery: "appliance repair",
   },
 
   // PETS
@@ -1580,7 +1580,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Measuring cup", "Food storage container with lid"],
     },
-    proSearchQuery: "veterinarian Columbus Ohio",
+    proSearchQuery: "veterinarian",
   },
   {
     id: "pet-vet-schedule",
@@ -1609,7 +1609,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Pet carrier for transport"],
     },
-    proSearchQuery: "veterinarian Columbus Ohio",
+    proSearchQuery: "veterinarian",
   },
   {
     id: "pet-flea-tick",
@@ -1638,7 +1638,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Flea/tick prevention product (vet recommended)", "Fine-tooth flea comb ($5)"],
     },
-    proSearchQuery: "veterinarian Columbus Ohio",
+    proSearchQuery: "veterinarian",
   },
   {
     id: "pet-dental",
@@ -1668,7 +1668,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Pet toothbrush ($5)", "Pet-safe enzymatic toothpaste ($8–$12)"],
     },
-    proSearchQuery: "veterinary dentist Columbus Ohio",
+    proSearchQuery: "veterinary dentist",
   },
   {
     id: "pet-emergency-kit",
@@ -1697,7 +1697,7 @@ export const TASKS: Task[] = [
       ],
       toolsNeeded: ["Small storage container", "Basic first aid supplies"],
     },
-    proSearchQuery: "emergency veterinarian Columbus Ohio",
+    proSearchQuery: "emergency veterinarian",
   },
 ];
 
