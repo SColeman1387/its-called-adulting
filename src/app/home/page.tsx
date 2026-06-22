@@ -7,6 +7,7 @@ import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/lea
 import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
+import { isTaskDue, getLastCompletion } from "@/lib/streaks";
 import { createClient } from "@supabase/supabase-js";
 import { migrateLocalStorageToSupabase } from "@/lib/migrateLocalStorage";
 
@@ -102,7 +103,15 @@ export default function Home() {
     setLoaded(true);
   }, []);
 
-  const seasonalTasks = getSeasonalTasks(profile);
+  const seasonalTasks = getSeasonalTasks(profile).filter((task) => {
+    if (task.checkInterval) {
+      // Recurring: only show when due again
+      return isTaskDue(task.id, task.checkInterval);
+    } else {
+      // One-time: hide once completed
+      return !completedTasks.has(task.id);
+    }
+  });
   const oilStatus = profile ? getOilChangeStatus(profile) : null;
   const milesUntilOil = profile ? getMilesUntilOilChange(profile) : null;
 
@@ -322,7 +331,7 @@ export default function Home() {
         <div className="mb-6 flex items-center gap-2 bg-green-50 border border-green-100 rounded-2xl px-4 py-3">
           <span className="text-green-600 text-lg">✓</span>
           <span className="text-sm text-green-700 font-medium">
-            {completedTasks.size} task{completedTasks.size !== 1 ? "s" : ""} completed
+            {completedTasks.size} task{completedTasks.size !== 1 ? "s" : ""} completed all-time
           </span>
         </div>
       )}
@@ -367,60 +376,55 @@ export default function Home() {
           {seasonEmoji[season]} Right Now — {season.charAt(0).toUpperCase() + season.slice(1)} Tasks
         </h2>
         {seasonalTasks.length === 0 ? (
-          <div className="text-center py-8 text-gray-400 text-sm">
-            No tasks match your current profile for this season.
-            <br />
-            <Link href="/setup" className="text-orange-500 font-medium mt-1 inline-block">Update your profile →</Link>
+          <div className="text-center py-10 text-gray-400 text-sm">
+            <div className="text-3xl mb-3">✓</div>
+            <p className="font-medium text-gray-500">All caught up!</p>
+            <p className="mt-1">No tasks due right now. Check back soon.</p>
+            <Link href="/setup" className="text-orange-500 font-medium mt-3 inline-block">Update your profile →</Link>
           </div>
         ) : (
           <div className="space-y-3">
-            {seasonalTasks.map((task) => (
-              <Link
-                key={task.id}
-                href={`/task/${task.id}`}
-                className={`flex items-start gap-4 p-4 rounded-2xl transition-shadow border ${
-                  completedTasks.has(task.id)
-                    ? "bg-green-50 border-green-100 opacity-60"
-                    : "bg-white shadow-sm hover:shadow-md border-gray-100"
-                }`}
-              >
-                <span className="text-2xl mt-0.5">
-                  {CATEGORIES.find((c) => c.id === task.category)?.icon}
-                </span>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className={`font-semibold text-sm ${completedTasks.has(task.id) ? "text-gray-400 line-through" : "text-gray-900"}`}>
-                      {task.title}
-                    </span>
-                    {completedTasks.has(task.id) ? (
-                      <span className="text-xs text-green-600 font-semibold">✓ Done</span>
-                    ) : (
+            {seasonalTasks.map((task) => {
+              const lastDone = task.checkInterval ? getLastCompletion(task.id) : null;
+              return (
+                <Link
+                  key={task.id}
+                  href={`/task/${task.id}`}
+                  className="flex items-start gap-4 p-4 rounded-2xl transition-shadow border bg-white shadow-sm hover:shadow-md border-gray-100"
+                >
+                  <span className="text-2xl mt-0.5">
+                    {CATEGORIES.find((c) => c.id === task.category)?.icon}
+                  </span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-sm text-gray-900">{task.title}</span>
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${difficultyColor[task.difficulty]}`}>
                         {task.difficulty}
                       </span>
-                    )}
-                  </div>
-                  {!completedTasks.has(task.id) && (
+                      {lastDone && (
+                        <span className="text-xs text-orange-500 font-medium">↻ due again</span>
+                      )}
+                    </div>
                     <p className="text-orange-600 text-xs mt-1 line-clamp-2 font-medium leading-relaxed">
                       💡 {task.howDidIKnow}
                     </p>
-                  )}
-                  <p className="text-gray-400 text-xs mt-1">⏱ {task.timeEstimate}</p>
-                  {!completedTasks.has(task.id) && TASK_SUPPLIES[task.id] && (
-                    <a
-                      href={TASK_SUPPLIES[task.id][0].amazonUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-[#FF9900] hover:underline"
-                    >
-                      🛒 Need supplies for this? →
-                    </a>
-                  )}
-                </div>
-                <span className="text-gray-300 text-lg self-center">›</span>
-              </Link>
-            ))}
+                    <p className="text-gray-400 text-xs mt-1">⏱ {task.timeEstimate}</p>
+                    {TASK_SUPPLIES[task.id] && (
+                      <a
+                        href={TASK_SUPPLIES[task.id][0].amazonUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1 mt-2 text-xs font-semibold text-[#FF9900] hover:underline"
+                      >
+                        🛒 Need supplies for this? →
+                      </a>
+                    )}
+                  </div>
+                  <span className="text-gray-300 text-lg self-center">›</span>
+                </Link>
+              );
+            })}
           </div>
         )}
         <Link
