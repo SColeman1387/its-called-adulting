@@ -86,7 +86,7 @@ export default function SubscribePage() {
           <ul className="px-8 py-6 space-y-3">
             {[
               { icon: "🏆", text: "Earn Adulting Bucks for every task you complete" },
-              { icon: "🎁", text: "Redeem points for Amazon gift cards — sent automatically" },
+              { icon: "🎁", text: "Redeem points for gift cards — sent automatically" },
               { icon: "🔧", text: "Unlock a 12-tool starter toolkit over your first year" },
               { icon: "💡", text: "100 bonus points just for subscribing today" },
               { icon: "✅", text: "Everything in the free plan, forever" },

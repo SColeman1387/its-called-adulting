@@ -201,7 +201,7 @@ export default function LandingPage() {
       {/* How earning works */}
       <section className="max-w-3xl mx-auto px-6 py-16">
         <h2 className="text-2xl font-black text-gray-900 mb-2 text-center">Do adulting tasks. Get paid for it.</h2>
-        <p className="text-gray-400 text-sm mb-10 text-center">Every task earns Adulting Bucks. Adulting Bucks become Amazon gift cards.</p>
+        <p className="text-gray-400 text-sm mb-10 text-center">Every task earns Adulting Bucks. Adulting Bucks become gift cards.</p>
         <div className="grid sm:grid-cols-3 gap-4 mb-10">
           {[
             { icon: "✅", label: "Complete a task", pts: "+10 pts", eg: "Check tire pressure, change air filter…" },
@@ -219,7 +219,7 @@ export default function LandingPage() {
         {/* Progress bar showing 100pts toward $10 gift card */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm max-w-md mx-auto">
           <div className="flex justify-between items-end mb-2">
-            <span className="text-sm font-bold text-gray-900">$10 Amazon Gift Card</span>
+            <span className="text-sm font-bold text-gray-900">$10 Gift Card</span>
             <span className="text-sm font-bold text-orange-500">500 pts needed</span>
           </div>
           <div className="w-full bg-gray-100 rounded-full h-3 mb-3">

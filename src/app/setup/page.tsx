@@ -107,7 +107,7 @@ export default function SetupPage() {
             <div className="bg-orange-50 rounded-2xl p-4 mb-5 space-y-2">
               {[
                 "Earn Adulting Bucks on every task you complete",
-                "Redeem for real Amazon gift cards",
+                "Redeem for real gift cards",
                 "100 bonus points just for subscribing today",
                 "Cancel anytime",
               ].map((item) => (

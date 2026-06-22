@@ -52,14 +52,12 @@ async function sendAdminNotification(opts: {
         <h2>New gift card redemption request</h2>
         <table style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
           <tr><td style="padding:6px 12px;font-weight:bold">User email</td><td style="padding:6px 12px">${opts.userEmail}</td></tr>
-          <tr><td style="padding:6px 12px;font-weight:bold">Amount</td><td style="padding:6px 12px">$${opts.amount} Amazon gift card</td></tr>
+          <tr><td style="padding:6px 12px;font-weight:bold">Amount</td><td style="padding:6px 12px">$${opts.amount} gift card</td></tr>
           <tr><td style="padding:6px 12px;font-weight:bold">User ID</td><td style="padding:6px 12px">${opts.userId}</td></tr>
           <tr><td style="padding:6px 12px;font-weight:bold">Points remaining</td><td style="padding:6px 12px">${opts.pointsAfter}</td></tr>
         </table>
         <p style="margin-top:24px">
-          <strong>To fulfill:</strong> Go to
-          <a href="https://www.amazon.com/gift-cards/b?ie=UTF8&node=2238192011">amazon.com/gift-cards</a>,
-          purchase a $${opts.amount} gift card, and email it to <strong>${opts.userEmail}</strong>.
+          <strong>To fulfill:</strong> Send a $${opts.amount} digital gift card to <strong>${opts.userEmail}</strong>.
         </p>
         <p style="color:#888;font-size:12px">It's Called Adulting admin notification</p>
       `,
@@ -106,7 +104,7 @@ export async function POST(req: NextRequest) {
   await supabase.from("rewards").insert({
     user_id: userId,
     tier: tierId,
-    reward_choice: tierLabel ?? `$${amount} Amazon Gift Card`,
+    reward_choice: tierLabel ?? `$${amount} Gift Card`,
     status: "pending_manual",
     ship_name: email,
     ship_address: "digital",

@@ -18,8 +18,8 @@ export const POINT_VALUES: Record<PointEvent["type"], number> = {
 };
 
 export const GIFT_CARD_TIERS = [
-  { id: "gc10",  label: "$10 Amazon Gift Card",  points: 500,   value: 10 },
-  { id: "gc25",  label: "$25 Amazon Gift Card",  points: 1250,  value: 25 },
+  { id: "gc10",  label: "$10 Gift Card",  points: 500,   value: 10 },
+  { id: "gc25",  label: "$25 Gift Card",  points: 1250,  value: 25 },
 ];
 
 function getLedger(): PointEvent[] {

@@ -100,7 +100,7 @@ export default function RewardsPage() {
       <div className="pt-8 pb-2">
         <Link href="/home" className="text-sm text-orange-600 font-medium mb-4 inline-block">← Home</Link>
         <h1 className="text-2xl font-bold text-gray-900">Adulting Bucks</h1>
-        <p className="text-gray-400 text-sm mt-1">Earn points, redeem for Amazon gift cards.</p>
+        <p className="text-gray-400 text-sm mt-1">Earn points, redeem for gift cards.</p>
       </div>
 
       {/* Paywall for non-subscribers */}
@@ -109,13 +109,13 @@ export default function RewardsPage() {
           <div className="text-4xl mb-3">⭐</div>
           <h2 className="text-xl font-black mb-2">Adulting Pro — $4.99/mo</h2>
           <p className="text-blue-200 text-sm leading-relaxed mb-5">
-            Earn Adulting Bucks for every task, lesson, and tool. Redeem for real Amazon gift cards — automatically sent to your inbox.
+            Earn Adulting Bucks for every task, lesson, and tool. Redeem for real gift cards — automatically sent to your inbox.
           </p>
           <ul className="text-left space-y-2 mb-6">
             {[
               "Earn points for every task completed",
               "Earn points for weekly lessons",
-              "Redeem for Amazon gift cards",
+              "Redeem for gift cards",
               "Gift cards sent automatically — no waiting",
             ].map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-white/90">
@@ -232,7 +232,7 @@ export default function RewardsPage() {
         <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
           <h3 className="font-bold text-gray-900 mb-1">Confirm redemption</h3>
           <p className="text-sm text-gray-500 mb-4">
-            We&apos;ll email you an Amazon gift card code within <strong>1–2 business days</strong>.
+            We&apos;ll email you an gift card code within <strong>1–2 business days</strong>.
             This will deduct <strong>{selectedTier.points.toLocaleString()} points</strong> from your balance.
           </p>
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
@@ -270,7 +270,7 @@ export default function RewardsPage() {
           <div className="text-5xl mb-3">🎉</div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Request submitted!</h2>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
-            Your request is in. We&apos;ll send your Amazon gift card to <strong>{email}</strong> within 1–2 business days.
+            Your request is in. We&apos;ll send your gift card to <strong>{email}</strong> within 1–2 business days.
           </p>
           <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-8 py-3 rounded-2xl text-sm">
             Back to home →
