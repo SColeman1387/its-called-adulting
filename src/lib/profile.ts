@@ -96,13 +96,6 @@ export function isWarmClimate(state?: string): boolean {
 export interface UserProfile {
   homeType: "apartment" | "rent-house" | "own-house" | null;
   hasCar: boolean;
-  carYear?: string;
-  carMake?: string;
-  currentMileage?: number;
-  lastOilChangeMileage?: number;
-  oilChangeInterval?: 3000 | 5000 | 7500 | 10000;
-  preferredOilShop?: string;
-  preferredOilShopPhone?: string;
   hasPool: boolean;
   poolType?: "above-ground" | "in-ground";
   hasYard: boolean;
@@ -120,19 +113,6 @@ export interface UserProfile {
   setupComplete: boolean;
 }
 
-export function getMilesUntilOilChange(profile: UserProfile): number | null {
-  if (!profile.hasCar || !profile.currentMileage || !profile.lastOilChangeMileage || !profile.oilChangeInterval) return null;
-  const milesDriven = profile.currentMileage - profile.lastOilChangeMileage;
-  return profile.oilChangeInterval - milesDriven;
-}
-
-export function getOilChangeStatus(profile: UserProfile): "overdue" | "due-soon" | "ok" | null {
-  const miles = getMilesUntilOilChange(profile);
-  if (miles === null) return null;
-  if (miles <= 0) return "overdue";
-  if (miles <= 500) return "due-soon";
-  return "ok";
-}
 
 const PROFILE_KEY = "adulting_profile";
 

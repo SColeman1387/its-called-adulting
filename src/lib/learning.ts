@@ -22,17 +22,25 @@ export function getWeeklyLesson(profile?: any): Task {
     if (t.category === "guides") return false;
     if (!t.requires) return true;
     if (!profile) return true;
-    switch (t.requires) {
-      case "hasCar": return !!profile.hasCar;
-      case "hasPool": return !!profile.hasPool;
-      case "hasYard": return !!profile.hasYard;
-      case "hasWaterSoftener": return !!profile.hasWaterSoftener;
-      case "hasDryer": return !!profile.hasDryer;
-      case "hasFireplace": return !!profile.hasFireplace;
-      case "homeOwner": return profile.homeType === "own-house";
-      case "hasOutdoorAccess": return profile.homeType === "rent-house" || profile.homeType === "own-house";
-      default: return true;
-    }
+    const reqs = Array.isArray(t.requires) ? t.requires : [t.requires];
+    return reqs.every((req) => {
+      switch (req) {
+        case "hasCar": return !!profile.hasCar || (profile.vehicles ?? []).length > 0;
+        case "hasPool": return !!profile.hasPool;
+        case "hasYard": return !!profile.hasYard;
+        case "hasWaterSoftener": return !!profile.hasWaterSoftener;
+        case "hasDryer": return !!profile.hasDryer;
+        case "hasFireplace": return !!profile.hasFireplace;
+        case "homeOwner": return profile.homeType === "own-house";
+        case "hasOutdoorAccess": return profile.homeType === "rent-house" || profile.homeType === "own-house";
+        case "coldClimate": return !["Florida","Hawaii","Arizona","California","Louisiana","Mississippi","Alabama","Georgia","South Carolina","Texas","Nevada","New Mexico"].includes(profile.state ?? "");
+        case "hasBoat": return !!profile.hasBoat;
+        case "hasGolfCart": return !!profile.hasGolfCart;
+        case "hasUTV": return !!profile.hasUTV;
+        case "hasRV": return !!profile.hasRV;
+        default: return true;
+      }
+    });
   });
 
   const week = getISOWeek();

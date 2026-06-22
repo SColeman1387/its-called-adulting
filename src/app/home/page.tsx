@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES, getSeasonalTasks, getCurrentSeason } from "@/lib/data";
-import { getProfile, UserProfile, Vehicle, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
+import { getProfile, UserProfile, Vehicle } from "@/lib/profile";
 import MileageCheckin from "@/components/MileageCheckin";
 import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/learning";
 import { getTotalPoints } from "@/lib/points";
@@ -118,8 +118,6 @@ export default function Home() {
       return !completedTasks.has(task.id);
     }
   });
-  const oilStatus = profile ? getOilChangeStatus(profile) : null;
-  const milesUntilOil = profile ? getMilesUntilOilChange(profile) : null;
 
   if (!loaded) return null;
 

@@ -599,7 +599,7 @@ export default function SetupPage() {
           <div className="bg-orange-50 rounded-2xl p-4 text-left mb-6 space-y-2">
             <div className="text-sm font-semibold text-orange-800 mb-2">Your setup:</div>
             <div className="text-sm text-orange-700">🏠 {profile.homeType === "apartment" ? "Apartment" : profile.homeType === "rent-house" ? "Renting a house" : "Own your home"}</div>
-            {profile.hasCar && <div className="text-sm text-orange-700">🚗 {profile.carYear && profile.carMake ? `${profile.carYear} ${profile.carMake}` : "Car owner"}</div>}
+            {vehicles.length > 0 && <div className="text-sm text-orange-700">🚗 {vehicles.length} vehicle{vehicles.length > 1 ? "s" : ""} ({vehicles.map(v => v.nickname || v.make || "Vehicle").join(", ")})</div>}
             {profile.hasPool && <div className="text-sm text-orange-700">🏊 {profile.poolType === "above-ground" ? "Above-ground pool" : "In-ground pool"}</div>}
             {profile.hasYard && <div className="text-sm text-orange-700">🌿 Yard / lawn</div>}
             {profile.hasPets && <div className="text-sm text-orange-700">🐾 Pets</div>}

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CATEGORIES, getTasksByCategory, Category } from "@/lib/data";
-import { getProfile, UserProfile, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
+import { getProfile, UserProfile } from "@/lib/profile";
 import { getTaskStreak, isTaskDue } from "@/lib/streaks";
 
 const difficultyColor: Record<string, string> = {
@@ -19,8 +19,7 @@ export default function CategoryPage() {
 
   const category = CATEGORIES.find((c) => c.id === id);
   const tasks = getTasksByCategory(id as Category, profile);
-  const oilStatus = id === "car" && profile ? getOilChangeStatus(profile) : null;
-  const milesUntil = id === "car" && profile ? getMilesUntilOilChange(profile) : null;
+  const hasVehicles = (profile?.vehicles ?? []).length > 0;
 
   if (!category) {
     return <div className="p-8 text-center text-gray-500">Category not found.</div>;
@@ -41,43 +40,19 @@ export default function CategoryPage() {
         </p>
       </div>
 
-      {/* Car dashboard banner */}
-      {id === "car" && (
-        <div className="mb-4">
-          {oilStatus && milesUntil !== null ? (
-            <Link
-              href="/car"
-              className={`flex items-center gap-4 p-4 rounded-2xl border-2 mb-3 ${
-                oilStatus === "overdue" ? "bg-red-50 border-red-200" :
-                oilStatus === "due-soon" ? "bg-orange-50 border-orange-200" :
-                "bg-green-50 border-green-200"
-              }`}
-            >
-              <span className="text-3xl">🛢️</span>
-              <div className="flex-1">
-                <div className={`font-bold text-sm ${oilStatus === "overdue" ? "text-red-700" : oilStatus === "due-soon" ? "text-orange-700" : "text-green-700"}`}>
-                  Oil Change {oilStatus === "overdue" ? "Overdue" : oilStatus === "due-soon" ? "Due Soon" : "On Track"}
-                </div>
-                <div className="text-xs text-gray-500 mt-0.5">
-                  {oilStatus === "overdue" ? `${Math.abs(milesUntil).toLocaleString()} miles past due` : `${milesUntil.toLocaleString()} miles until next change`}
-                </div>
-              </div>
-              <span className="text-gray-300 text-lg">›</span>
-            </Link>
-          ) : (
-            <Link
-              href="/car"
-              className="flex items-center gap-4 p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 mb-3"
-            >
-              <span className="text-3xl">🚗</span>
-              <div className="flex-1">
-                <div className="font-bold text-blue-900 text-sm">Car Dashboard</div>
-                <div className="text-xs text-blue-600 mt-0.5">Track oil changes, mileage, and your preferred shop</div>
-              </div>
-              <span className="text-blue-300 text-lg">›</span>
-            </Link>
-          )}
-        </div>
+      {/* Vehicles banner on Car category */}
+      {id === "car" && hasVehicles && (
+        <Link
+          href="/vehicles"
+          className="flex items-center gap-4 p-4 bg-blue-50 rounded-2xl border-2 border-blue-200 mb-4"
+        >
+          <span className="text-3xl">🚗</span>
+          <div className="flex-1">
+            <div className="font-bold text-blue-900 text-sm">My Vehicles</div>
+            <div className="text-xs text-blue-600 mt-0.5">Service history, oil change tracking, and maintenance records</div>
+          </div>
+          <span className="text-blue-300 text-lg">›</span>
+        </Link>
       )}
 
       {/* Interactive tools for guides category */}
