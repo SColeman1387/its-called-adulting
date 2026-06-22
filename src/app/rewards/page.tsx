@@ -126,13 +126,20 @@ export default function RewardsPage() {
           </ul>
           <button
             onClick={async () => {
-              const res = await fetch("/api/stripe/checkout", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId: user?.id, email: user?.email, redirectUrl: window.location.origin }),
-              });
-              const { url } = await res.json();
-              if (url) window.location.href = url;
+              try {
+                const res = await fetch("/api/stripe/checkout", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ userId: user?.id, email: user?.email, redirectUrl: window.location.origin }),
+                });
+                if (!res.ok) throw new Error(`API error ${res.status}`);
+                const { url } = await res.json();
+                if (url) window.location.href = url;
+                else throw new Error("No checkout URL returned");
+              } catch (err) {
+                console.error("Checkout error:", err);
+                alert("Something went wrong starting checkout. Please try again or contact support.");
+              }
             }}
             className="w-full py-4 bg-orange-500 text-white font-black rounded-2xl hover:bg-orange-600 transition-colors text-base"
           >
