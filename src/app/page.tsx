@@ -26,12 +26,12 @@ export default function LandingPage() {
           Free to start · No download required
         </div>
         <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
-          Is your kid ready<br />
-          <span className="text-orange-500">to adult?</span>
+          Everything they need<br />
+          <span className="text-orange-500">to go on their own.</span>
         </h1>
         <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg mx-auto">
-          Every parent wants their kid to call. You just also want to know
-          they can handle themselves when you&apos;re not there.
+          Practical skills, timely reminders, and the tools they&apos;ll actually need —
+          all in one place, ready the moment they need them.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
