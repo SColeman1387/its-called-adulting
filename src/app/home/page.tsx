@@ -46,6 +46,10 @@ export default function Home() {
 
   useEffect(() => {
     const p = getProfile();
+    if (!p?.setupComplete) {
+      window.location.href = "/setup";
+      return;
+    }
     setProfile(p);
     const raw = localStorage.getItem("ica_completed_tasks");
     if (raw) {
