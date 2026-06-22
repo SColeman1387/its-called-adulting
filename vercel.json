@@ -3,6 +3,10 @@
     {
       "path": "/api/push/trash-reminder?secret=9f63188bef596e54c95c64bc70d8461f612c687597b1fd6716088589b3200889",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/push/task-reminders?secret=9f63188bef596e54c95c64bc70d8461f612c687597b1fd6716088589b3200889",
+      "schedule": "0 9 * * 1"
     }
   ]
 }

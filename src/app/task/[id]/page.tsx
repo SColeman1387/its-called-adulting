@@ -9,6 +9,12 @@ import { TASK_SUPPLIES } from "@/lib/supplies";
 import { getProfile } from "@/lib/profile";
 import TipSubmitter from "@/components/TipSubmitter";
 import CommunityTips from "@/components/CommunityTips";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function TaskPage() {
   const { id } = useParams();
@@ -29,7 +35,7 @@ export default function TaskPage() {
     setLastDone(getLastCompletion(task.id));
   }, [task]);
 
-  const markComplete = () => {
+  const markComplete = async () => {
     if (!task) return;
     recordCompletion(task.id);
     awardPoints("task_complete", task.title, task.id);
@@ -37,6 +43,14 @@ export default function TaskPage() {
     setCount((c) => c + 1);
     const newStreak = task.checkInterval ? getTaskStreak(task.id, task.checkInterval) : 0;
     setStreak(newStreak);
+    // Sync completion to Supabase so server-side reminders know what's due
+    const { data } = await supabase.auth.getUser();
+    if (data.user) {
+      await supabase.from("task_completions").upsert(
+        { user_id: data.user.id, task_id: task.id, completed_at: new Date().toISOString() },
+        { onConflict: "user_id,task_id" }
+      );
+    }
   };
 
   if (!task) {

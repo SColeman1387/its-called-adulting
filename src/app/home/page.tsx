@@ -8,6 +8,7 @@ import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
 import { isTaskDue, getLastCompletion } from "@/lib/streaks";
+import InstallPrompt from "@/components/InstallPrompt";
 import { createClient } from "@supabase/supabase-js";
 import { migrateLocalStorageToSupabase } from "@/lib/migrateLocalStorage";
 
@@ -119,6 +120,7 @@ export default function Home() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 pb-24">
+      <InstallPrompt />
       {/* Pending parent invite banner */}
       {pendingInvite && (
         <Link
