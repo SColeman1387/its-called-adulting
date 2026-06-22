@@ -8,7 +8,7 @@ import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
 import { Task } from "@/lib/data";
 import { isTaskDue, getLastCompletion } from "@/lib/streaks";
-import InstallPrompt from "@/components/InstallPrompt";
+import InstallPrompt, { IOSInstructions, useInstallState } from "@/components/InstallPrompt";
 import { createClient } from "@supabase/supabase-js";
 import { migrateLocalStorageToSupabase } from "@/lib/migrateLocalStorage";
 
@@ -46,6 +46,8 @@ export default function Home() {
   const [recyclingDay, setRecyclingDay] = useState<number | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [pendingInvite, setPendingInvite] = useState<{ token: string; parentName: string } | null>(null);
+  const [showIOSHelp, setShowIOSHelp] = useState(false);
+  const { platform, standalone } = useInstallState();
 
   useEffect(() => {
     const p = getProfile();
@@ -453,6 +455,24 @@ export default function Home() {
           <span className="text-gray-500 text-lg">›</span>
         </Link>
       </section>
+
+      {/* iOS Add to Home Screen — always accessible, shown when not in standalone */}
+      {platform === "ios" && !standalone && (
+        <section className="mt-6">
+          <button
+            onClick={() => setShowIOSHelp(true)}
+            className="w-full flex items-center gap-4 p-4 bg-blue-50 border border-blue-100 rounded-2xl hover:bg-blue-100 transition-colors text-left"
+          >
+            <span className="text-2xl">📱</span>
+            <div className="flex-1">
+              <div className="font-semibold text-blue-900 text-sm">Add to Home Screen</div>
+              <div className="text-blue-600 text-xs mt-0.5">Opens like a real app — no browser bar</div>
+            </div>
+            <span className="text-blue-400 text-lg">›</span>
+          </button>
+        </section>
+      )}
+      {showIOSHelp && <IOSInstructions onClose={() => setShowIOSHelp(false)} />}
 
       {/* Bottom nav */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex items-center justify-around px-2 py-2 z-50">

@@ -2,7 +2,7 @@
   "name": "It's Called Adulting",
   "short_name": "Adulting",
   "description": "Everything your dad would have taught you — all in one place.",
-  "start_url": "/",
+  "start_url": "/home",
   "display": "standalone",
   "background_color": "#f9f9f7",
   "theme_color": "#f97316",
