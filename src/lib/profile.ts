@@ -1,3 +1,48 @@
+export interface Vehicle {
+  id: string;
+  nickname: string;        // "My Truck", "Wife's SUV"
+  year?: string;
+  make?: string;           // make + model, e.g. "Ford F-150"
+  oilChangeInterval?: 3000 | 5000 | 7500 | 10000;
+  lastOilChangeMileage?: number;
+  lastOilChangeDate?: string;
+  mileageHistory: { date: string; mileage: number }[];  // ordered oldest→newest
+}
+
+export function getLatestMileage(v: Vehicle): number | undefined {
+  if (!v.mileageHistory.length) return undefined;
+  return v.mileageHistory[v.mileageHistory.length - 1].mileage;
+}
+
+export function getMilesUntilOilChangeV2(v: Vehicle): number | null {
+  const current = getLatestMileage(v);
+  if (!current || !v.lastOilChangeMileage || !v.oilChangeInterval) return null;
+  return v.oilChangeInterval - (current - v.lastOilChangeMileage);
+}
+
+export function getOilChangeStatusV2(v: Vehicle): "overdue" | "due-soon" | "ok" | null {
+  const miles = getMilesUntilOilChangeV2(v);
+  if (miles === null) return null;
+  if (miles <= 0) return "overdue";
+  if (miles <= 500) return "due-soon";
+  return "ok";
+}
+
+// Estimate avg miles/month from history, return predicted months until oil change
+export function predictOilChangeMonths(v: Vehicle): number | null {
+  const history = v.mileageHistory;
+  if (history.length < 2 || !v.lastOilChangeMileage || !v.oilChangeInterval) return null;
+  const first = history[0];
+  const last = history[history.length - 1];
+  const monthsElapsed = (new Date(last.date).getTime() - new Date(first.date).getTime()) / (1000 * 60 * 60 * 24 * 30);
+  if (monthsElapsed < 0.5) return null;
+  const milesPerMonth = (last.mileage - first.mileage) / monthsElapsed;
+  if (milesPerMonth <= 0) return null;
+  const milesLeft = getMilesUntilOilChangeV2(v);
+  if (milesLeft === null) return null;
+  return Math.max(0, milesLeft / milesPerMonth);
+}
+
 // States where hard freezes are rare — pool winterizing, hose winterizing
 // and freeze-focused content should be suppressed
 const WARM_CLIMATE_STATES = new Set([
@@ -34,6 +79,7 @@ export interface UserProfile {
   hasGolfCart: boolean;
   hasUTV: boolean;
   hasRV: boolean;
+  vehicles: Vehicle[];
   setupComplete: boolean;
 }
 
@@ -86,5 +132,6 @@ export const DEFAULT_PROFILE: UserProfile = {
   hasGolfCart: false,
   hasUTV: false,
   hasRV: false,
+  vehicles: [],
   setupComplete: false,
 };

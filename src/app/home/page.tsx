@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CATEGORIES, getSeasonalTasks, getCurrentSeason } from "@/lib/data";
-import { getProfile, UserProfile, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
+import { getProfile, UserProfile, Vehicle, getMilesUntilOilChange, getOilChangeStatus } from "@/lib/profile";
+import MileageCheckin from "@/components/MileageCheckin";
 import { getWeeklyLesson, getThisWeekRecord, getLearningStreak } from "@/lib/learning";
 import { getTotalPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
@@ -35,6 +36,7 @@ const difficultyColor: Record<string, string> = {
 export default function Home() {
   const season = getCurrentSeason();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [completedTasks, setCompletedTasks] = useState<Set<string>>(new Set());
   const [weeklyLesson, setWeeklyLesson] = useState<Task | null>(null);
@@ -56,6 +58,7 @@ export default function Home() {
       return;
     }
     setProfile(p);
+    setVehicles(p.vehicles ?? []);
     const raw = localStorage.getItem("ica_completed_tasks");
     if (raw) {
       try { setCompletedTasks(new Set(JSON.parse(raw))); } catch { /* ignore */ }
@@ -305,30 +308,11 @@ export default function Home() {
         );
       })()}
 
-      {/* Oil change alert */}
-      {oilStatus && oilStatus !== "ok" && milesUntilOil !== null && (
-        <Link
-          href="/car"
-          className={`flex items-center gap-3 mb-4 px-4 py-3 rounded-2xl border ${
-            oilStatus === "overdue"
-              ? "bg-red-50 border-red-200"
-              : "bg-orange-50 border-orange-200"
-          }`}
-        >
-          <span className="text-xl">🛢️</span>
-          <div className="flex-1">
-            <p className={`text-sm font-bold ${oilStatus === "overdue" ? "text-red-700" : "text-orange-700"}`}>
-              Oil change {oilStatus === "overdue" ? "overdue" : "due soon"}
-            </p>
-            <p className="text-xs text-gray-500">
-              {oilStatus === "overdue"
-                ? `${Math.abs(milesUntilOil).toLocaleString()} miles past due — tap to schedule`
-                : `${milesUntilOil.toLocaleString()} miles remaining — tap to schedule`}
-            </p>
-          </div>
-          <span className="text-gray-300 text-lg">›</span>
-        </Link>
-      )}
+      {/* Vehicle mileage check-in + oil change alerts */}
+      <MileageCheckin
+        vehicles={vehicles}
+        onUpdate={setVehicles}
+      />
 
       {/* Completed tasks badge */}
       {completedTasks.size > 0 && (

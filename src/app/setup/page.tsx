@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { UserProfile, DEFAULT_PROFILE, saveProfile } from "@/lib/profile";
+import { UserProfile, Vehicle, DEFAULT_PROFILE, saveProfile } from "@/lib/profile";
 import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
@@ -43,6 +43,25 @@ export default function SetupPage() {
   const [showUpsell, setShowUpsell] = useState(false);
   const [trashDay, setTrashDay] = useState<number | null>(null);
   const [recyclingDay, setRecyclingDay] = useState<number | null>(null);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [editingVehicleIdx, setEditingVehicleIdx] = useState<number | null>(null);
+
+  const newBlankVehicle = (): Vehicle => ({
+    id: crypto.randomUUID(),
+    nickname: "",
+    mileageHistory: [],
+  });
+
+  const updateVehicle = (idx: number, patch: Partial<Vehicle>) =>
+    setVehicles((vs) => vs.map((v, i) => i === idx ? { ...v, ...patch } : v));
+
+  const addVehicle = () => {
+    setVehicles((vs) => [...vs, newBlankVehicle()]);
+    setEditingVehicleIdx(vehicles.length);
+  };
+
+  const removeVehicle = (idx: number) =>
+    setVehicles((vs) => vs.filter((_, i) => i !== idx));
 
   const stepIndex = STEPS.indexOf(step);
   const progress = Math.round((stepIndex / (STEPS.length - 1)) * 100);
@@ -54,7 +73,7 @@ export default function SetupPage() {
   const back = () => setStep(STEPS[stepIndex - 1]);
 
   const finish = async () => {
-    saveProfile({ ...profile, setupComplete: true });
+    saveProfile({ ...profile, vehicles, hasCar: vehicles.length > 0, setupComplete: true });
     // Save trash/recycling days to Supabase if user set them
     if (trashDay !== null || recyclingDay !== null) {
       const { data } = await supabase.auth.getUser();
@@ -220,127 +239,133 @@ export default function SetupPage() {
       {/* Step: Car */}
       {step === "car" && (
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">Do you have a car?</h2>
-          <p className="text-sm text-gray-500 mb-5">We&apos;ll track your oil change schedule and remind you when it&apos;s due.</p>
-          <div className="space-y-3 mb-6">
-            {[
-              { val: true, label: "Yes, I have a car", emoji: "🚗" },
-              { val: false, label: "No car right now", emoji: "🚶" },
-            ].map((opt) => (
-              <button
-                key={String(opt.val)}
-                onClick={() => update({ hasCar: opt.val })}
-                className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all ${
-                  profile.hasCar === opt.val
-                    ? "border-orange-400 bg-orange-50"
-                    : "border-gray-100 bg-white hover:border-orange-200"
-                }`}
-              >
-                <span className="text-3xl">{opt.emoji}</span>
-                <span className="font-semibold text-gray-900">{opt.label}</span>
-              </button>
+          <h2 className="text-lg font-bold text-gray-900 mb-1">Your vehicles</h2>
+          <p className="text-sm text-gray-500 mb-5">Add each vehicle — we&apos;ll track oil changes and remind you monthly to update your mileage.</p>
+
+          {/* Vehicle list */}
+          <div className="space-y-3 mb-4">
+            {vehicles.map((v, idx) => (
+              <div key={v.id} className="border-2 border-gray-100 rounded-2xl overflow-hidden">
+                {/* Vehicle header */}
+                <button
+                  onClick={() => setEditingVehicleIdx(editingVehicleIdx === idx ? null : idx)}
+                  className="w-full flex items-center gap-3 p-4 text-left bg-white"
+                >
+                  <span className="text-2xl">🚗</span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-gray-900">{v.nickname || `Vehicle ${idx + 1}`}</div>
+                    <div className="text-xs text-gray-400">{[v.year, v.make].filter(Boolean).join(" ") || "Tap to add details"}</div>
+                  </div>
+                  <span className="text-gray-400 text-sm">{editingVehicleIdx === idx ? "▲" : "▼"}</span>
+                </button>
+
+                {/* Expanded form */}
+                {editingVehicleIdx === idx && (
+                  <div className="px-4 pb-4 space-y-3 border-t border-gray-100 pt-3">
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Nickname</label>
+                      <input
+                        type="text"
+                        placeholder='e.g. My Truck or Wifes SUV'
+                        value={v.nickname}
+                        onChange={(e) => updateVehicle(idx, { nickname: e.target.value })}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Year</label>
+                        <input
+                          type="number"
+                          placeholder="2019"
+                          value={v.year || ""}
+                          onChange={(e) => updateVehicle(idx, { year: e.target.value })}
+                          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Make & Model</label>
+                        <input
+                          type="text"
+                          placeholder="Ford F-150"
+                          value={v.make || ""}
+                          onChange={(e) => updateVehicle(idx, { make: e.target.value })}
+                          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Current Mileage</label>
+                      <input
+                        type="number"
+                        placeholder="47500"
+                        value={v.mileageHistory[0]?.mileage || ""}
+                        onChange={(e) => {
+                          const m = parseInt(e.target.value);
+                          updateVehicle(idx, {
+                            mileageHistory: m ? [{ date: new Date().toISOString(), mileage: m }] : [],
+                          });
+                        }}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Last Oil Change Mileage</label>
+                      <input
+                        type="number"
+                        placeholder="45000 (check windshield sticker)"
+                        value={v.lastOilChangeMileage || ""}
+                        onChange={(e) => updateVehicle(idx, { lastOilChangeMileage: parseInt(e.target.value) || undefined })}
+                        className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Oil type</label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {([
+                          { val: 3000, label: "Conventional", sub: "3,000 mi" },
+                          { val: 5000, label: "Synthetic Blend", sub: "5,000 mi" },
+                          { val: 7500, label: "Full Synthetic", sub: "7,500 mi" },
+                          { val: 10000, label: "Full Synthetic+", sub: "10,000 mi" },
+                        ] as { val: 3000 | 5000 | 7500 | 10000; label: string; sub: string }[]).map((opt) => (
+                          <button
+                            key={opt.val}
+                            onClick={() => updateVehicle(idx, { oilChangeInterval: opt.val })}
+                            className={`flex flex-col p-2.5 rounded-xl border-2 text-left transition-all ${
+                              v.oilChangeInterval === opt.val
+                                ? "border-orange-400 bg-orange-50"
+                                : "border-gray-100 bg-white"
+                            }`}
+                          >
+                            <span className="text-xs font-bold text-gray-900">{opt.label}</span>
+                            <span className="text-xs text-gray-400">{opt.sub}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => removeVehicle(idx)}
+                      className="text-xs text-red-400 font-medium mt-1"
+                    >
+                      Remove this vehicle
+                    </button>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
-          {profile.hasCar && (
-            <div className="space-y-4 mb-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Year</label>
-                  <input
-                    type="number"
-                    placeholder="e.g. 2019"
-                    value={profile.carYear || ""}
-                    onChange={(e) => update({ carYear: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
-                  />
-                </div>
-                <div>
-                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Make & Model</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Honda Civic"
-                    value={profile.carMake || ""}
-                    onChange={(e) => update({ carMake: e.target.value })}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-orange-400"
-                  />
-                </div>
-              </div>
+          <button
+            onClick={addVehicle}
+            className="w-full py-3 border-2 border-dashed border-orange-200 rounded-2xl text-sm font-semibold text-orange-500 hover:bg-orange-50 transition-colors mb-6"
+          >
+            + Add {vehicles.length === 0 ? "a vehicle" : "another vehicle"}
+          </button>
 
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Current Mileage</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 47500"
-                  value={profile.currentMileage || ""}
-                  onChange={(e) => update({ currentMileage: parseInt(e.target.value) || undefined })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Last Oil Change Mileage</label>
-                <input
-                  type="number"
-                  placeholder="e.g. 45000 (check sticker in windshield)"
-                  value={profile.lastOilChangeMileage || ""}
-                  onChange={(e) => update({ lastOilChangeMileage: parseInt(e.target.value) || undefined })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Oil Type (sets your interval)</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {([
-                    { val: 3000, label: "Conventional", sub: "Every 3,000 mi" },
-                    { val: 5000, label: "Synthetic Blend", sub: "Every 5,000 mi" },
-                    { val: 7500, label: "Full Synthetic", sub: "Every 7,500 mi" },
-                    { val: 10000, label: "Full Synthetic+", sub: "Every 10,000 mi" },
-                  ] as { val: 3000 | 5000 | 7500 | 10000; label: string; sub: string }[]).map((opt) => (
-                    <button
-                      key={opt.val}
-                      onClick={() => update({ oilChangeInterval: opt.val })}
-                      className={`flex flex-col items-start p-3 rounded-xl border-2 text-left transition-all ${
-                        profile.oilChangeInterval === opt.val
-                          ? "border-orange-400 bg-orange-50"
-                          : "border-gray-100 bg-white hover:border-orange-200"
-                      }`}
-                    >
-                      <span className="text-xs font-bold text-gray-900">{opt.label}</span>
-                      <span className="text-xs text-gray-400 mt-0.5">{opt.sub}</span>
-                    </button>
-                  ))}
-                </div>
-                <p className="text-xs text-gray-400 mt-1.5">Not sure? Check your owner&apos;s manual or the oil cap under the hood.</p>
-              </div>
-
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">Preferred Oil Change Shop <span className="font-normal normal-case">(optional)</span></label>
-                <input
-                  type="text"
-                  placeholder="e.g. Valvoline on High St"
-                  value={profile.preferredOilShop || ""}
-                  onChange={(e) => update({ preferredOilShop: e.target.value })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400 mb-2"
-                />
-                <input
-                  type="tel"
-                  placeholder="Phone number (optional)"
-                  value={profile.preferredOilShopPhone || ""}
-                  onChange={(e) => update({ preferredOilShopPhone: e.target.value })}
-                  className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-orange-400"
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="flex gap-3 mt-6">
-            <button onClick={back} className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm text-gray-600 hover:bg-gray-50">
-              ← Back
-            </button>
-            <button onClick={next} className="flex-1 py-3 rounded-2xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600">
-              Continue →
+          <div className="flex gap-3">
+            <button onClick={back} className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm text-gray-600">← Back</button>
+            <button onClick={next} className="flex-1 py-3 rounded-2xl bg-orange-500 text-white text-sm font-semibold">
+              {vehicles.length === 0 ? "Skip →" : "Continue →"}
             </button>
           </div>
         </div>
