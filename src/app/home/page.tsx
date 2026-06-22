@@ -237,7 +237,7 @@ export default function Home() {
           <div className="text-sm text-gray-600">
             <span className="font-semibold text-gray-900">Your profile:</span>{" "}
             {profile.homeType === "apartment" ? "Apartment" : profile.homeType === "rent-house" ? "Renting a house" : "Homeowner"}
-            {profile.hasCar ? " · Car" : ""}
+            {vehicles.length > 0 ? ` · ${vehicles.length} vehicle${vehicles.length > 1 ? "s" : ""}` : profile.hasCar ? " · Car" : ""}
             {profile.hasPool ? " · Pool" : ""}
             {profile.hasYard ? " · Yard" : ""}
           </div>
@@ -473,6 +473,12 @@ export default function Home() {
           <span className="text-xl">🔧</span>
           <span className="text-xs font-medium">Toolkit</span>
         </Link>
+        {vehicles.length > 0 && (
+          <Link href="/vehicles" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600">
+            <span className="text-xl">🚗</span>
+            <span className="text-xs font-medium">Vehicles</span>
+          </Link>
+        )}
         <Link href="/rewards" className="flex flex-col items-center gap-0.5 px-3 py-1 text-gray-400 hover:text-gray-600">
           <span className="text-xl">🏆</span>
           <span className="text-xs font-medium">Rewards</span>

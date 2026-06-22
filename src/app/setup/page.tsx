@@ -50,6 +50,7 @@ export default function SetupPage() {
     id: crypto.randomUUID(),
     nickname: "",
     mileageHistory: [],
+    serviceHistory: [],
   });
 
   const updateVehicle = (idx: number, patch: Partial<Vehicle>) =>

@@ -1,3 +1,39 @@
+export type ServiceType =
+  | "oil_change"
+  | "tire_rotation"
+  | "brakes"
+  | "tires"
+  | "battery"
+  | "air_filter"
+  | "transmission"
+  | "coolant"
+  | "inspection"
+  | "other";
+
+export const SERVICE_LABELS: Record<ServiceType, string> = {
+  oil_change: "Oil Change",
+  tire_rotation: "Tire Rotation",
+  brakes: "Brakes",
+  tires: "Tires",
+  battery: "Battery",
+  air_filter: "Air Filter",
+  transmission: "Transmission Service",
+  coolant: "Coolant Flush",
+  inspection: "Inspection / State Inspection",
+  other: "Other",
+};
+
+export interface ServiceRecord {
+  id: string;
+  date: string;             // ISO date string
+  serviceType: ServiceType;
+  mileage?: number;
+  cost?: number;
+  shop?: string;
+  notes?: string;
+  receiptUrl?: string;      // Supabase Storage public URL
+}
+
 export interface Vehicle {
   id: string;
   nickname: string;        // "My Truck", "Wife's SUV"
@@ -7,6 +43,7 @@ export interface Vehicle {
   lastOilChangeMileage?: number;
   lastOilChangeDate?: string;
   mileageHistory: { date: string; mileage: number }[];  // ordered oldest→newest
+  serviceHistory: ServiceRecord[];
 }
 
 export function getLatestMileage(v: Vehicle): number | undefined {
