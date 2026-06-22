@@ -20,6 +20,7 @@ export default function TaskPage() {
   const { id } = useParams();
   const task = TASKS.find((t) => t.id === id);
   const [mode, setMode] = useState<"choose" | "diy" | "pro">("choose");
+  const [stepsExpanded, setStepsExpanded] = useState(false);
   const [checkedSteps, setCheckedSteps] = useState<Set<number>>(new Set());
   const [completed, setCompleted] = useState(false);
   const [streak, setStreak] = useState(0);
@@ -163,7 +164,7 @@ export default function TaskPage() {
         <div className="mt-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="font-bold text-gray-900 text-lg">DIY Guide</h2>
-            <button onClick={() => { setMode("choose"); setCheckedSteps(new Set()); }} className="text-xs text-gray-400 hover:text-gray-600">
+            <button onClick={() => { setMode("choose"); setCheckedSteps(new Set()); setStepsExpanded(false); }} className="text-xs text-gray-400 hover:text-gray-600">
               ← Change
             </button>
           </div>
@@ -183,32 +184,53 @@ export default function TaskPage() {
             <p className="text-sm text-blue-900">{task.diyGuide.intro}</p>
           </div>
 
-          {/* Steps */}
-          <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Steps</h3>
-          <div className="space-y-2 mb-6">
-            {task.diyGuide.steps.map((step, i) => (
-              <button
-                key={i}
-                onClick={() => toggleStep(i)}
-                className={`w-full flex items-start gap-3 p-4 rounded-2xl text-left transition-all border ${
-                  checkedSteps.has(i)
-                    ? "bg-green-50 border-green-200"
-                    : "bg-white border-gray-100 hover:border-gray-200"
-                }`}
-              >
-                <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center text-xs font-bold transition-colors ${
-                  checkedSteps.has(i)
-                    ? "border-green-500 bg-green-500 text-white"
-                    : "border-gray-300 text-gray-400"
-                }`}>
-                  {checkedSteps.has(i) ? "✓" : i + 1}
+          {/* Steps — collapsed by default */}
+          {!stepsExpanded ? (
+            <button
+              onClick={() => setStepsExpanded(true)}
+              className="w-full flex items-center justify-between p-4 bg-white rounded-2xl border-2 border-dashed border-gray-200 hover:border-orange-300 hover:shadow-sm transition-all text-left mb-6"
+            >
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">📋</span>
+                <div>
+                  <div className="font-semibold text-gray-900 text-sm">Need the step-by-step?</div>
+                  <div className="text-xs text-gray-400 mt-0.5">{task.diyGuide.steps.length} steps — tap to expand</div>
                 </div>
-                <span className={`text-sm ${checkedSteps.has(i) ? "text-gray-400 line-through" : "text-gray-700"}`}>
-                  {step}
-                </span>
-              </button>
-            ))}
-          </div>
+              </div>
+              <span className="text-orange-500 font-bold text-sm">Show →</span>
+            </button>
+          ) : (
+            <>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-widest">Steps</h3>
+                <button onClick={() => setStepsExpanded(false)} className="text-xs text-gray-400 hover:text-gray-600">Hide</button>
+              </div>
+              <div className="space-y-2 mb-6">
+                {task.diyGuide.steps.map((step, i) => (
+                  <button
+                    key={i}
+                    onClick={() => toggleStep(i)}
+                    className={`w-full flex items-start gap-3 p-4 rounded-2xl text-left transition-all border ${
+                      checkedSteps.has(i)
+                        ? "bg-green-50 border-green-200"
+                        : "bg-white border-gray-100 hover:border-gray-200"
+                    }`}
+                  >
+                    <div className={`mt-0.5 w-5 h-5 rounded-full border-2 flex-shrink-0 flex items-center justify-center text-xs font-bold transition-colors ${
+                      checkedSteps.has(i)
+                        ? "border-green-500 bg-green-500 text-white"
+                        : "border-gray-300 text-gray-400"
+                    }`}>
+                      {checkedSteps.has(i) ? "✓" : i + 1}
+                    </div>
+                    <span className={`text-sm ${checkedSteps.has(i) ? "text-gray-400 line-through" : "text-gray-700"}`}>
+                      {step}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           {/* Supplies you'll need */}
           {TASK_SUPPLIES[task.id] && (

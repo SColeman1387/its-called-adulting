@@ -30,8 +30,8 @@ export default function LandingPage() {
           <span className="text-orange-500">to adult?</span>
         </h1>
         <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-lg mx-auto">
-          The app that replaces the midnight &ldquo;Mom, I locked my keys in the car&rdquo; call.
-          Practical life skills nobody taught them — all in one place.
+          The app that turns &ldquo;Mom, my car won&apos;t start and I don&apos;t know what to do&rdquo;
+          into &ldquo;I figured it out.&rdquo; Practical life skills, all in one place.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -75,9 +75,9 @@ export default function LandingPage() {
             You can&apos;t be there<br />for every moment.
           </h2>
           <p className="text-blue-200 leading-relaxed mb-6 text-base">
-            The next time your kid locks their keys in the car at midnight,
-            gets a weird landlord letter, or doesn&apos;t know if that noise their car
-            is making is serious — they&apos;ll have answers before they even call you.
+            The next time your kid&apos;s car won&apos;t start, they get a weird landlord
+            letter, or they don&apos;t know if that noise is serious — they&apos;ll have
+            answers before they even call you.
           </p>
           <ul className="space-y-3 mb-8">
             {[
@@ -143,6 +143,72 @@ export default function LandingPage() {
           >
             See the toolkit →
           </Link>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="max-w-3xl mx-auto px-6 py-16">
+        <h2 className="text-2xl font-black text-gray-900 mb-2 text-center">Simple pricing</h2>
+        <p className="text-gray-400 text-sm mb-10 text-center">Start free. Upgrade when you want to earn real stuff.</p>
+        <div className="grid sm:grid-cols-2 gap-4">
+
+          {/* Free tier */}
+          <div className="bg-gray-50 rounded-3xl p-7 border border-gray-100">
+            <div className="text-2xl font-black text-gray-900 mb-1">Free</div>
+            <div className="text-gray-400 text-sm mb-6">Forever. No credit card.</div>
+            <ul className="space-y-3 text-sm text-gray-700">
+              {[
+                "100+ life skill guides",
+                "Step-by-step DIY walkthroughs",
+                "Find a pro near you",
+                "Seasonal task reminders",
+                "Car, home, money, health & more",
+                "Works on any phone or computer",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <span className="text-green-500 font-bold mt-0.5">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/home"
+              className="mt-8 block text-center bg-white text-gray-900 font-bold px-6 py-3 rounded-2xl border-2 border-gray-200 hover:border-gray-400 transition-colors text-sm"
+            >
+              Start free →
+            </Link>
+          </div>
+
+          {/* Pro tier */}
+          <div className="bg-orange-500 rounded-3xl p-7 text-white relative overflow-hidden">
+            <div className="absolute top-4 right-4 bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full">
+              Most popular
+            </div>
+            <div className="text-2xl font-black mb-1">$4.99<span className="text-base font-normal text-orange-200">/mo</span></div>
+            <div className="text-orange-200 text-sm mb-6">Cancel anytime.</div>
+            <ul className="space-y-3 text-sm text-white/90">
+              {[
+                "Everything in Free",
+                "Earn Adulting Bucks for every task",
+                "100 bonus points just for subscribing",
+                "Redeem points for real gift cards",
+                "Unlock a 12-tool starter toolkit",
+                "Priority access to new features",
+              ].map((item) => (
+                <li key={item} className="flex items-start gap-2.5">
+                  <span className="text-white font-bold mt-0.5">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <Link
+              href="/subscribe"
+              className="mt-8 block text-center bg-white text-orange-600 font-bold px-6 py-3 rounded-2xl hover:bg-orange-50 transition-colors text-sm"
+            >
+              Get Adulting Pro →
+            </Link>
+          </div>
+
         </div>
       </section>
 
