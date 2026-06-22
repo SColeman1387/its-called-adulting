@@ -6,8 +6,15 @@ import { TASKS, CATEGORIES } from "@/lib/data";
 import { recordCompletion, getTaskStreak, getCompletionCount, getLastCompletion } from "@/lib/streaks";
 import { awardPoints } from "@/lib/points";
 import { TASK_SUPPLIES } from "@/lib/supplies";
+import { getProfile } from "@/lib/profile";
 import TipSubmitter from "@/components/TipSubmitter";
 import CommunityTips from "@/components/CommunityTips";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 export default function TaskPage() {
   const { id } = useParams();
@@ -18,12 +25,23 @@ export default function TaskPage() {
   const [streak, setStreak] = useState(0);
   const [count, setCount] = useState(0);
   const [lastDone, setLastDone] = useState<Date | null>(null);
+  const [showUpsell, setShowUpsell] = useState(false);
+  const [isSubscriber, setIsSubscriber] = useState(false);
+  const profile = getProfile();
+  const userCity = profile?.city || profile?.state || "your area";
 
   useEffect(() => {
     if (!task) return;
     setStreak(task.checkInterval ? getTaskStreak(task.id, task.checkInterval) : 0);
     setCount(getCompletionCount(task.id));
     setLastDone(getLastCompletion(task.id));
+    // Check subscription status
+    supabase.auth.getUser().then(({ data }) => {
+      if (!data.user) return;
+      supabase.from("profiles").select("is_subscribed").eq("id", data.user.id).single().then(({ data: p }) => {
+        setIsSubscriber(!!p?.is_subscribed);
+      });
+    });
   }, [task]);
 
   const markComplete = () => {
@@ -34,6 +52,8 @@ export default function TaskPage() {
     setCount((c) => c + 1);
     const newStreak = task.checkInterval ? getTaskStreak(task.id, task.checkInterval) : 0;
     setStreak(newStreak);
+    // Show upsell to non-subscribers after first completion
+    if (!isSubscriber) setTimeout(() => setShowUpsell(true), 800);
   };
 
   if (!task) {
@@ -53,6 +73,51 @@ export default function TaskPage() {
 
   return (
     <main className="max-w-2xl mx-auto px-4 pb-16">
+
+      {/* Subscription upsell modal */}
+      {showUpsell && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl w-full max-w-sm p-6 shadow-2xl">
+            <div className="text-center mb-5">
+              <div className="text-5xl mb-3">⭐</div>
+              <h2 className="text-xl font-black text-gray-900 mb-1">You just earned points!</h2>
+              <p className="text-sm text-gray-500">Subscribe to bank them — plus get <span className="font-bold text-orange-500">100 bonus Adulting Bucks</span> just for starting.</p>
+            </div>
+            <div className="bg-orange-50 rounded-2xl p-4 mb-5">
+              <div className="space-y-2">
+                {[
+                  "Earn Adulting Bucks on every task",
+                  "Redeem for real gift cards",
+                  "100 bonus points when you subscribe today",
+                  "Cancel anytime",
+                ].map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm text-orange-900">
+                    <span className="text-orange-500 font-bold">✓</span>
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="text-center mb-3">
+              <span className="text-2xl font-black text-gray-900">$4.99</span>
+              <span className="text-sm text-gray-400">/month</span>
+            </div>
+            <Link
+              href="/rewards"
+              onClick={() => setShowUpsell(false)}
+              className="block w-full py-4 bg-orange-500 text-white font-bold rounded-2xl text-center hover:bg-orange-600 transition-colors mb-3"
+            >
+              Start earning → Get 100 bonus points
+            </Link>
+            <button
+              onClick={() => setShowUpsell(false)}
+              className="w-full text-sm text-gray-400 hover:text-gray-600 py-2"
+            >
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
       {/* Header */}
       <div className="pt-8 pb-4">
         <Link href={`/category/${task.category}`} className="text-sm text-orange-600 font-medium mb-4 inline-block">
@@ -280,7 +345,7 @@ export default function TaskPage() {
 
           <div className="bg-blue-50 rounded-2xl p-4 mb-4">
             <p className="text-sm text-blue-900">
-              We&apos;re showing you top-rated local businesses in Columbus, OH for this job. Look for 4–5 star ratings and recent reviews.
+              We&apos;re showing you top-rated local businesses near {userCity} for this job. Look for 4–5 star ratings and recent reviews.
             </p>
           </div>
 
@@ -290,7 +355,7 @@ export default function TaskPage() {
               <span className="text-2xl">📍</span>
               <div>
                 <div className="font-semibold text-gray-900 text-sm">Local Businesses Near You</div>
-                <div className="text-xs text-gray-500">Columbus, OH · 4–5 star rated</div>
+                <div className="text-xs text-gray-500">{userCity} · 4–5 star rated</div>
               </div>
             </div>
             <a
