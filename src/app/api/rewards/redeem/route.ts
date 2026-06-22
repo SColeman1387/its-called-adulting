@@ -9,11 +9,22 @@ const supabase = createClient(
 const TREMENDOUS_API_URL = process.env.TREMENDOUS_API_URL ?? "https://testflight.tremendous.com/api/v2";
 const TREMENDOUS_API_KEY = process.env.TREMENDOUS_API_KEY!;
 
-// Map our tier IDs to dollar amounts
 const TIER_AMOUNTS: Record<string, number> = {
   gc10: 10,
   gc25: 25,
 };
+
+// In-memory rate limit: max 2 redemptions per userId per 24h window
+const recentRedemptions = new Map<string, number[]>();
+
+function isRateLimited(userId: string): boolean {
+  const now = Date.now();
+  const windowMs = 24 * 60 * 60 * 1000;
+  const times = (recentRedemptions.get(userId) ?? []).filter(t => now - t < windowMs);
+  if (times.length >= 2) return true;
+  recentRedemptions.set(userId, [...times, now]);
+  return false;
+}
 
 export async function POST(req: NextRequest) {
   const { userId, tierId, tierLabel, points, email } = await req.json();
@@ -21,8 +32,23 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
+  if (isRateLimited(userId)) {
+    return NextResponse.json({ error: "Too many redemptions. Please wait 24 hours." }, { status: 429 });
+  }
+
   const amount = TIER_AMOUNTS[tierId];
   if (!amount) return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
+
+  // Verify user has enough points in DB before redeeming
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("points")
+    .eq("id", userId)
+    .single();
+
+  if (!profile || (profile.points ?? 0) < points) {
+    return NextResponse.json({ error: "Insufficient points" }, { status: 403 });
+  }
 
   // Send the gift card via Tremendous
   const tremendous = await fetch(`${TREMENDOUS_API_URL}/orders`, {

@@ -23,7 +23,7 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="max-w-2xl mx-auto px-6 pt-12 pb-16 text-center">
         <div className="inline-block bg-orange-100 text-orange-700 text-xs font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-wide">
-          Free · No download required
+          Free to start · No download required
         </div>
         <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
           Is your kid ready<br />
@@ -55,7 +55,7 @@ export default function LandingPage() {
         <div className="max-w-3xl mx-auto px-6 flex flex-wrap justify-center gap-8 text-center">
           {[
             { stat: "100+", label: "Life skills covered" },
-            { stat: "Free", label: "Always free to use" },
+            { stat: "Free", label: "Free to get started" },
             { stat: "12", label: "Real tools to earn" },
             { stat: "5 min", label: "Lessons per week" },
           ].map(({ stat, label }) => (

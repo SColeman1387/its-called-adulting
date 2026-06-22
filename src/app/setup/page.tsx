@@ -84,20 +84,38 @@ export default function SetupPage() {
       {/* Step: City */}
       {step === "city" && (
         <div>
-          <h2 className="text-lg font-bold text-gray-900 mb-1">What city are you in?</h2>
-          <p className="text-sm text-gray-500 mb-5">We use this to show community tips and advice that's relevant to where you live.</p>
-          <input
-            type="text"
-            value={profile.city ?? ""}
-            onChange={(e) => update({ city: e.target.value })}
-            placeholder="e.g. Columbus, OH"
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400 mb-4"
-          />
+          <h2 className="text-lg font-bold text-gray-900 mb-1">Where are you located?</h2>
+          <p className="text-sm text-gray-500 mb-5">We use this to show tasks and tips relevant to your state — like DMV rules, renter&apos;s rights, and local resources.</p>
+          <div className="space-y-3 mb-4">
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">City</label>
+              <input
+                type="text"
+                value={profile.city ?? ""}
+                onChange={(e) => update({ city: e.target.value })}
+                placeholder="e.g. Columbus"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">State</label>
+              <select
+                value={profile.state ?? ""}
+                onChange={(e) => update({ state: e.target.value })}
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400 bg-white"
+              >
+                <option value="">Select your state…</option>
+                {["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"].map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+          </div>
           <button
             onClick={next}
             className="w-full py-3.5 bg-orange-500 text-white font-bold rounded-2xl hover:bg-orange-600"
           >
-            {profile.city?.trim() ? "Continue →" : "Skip for now →"}
+            {(profile.city?.trim() || profile.state) ? "Continue →" : "Skip for now →"}
           </button>
         </div>
       )}

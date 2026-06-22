@@ -13,6 +13,7 @@ export interface UserProfile {
   hasYard: boolean;
   hasPets: boolean;
   city?: string;
+  state?: string;
   hasWaterSoftener: boolean;
   hasDryer: boolean;
   hasFireplace: boolean;
