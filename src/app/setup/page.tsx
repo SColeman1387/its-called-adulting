@@ -3,6 +3,27 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { UserProfile, DEFAULT_PROFILE, saveProfile } from "@/lib/profile";
 
+async function detectLocation(): Promise<{ city?: string; state?: string }> {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) { resolve({}); return; }
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          const { latitude, longitude } = pos.coords;
+          const res = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+          );
+          const data = await res.json();
+          const city = data.address?.city || data.address?.town || data.address?.village || "";
+          const state = data.address?.state || "";
+          resolve({ city, state });
+        } catch { resolve({}); }
+      },
+      () => resolve({})
+    );
+  });
+}
+
 type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "done";
 
 const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "done"];
@@ -85,7 +106,16 @@ export default function SetupPage() {
       {step === "city" && (
         <div>
           <h2 className="text-lg font-bold text-gray-900 mb-1">Where are you located?</h2>
-          <p className="text-sm text-gray-500 mb-5">We use this to show tasks and tips relevant to your state — like DMV rules, renter&apos;s rights, and local resources.</p>
+          <p className="text-sm text-gray-500 mb-4">We use this to show tasks and tips relevant to your state — like DMV rules, renter&apos;s rights, and local resources.</p>
+          <button
+            onClick={async () => {
+              const loc = await detectLocation();
+              if (loc.city || loc.state) update({ city: loc.city, state: loc.state });
+            }}
+            className="w-full py-3 mb-4 border-2 border-dashed border-orange-200 rounded-xl text-sm text-orange-600 font-semibold hover:bg-orange-50 transition-colors"
+          >
+            📍 Detect my location automatically
+          </button>
           <div className="space-y-3 mb-4">
             <div>
               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1 block">City</label>

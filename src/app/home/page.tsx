@@ -133,7 +133,7 @@ export default function Home() {
         <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
           <div className="inline-flex items-center gap-1.5 bg-orange-50 text-orange-700 text-xs font-medium px-3 py-1.5 rounded-full">
             <span>{seasonEmoji[season]}</span>
-            <span>Showing tasks for {season} in Columbus, OH</span>
+            <span>Showing tasks for {season}{profile?.city ? ` in ${profile.city}` : profile?.state ? ` in ${profile.state}` : ""}</span>
           </div>
           <Link href="/rewards" className="inline-flex items-center gap-1.5 bg-[#0f1f3d] text-white text-xs font-bold px-3 py-1.5 rounded-full hover:bg-[#1a2f55] transition-colors">
             <span>⭐</span>
