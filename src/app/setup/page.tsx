@@ -131,7 +131,7 @@ export default function SetupPage() {
               style={{ width: `${progress}%` }}
             />
           </div>
-          <span className="text-xs text-gray-400 w-10 text-right">{stepIndex + 1}/{STEPS.length - 1}</span>
+          <span className="text-xs text-gray-400 w-10 text-right">{Math.min(stepIndex + 1, STEPS.length - 1)}/{STEPS.length - 1}</span>
         </div>
       </div>
 

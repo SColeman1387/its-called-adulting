@@ -74,9 +74,14 @@ export default function TaskPage() {
 
       {/* Header */}
       <div className="pt-8 pb-4">
-        <Link href={`/category/${task.category}`} className="text-sm text-orange-600 font-medium mb-4 inline-block">
-          ← {category?.label}
-        </Link>
+        <div className="flex items-center justify-between mb-4">
+          <Link href={`/category/${task.category}`} className="text-sm text-orange-600 font-medium">
+            ← {category?.label}
+          </Link>
+          <Link href="/home" className="text-sm text-gray-400 hover:text-gray-600">
+            Home
+          </Link>
+        </div>
         <div className="flex items-start gap-3">
           <span className="text-4xl">{category?.icon}</span>
           <div className="flex-1">
