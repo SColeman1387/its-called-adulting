@@ -122,10 +122,10 @@ export default function SetupPage() {
               <span className="text-sm text-gray-400">/month</span>
             </div>
             <a
-              href="/rewards"
+              href="/subscribe"
               className="block w-full py-4 bg-orange-500 text-white font-bold rounded-2xl text-center hover:bg-orange-600 transition-colors mb-3"
             >
-              Start earning → Get 100 bonus points
+              Start Adulting Pro — $4.99/mo →
             </a>
             <button
               onClick={goHome}
