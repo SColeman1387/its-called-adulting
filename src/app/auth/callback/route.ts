@@ -1,6 +1,12 @@
 import { createServerClient } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
@@ -38,14 +44,30 @@ export async function GET(request: NextRequest) {
           .single();
 
         if (referrer) {
-          await supabase.from("referrals").insert({
+          await supabaseAdmin.from("referrals").insert({
             referrer_id: referrer.id,
             referred_id: data.user.id,
           });
-          await supabase
+          await supabaseAdmin
             .from("profiles")
             .update({ referred_by: referrer.id })
             .eq("id", data.user.id);
+          // Award +50 points to the referrer
+          const ledgerId = `referral_${referrer.id}_${data.user.id}`;
+          const { data: existing } = await supabaseAdmin
+            .from("points_ledger")
+            .select("id")
+            .eq("id", ledgerId)
+            .maybeSingle();
+          if (!existing) {
+            await supabaseAdmin.from("points_ledger").insert({
+              id: ledgerId,
+              user_id: referrer.id,
+              type: "referral",
+              points: 50,
+              label: `Friend joined — referral bonus`,
+            });
+          }
         }
       }
 
