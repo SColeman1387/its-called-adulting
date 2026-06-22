@@ -27,6 +27,10 @@ function isRateLimited(userId: string): boolean {
 }
 
 export async function POST(req: NextRequest) {
+  if (process.env.NEXT_PUBLIC_REWARDS_LIVE !== "true") {
+    return NextResponse.json({ error: "Redemption not yet available." }, { status: 503 });
+  }
+
   const { userId, tierId, tierLabel, points, email } = await req.json();
   if (!userId || !tierId || !email) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });

@@ -190,7 +190,7 @@ export default function SetupPage() {
                 type="text"
                 value={profile.city ?? ""}
                 onChange={(e) => update({ city: e.target.value })}
-                placeholder="e.g. Columbus"
+                placeholder="e.g. Chicago"
                 className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-orange-400"
               />
             </div>

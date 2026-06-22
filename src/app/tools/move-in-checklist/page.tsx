@@ -65,7 +65,7 @@ const SECTIONS: Section[] = [
       { id: "co-detector", label: "Locate and test carbon monoxide detectors" },
       { id: "fire-extinguisher", label: "Locate fire extinguisher if one is provided" },
       { id: "deadbolt", label: "Confirm deadbolt works on front door" },
-      { id: "lock-request", label: "Ask about re-keying — you don't know who had keys before you", note: "Ohio law doesn't require landlords to re-key, but you can ask." },
+      { id: "lock-request", label: "Ask about re-keying — you don't know who had keys before you", note: "Most landlords aren't required to re-key, but it's always worth asking." },
       { id: "emergency-exits", label: "Identify your emergency exits" },
       { id: "water-shutoff", label: "Find the main water shutoff valve (usually under sink or in utility closet)" },
       { id: "breaker-box", label: "Locate the breaker box and take a photo of it" },
@@ -82,12 +82,12 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    title: "Ohio Renter Basics",
+    title: "Renter Basics (Every State)",
     icon: "⚖️",
     items: [
-      { id: "deposit-law", label: "Know the deposit deadline: landlord has 30 days after move-out to return it" },
-      { id: "notice-to-enter", label: "Landlord must give 24 hours notice before entering your unit" },
-      { id: "habitability", label: "Landlord must provide working heat, plumbing, and a secure unit" },
+      { id: "deposit-law", label: "Know the deposit deadline: most states require return within 14–45 days of move-out" },
+      { id: "notice-to-enter", label: "Landlord must give advance notice before entering — usually 24–48 hours" },
+      { id: "habitability", label: "Landlord must provide working heat, plumbing, and a secure unit in every state" },
       { id: "save-rent-receipts", label: "Save proof of every rent payment (bank records, receipts, email confirmations)" },
     ],
   },
@@ -194,12 +194,12 @@ export default function MoveInChecklistPage() {
 
       <div className="mt-8 bg-gray-900 rounded-2xl p-5 text-center">
         <p className="text-white text-sm font-semibold mb-1">Need to know your renter rights?</p>
-        <p className="text-gray-400 text-xs mb-3">Ohio law protects you — but you have to know it to use it.</p>
+        <p className="text-gray-400 text-xs mb-3">State law protects you — but you have to know it to use it.</p>
         <Link
           href="/task/renter-rights"
           className="inline-block bg-white text-gray-900 text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-gray-100 transition-colors"
         >
-          Ohio Renter Rights Guide →
+          Renter Rights Guide →
         </Link>
       </div>
     </main>

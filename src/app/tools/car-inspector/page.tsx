@@ -525,7 +525,7 @@ export default function CarInspectorPage() {
                 <>
                   <div className="text-sm text-gray-700">1. Schedule a pre-purchase inspection with an independent mechanic ($100–$150).</div>
                   <div className="text-sm text-gray-700">2. Use any mechanic findings to negotiate the price.</div>
-                  <div className="text-sm text-gray-700">3. Verify the title is clean and transfer it at the Ohio BMV within 30 days of purchase.</div>
+                  <div className="text-sm text-gray-700">3. Verify the title is clean and transfer it at your state DMV — most states require this within 30 days of purchase.</div>
                 </>
               )}
             </div>

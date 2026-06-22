@@ -1,4 +1,9 @@
 "use client";
+import { redirect } from "next/navigation";
+
+// Internal tool — not for public users
+if (typeof window === "undefined") redirect("/home");
+if (typeof window !== "undefined") window.location.href = "/home";
 
 const sections = [
   {

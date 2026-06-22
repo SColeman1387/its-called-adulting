@@ -91,7 +91,7 @@ export const INSPECTION_QUESTIONS: InspectionQuestion[] = [
     id: "rust",
     group: "exterior",
     question: "Is there rust on the rocker panels, wheel wells, or undercarriage?",
-    why: "Get down and look under the car. Surface rust (orange flaking on flat surfaces) is cosmetic. But rust on the frame rails, floor pans, or rocker panels (the metal sill under the doors) is structural — it literally weakens the car's skeleton. In Ohio's salted winters, this is common.",
+    why: "Get down and look under the car. Surface rust (orange flaking on flat surfaces) is cosmetic. But rust on the frame rails, floor pans, or rocker panels (the metal sill under the doors) is structural — it literally weakens the car's skeleton. Especially common on cars from northern states where roads are salted in winter.",
     badAnswer: "yes",
     risk: "major",
     estimatedCost: "Surface rust: $500–$1,500. Structural rust: $2,000–$5,000+. Severe: car is totaled.",

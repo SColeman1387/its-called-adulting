@@ -48,7 +48,7 @@ const FLAGS: Flag[] = [
     id: "no-repair-timeline",
     question: "Is there no mention of how quickly the landlord must make repairs?",
     redFlagIfYes: true,
-    explanation: "Ohio law requires repairs within a 'reasonable time.' Leases should be more specific. Vagueness protects landlords.",
+    explanation: "Most states require repairs within a reasonable time.' Leases should be more specific. Vagueness protects landlords.",
     severity: "warning",
     tip: "Ask to add: 'Landlord will respond to repair requests within 48 hours and complete repairs within 14 days.'",
   },
@@ -56,17 +56,17 @@ const FLAGS: Flag[] = [
     id: "no-deposit-return-timeline",
     question: "Does the lease fail to mention when your deposit will be returned?",
     redFlagIfYes: true,
-    explanation: "Ohio law requires return within 30 days — but a lease that ignores this may indicate a landlord unfamiliar with (or deliberately avoiding) their legal obligations.",
+    explanation: "Most states require deposit return within 14–45 days — but a lease that ignores this may indicate a landlord unfamiliar with (or deliberately avoiding) their legal obligations.",
     severity: "note",
-    tip: "Ohio law already protects you here — 30 days required. But note it as a sign of how professional this landlord is.",
+    tip: "Check your state's landlord-tenant law — most require 14–45 days. Either way, note it. But note it as a sign of how professional this landlord is.",
   },
   {
     id: "no-entry-notice",
     question: "Does the lease give the landlord the right to enter without notice?",
     redFlagIfYes: true,
-    explanation: "Ohio law requires 24 hours notice before landlord entry (except emergencies). A lease that contradicts this is legally unenforceable — but it's a sign.",
+    explanation: "Most states require 24–48 hours notice before landlord entry (except emergencies). A lease that contradicts this is legally unenforceable — but it's a sign.",
     severity: "dealbreaker",
-    tip: "Know that Ohio law overrides this clause. But a landlord who writes this into a lease may not respect your privacy.",
+    tip: "Most state laws override this clause — your right to privacy is protected regardless. But a landlord who writes this into a lease may not respect your privacy.",
   },
   {
     id: "no-utilities-clarity",
@@ -88,7 +88,7 @@ const FLAGS: Flag[] = [
     id: "deposit-non-refundable",
     question: "Does the lease call any part of the security deposit 'non-refundable'?",
     redFlagIfYes: true,
-    explanation: "In Ohio, security deposits must be returned minus legitimate deductions. 'Non-refundable deposits' are generally unenforceable.",
+    explanation: "In most states, security deposits must be returned minus legitimate deductions. 'Non-refundable deposits' are generally unenforceable.",
     severity: "dealbreaker",
     tip: "Know this is likely unenforceable, but it signals a landlord who may try to keep your deposit regardless.",
   },
@@ -196,8 +196,8 @@ export default function LeaseCheckerPage() {
             <ul className="space-y-1 text-xs text-gray-600">
               <li>• Everything is negotiable before you sign</li>
               <li>• Get all changes in writing as a lease addendum</li>
-              <li>• Ohio law overrides unenforceable lease clauses — but know what&apos;s legal</li>
-              <li>• When in doubt, contact Ohio Legal Help: ohiolegalhelp.org</li>
+              <li>• State law overrides unenforceable lease clauses — but you have to know your rights</li>
+              <li>• Search &quot;[your state] tenant rights&quot; for free local legal aid resources</li>
             </ul>
           </div>
 

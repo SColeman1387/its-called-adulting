@@ -72,7 +72,7 @@ export default function AboutPage() {
 
         <div className="border-t border-gray-100 pt-6">
           <p className="text-gray-400 text-xs leading-relaxed">
-            Built in Columbus, Ohio. Starting with Columbus because it has one of the largest student and young adult populations in the Midwest — and the most people asking &ldquo;how was I supposed to know that?&rdquo;
+            Built by a dad who got tired of watching his daughter figure things out the hard way. Started in the Midwest — growing everywhere.
           </p>
         </div>
       </div>

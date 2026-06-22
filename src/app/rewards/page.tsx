@@ -156,6 +156,11 @@ export default function RewardsPage() {
 
       {/* Gift card tiers */}
       <h2 className="text-base font-bold text-gray-900 mb-3">Redeem for gift cards</h2>
+      {process.env.NEXT_PUBLIC_REWARDS_LIVE !== "true" && (
+        <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-sm text-yellow-800">
+          <strong>Gift card redemption coming soon.</strong> Keep earning — your points are safe and will be ready to redeem when we go live.
+        </div>
+      )}
       <div className="space-y-3 mb-6">
         {GIFT_CARD_TIERS.map((tier) => {
           const canAfford = points >= tier.points;

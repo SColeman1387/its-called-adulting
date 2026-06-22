@@ -152,7 +152,7 @@ export default function LandingPage() {
           Start adulting today.
         </h2>
         <p className="text-gray-400 mb-8 text-base">
-          Free forever. No app store. Works on any device.
+          Free to start. No app store. Works on any device.
         </p>
         <Link
           href="/home"

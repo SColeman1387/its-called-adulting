@@ -11,7 +11,7 @@ const EXAMPLE_PROMPTS = [
   "I didn't know tires need to be rotated, not just replaced when they go flat…",
   "I didn't know you have to tell your insurance when you move…",
   "I didn't know grocery stores mark up produce on the ends of aisles…",
-  "I didn't know a security deposit has to be returned within 30 days in Ohio…",
+  "I didn't know landlords have a legal deadline to return your security deposit…",
 ];
 
 const COST_OPTIONS = [

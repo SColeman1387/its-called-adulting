@@ -35,6 +35,22 @@ export async function POST(req: NextRequest) {
           stripe_subscription_id: session.subscription as string,
         })
         .eq("id", userId);
+      // Award 100 bonus points for subscribing — only once per user
+      const { data: existing } = await supabaseAdmin
+        .from("points_ledger")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("type", "signup_bonus")
+        .maybeSingle();
+      if (!existing) {
+        await supabaseAdmin.from("points_ledger").insert({
+          id: `signup_bonus_${userId}`,
+          user_id: userId,
+          type: "signup_bonus",
+          points: 100,
+          label: "Welcome bonus — subscribed to Adulting Pro",
+        });
+      }
       break;
     }
 

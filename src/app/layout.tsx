@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
+import ServiceWorkerRegistrar from "@/components/ServiceWorkerRegistrar";
 
 const geist = Geist({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" sizes="512x512" href="/icon-512.png" />
       </head>
       <body className={`${geist.className} bg-gray-50 min-h-screen`} style={{ colorScheme: "light" }}>
+        <ServiceWorkerRegistrar />
         {children}
       </body>
     </html>

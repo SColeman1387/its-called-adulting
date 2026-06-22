@@ -81,7 +81,7 @@ export const TASK_SUPPLIES: Record<string, Supply[]> = {
 
   "lawn-spring": [
     { name: "Starter Fertilizer (spring)", price: "$25–$40", note: "High phosphorus to kick-start root growth. Apply after first mow.", amazonUrl: "https://www.amazon.com/s?k=spring+starter+lawn+fertilizer&tag=itscalledadul-20" },
-    { name: "Grass Seed (for bare patches)", price: "$15–$30", note: "Match to your grass type — Kentucky Bluegrass or Tall Fescue for Ohio.", amazonUrl: "https://www.amazon.com/s?k=grass+seed+ohio+tall+fescue&tag=itscalledadul-20" },
+    { name: "Grass Seed (for bare patches)", price: "$15–$30", note: "Match to your climate — cool-season (fescue, bluegrass) for northern states, warm-season (bermuda, zoysia) for southern states.", amazonUrl: "https://www.amazon.com/s?k=grass+seed+tall+fescue&tag=itscalledadul-20" },
   ],
 
   "lawn-fall": [
