@@ -43,10 +43,22 @@ function AuthForm() {
         router.push(redirect);
       }
     } catch (err: unknown) {
-      // AuthError from Supabase may serialize as {} — always ensure a readable string
+      console.error("Auth error raw:", err);
       let msg = "Something went wrong. Please try again.";
-      if (err instanceof Error && err.message) msg = err.message;
-      else if (typeof err === "string" && err) msg = err;
+      if (err instanceof Error) {
+        const raw = err.message?.trim();
+        // Supabase sometimes returns "{}" or a JSON blob as the message
+        if (raw && raw !== "{}" && !raw.startsWith("{")) {
+          msg = raw;
+        } else if (raw?.startsWith("{")) {
+          try {
+            const parsed = JSON.parse(raw);
+            msg = parsed.message || parsed.error_description || parsed.msg || msg;
+          } catch { /* ignore parse error, use default */ }
+        }
+      } else if (typeof err === "string" && err.trim() && err.trim() !== "{}") {
+        msg = err;
+      }
       setError(msg);
     } finally {
       setLoading(false);
