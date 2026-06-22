@@ -32,7 +32,7 @@ export default function LandingPage() {
         <div className="space-y-2 mb-8 max-w-lg mx-auto text-base text-gray-500">
           <p>&ldquo;Dad? My car won&apos;t start.&rdquo;</p>
           <p>&ldquo;Mom? My laundry smells weird.&rdquo;</p>
-          <p>&ldquo;Dad? Why does my water taste funny?&rdquo;</p>
+          <p>&ldquo;Dad? Why does my skin feel so dry?&rdquo;</p>
           <p className="text-gray-400 text-sm pt-1">They don&apos;t have to call anymore.</p>
         </div>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
