@@ -33,6 +33,7 @@ function AuthForm() {
           password,
           options: {
             data: { display_name: name, referral_code: ref ?? null },
+            emailRedirectTo: `${window.location.origin}/auth/callback`,
           },
         });
         if (signUpError) throw signUpError;
