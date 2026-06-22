@@ -128,6 +128,48 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* How earning works */}
+      <section className="max-w-3xl mx-auto px-6 py-16">
+        <h2 className="text-2xl font-black text-gray-900 mb-2 text-center">Do adulting tasks. Get paid for it.</h2>
+        <p className="text-gray-400 text-sm mb-10 text-center">Every task earns Adulting Bucks. Adulting Bucks become Amazon gift cards.</p>
+        <div className="grid sm:grid-cols-3 gap-4 mb-10">
+          {[
+            { icon: "✅", label: "Complete a task", pts: "+10 pts", eg: "Check tire pressure, change air filter…" },
+            { icon: "📚", label: "Finish a lesson", pts: "+25 pts", eg: "One 5-minute lesson, once a week" },
+            { icon: "⭐", label: "Subscribe today", pts: "+100 pts", eg: "Instant bonus — 20% of your first gift card" },
+          ].map(({ icon, label, pts, eg }) => (
+            <div key={label} className="bg-gray-50 rounded-2xl p-5 border border-gray-100 text-center">
+              <div className="text-3xl mb-3">{icon}</div>
+              <div className="font-bold text-gray-900 text-sm mb-1">{label}</div>
+              <div className="text-orange-500 font-black text-lg mb-2">{pts}</div>
+              <div className="text-xs text-gray-400 leading-relaxed">{eg}</div>
+            </div>
+          ))}
+        </div>
+        {/* Progress bar showing 100pts toward $10 gift card */}
+        <div className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm max-w-md mx-auto">
+          <div className="flex justify-between items-end mb-2">
+            <span className="text-sm font-bold text-gray-900">$10 Amazon Gift Card</span>
+            <span className="text-sm font-bold text-orange-500">500 pts needed</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-3 mb-3">
+            <div className="bg-orange-500 h-3 rounded-full" style={{ width: "20%" }} />
+          </div>
+          <p className="text-xs text-gray-500 text-center">
+            Subscribe today → instant 100 bonus points → already <strong className="text-orange-500">20% of the way</strong> to your first gift card before you even start.
+          </p>
+        </div>
+        <div className="text-center mt-8">
+          <Link
+            href="/auth?redirect=/subscribe"
+            className="inline-block bg-orange-500 text-white font-bold px-8 py-4 rounded-2xl text-sm hover:bg-orange-600 transition-colors shadow-lg shadow-orange-200"
+          >
+            Create a free account →
+          </Link>
+          <p className="text-xs text-gray-400 mt-3">Free to sign up. Subscribe after to start earning.</p>
+        </div>
+      </section>
+
       {/* Toolkit teaser */}
       <section className="bg-orange-50 border-y border-orange-100 py-14">
         <div className="max-w-2xl mx-auto px-6 text-center">

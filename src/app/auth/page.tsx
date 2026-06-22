@@ -43,7 +43,11 @@ function AuthForm() {
         router.push(redirect);
       }
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      // AuthError from Supabase may serialize as {} — always ensure a readable string
+      let msg = "Something went wrong. Please try again.";
+      if (err instanceof Error && err.message) msg = err.message;
+      else if (typeof err === "string" && err) msg = err;
+      setError(msg);
     } finally {
       setLoading(false);
     }

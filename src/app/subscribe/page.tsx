@@ -68,6 +68,20 @@ export default function SubscribePage() {
             <p className="text-gray-400 text-xs mt-1">Cancel anytime. No contracts.</p>
           </div>
 
+          {/* 20% progress bar */}
+          <div className="mx-8 mb-2 bg-orange-50 rounded-2xl p-4 border border-orange-100">
+            <div className="flex justify-between text-xs font-semibold mb-2">
+              <span className="text-gray-700">$10 Gift Card Progress</span>
+              <span className="text-orange-500">100 / 500 pts</span>
+            </div>
+            <div className="w-full bg-orange-100 rounded-full h-2.5 mb-2">
+              <div className="bg-orange-500 h-2.5 rounded-full" style={{ width: "20%" }} />
+            </div>
+            <p className="text-xs text-orange-700 text-center font-medium">
+              Subscribe now → instant 100 bonus points → already 20% of the way to your first gift card
+            </p>
+          </div>
+
           {/* Features */}
           <ul className="px-8 py-6 space-y-3">
             {[
