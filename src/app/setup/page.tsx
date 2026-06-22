@@ -32,9 +32,9 @@ async function detectLocation(): Promise<{ city?: string; state?: string }> {
 
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "trash" | "done";
+type Step = "home" | "city" | "car" | "outdoor" | "indoor" | "trash" | "toys" | "done";
 
-const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "trash", "done"];
+const STEPS: Step[] = ["home", "city", "car", "outdoor", "indoor", "trash", "toys", "done"];
 
 export default function SetupPage() {
   const router = useRouter();
@@ -508,6 +508,50 @@ export default function SetupPage() {
             </button>
             <button onClick={next} className="flex-1 py-3 rounded-2xl bg-orange-500 text-white text-sm font-semibold hover:bg-orange-600">
               {trashDay !== null || recyclingDay !== null ? "Save & Continue →" : "Skip →"}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Toys */}
+      {step === "toys" && (
+        <div>
+          <h2 className="text-xl font-bold text-gray-900 mb-1">Any toys or extras?</h2>
+          <p className="text-gray-500 text-sm mb-6">We&apos;ll add seasonal maintenance reminders for whatever you own.</p>
+          <div className="space-y-3">
+            {[
+              { key: "hasBoat", emoji: "⛵", label: "Boat", sub: "Winterizing, engine flush, battery, bilge" },
+              { key: "hasGolfCart", emoji: "🏌️", label: "Golf Cart", sub: "Battery maintenance, tire pressure, charging" },
+              { key: "hasUTV", emoji: "🏕️", label: "UTV / ATV", sub: "Oil changes, air filter, belt inspection" },
+              { key: "hasRV", emoji: "🚌", label: "RV / Camper", sub: "Winterizing, roof seals, generator, tanks" },
+            ].map(({ key, emoji, label, sub }) => {
+              const checked = profile[key as keyof UserProfile] as boolean;
+              return (
+                <button
+                  key={key}
+                  onClick={() => update({ [key]: !checked })}
+                  className={`w-full flex items-center gap-4 p-4 rounded-2xl border-2 text-left transition-all ${
+                    checked ? "border-orange-500 bg-orange-50" : "border-gray-100 bg-white"
+                  }`}
+                >
+                  <span className="text-3xl">{emoji}</span>
+                  <div className="flex-1">
+                    <div className="font-semibold text-gray-900">{label}</div>
+                    <div className="text-xs text-gray-400 mt-0.5">{sub}</div>
+                  </div>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 ${
+                    checked ? "border-orange-500 bg-orange-500" : "border-gray-300"
+                  }`}>
+                    {checked && <span className="text-white text-xs font-bold">✓</span>}
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+          <div className="flex gap-3 mt-8">
+            <button onClick={back} className="flex-1 py-3 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-500">← Back</button>
+            <button onClick={next} className="flex-1 py-3 rounded-2xl bg-orange-500 text-white font-bold text-sm">
+              {[profile.hasBoat, profile.hasGolfCart, profile.hasUTV, profile.hasRV].some(Boolean) ? "Add my toys →" : "Skip →"}
             </button>
           </div>
         </div>

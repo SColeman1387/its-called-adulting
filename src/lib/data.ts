@@ -11,7 +11,11 @@ export type TaskRequires =
   | "hasFireplace"
   | "homeOwner"        // own-house only
   | "hasOutdoorAccess" // rent-house or own-house (not apartment)
-  | "coldClimate";     // hidden for FL, AZ, HI, TX, etc. — freeze tasks irrelevant
+  | "coldClimate"      // hidden for FL, AZ, HI, TX, etc. — freeze tasks irrelevant
+  | "hasBoat"
+  | "hasGolfCart"
+  | "hasUTV"
+  | "hasRV";
 
 export interface Task {
   id: string;
@@ -1705,6 +1709,355 @@ export const TASKS: Task[] = [
     },
     proSearchQuery: "emergency veterinarian",
   },
+
+  // ── BOAT ──────────────────────────────────────────────────────────────────
+  {
+    id: "boat-winterize",
+    title: "Winterize your boat",
+    description: "Skipping winterization is the most expensive mistake boat owners make. One freeze can crack an engine block — a $5,000+ repair.",
+    howDidIKnow: "Most boat damage happens in storage, not on the water.",
+    category: "home",
+    season: "fall",
+    requires: ["hasBoat", "coldClimate"],
+    difficulty: "medium",
+    timeEstimate: "3–4 hours",
+    diyGuide: {
+      intro: "Flush the engine with fresh water, fog the cylinders, stabilize the fuel, drain all water systems, and cover it properly.",
+      steps: [
+        "Run the engine on fresh water for 10 minutes to flush salt and debris from the cooling system.",
+        "Add marine fuel stabilizer to a full tank of gas and run the engine briefly to circulate it.",
+        "Fog the engine cylinders with fogging oil while the engine is running, then shut it off.",
+        "Drain all water from the bilge, live wells, and any water lines.",
+        "Remove and store the battery on a trickle charger indoors — never leave it in the boat.",
+        "Change the engine oil and gear lube before storage, not in spring.",
+        "Grease all fittings, lubricate cables, and spray exposed metal with corrosion inhibitor.",
+        "Cover with a proper fitted cover or shrink wrap — tarps trap moisture and cause mold.",
+      ],
+      tips: [
+        "Leaving water in any line — it freezes and cracks fittings.",
+        "Storing with old oil — acids in used oil corrode engine internals all winter.",
+        "Not fogging the engine — cylinders rust without it.",
+      ],
+      toolsNeeded: ["Fuel stabilizer", "Fogging oil", "Gear lube", "Trickle charger", "Grease gun"],
+    },
+    proSearchQuery: "boat winterization service",
+  },
+  {
+    id: "boat-spring-launch",
+    title: "Get your boat ready for the season",
+    description: "A spring commissioning checklist so your first day on the water isn't spent troubleshooting at the dock.",
+    howDidIKnow: "Problems always show up the first time you launch — catch them in the driveway instead.",
+    category: "home",
+    season: "spring",
+    requires: "hasBoat",
+    difficulty: "medium",
+    timeEstimate: "2–3 hours",
+    diyGuide: {
+      intro: "Reinstall the battery, check all fluid levels, inspect the hull, test all electronics, and do a short water test before your first real trip.",
+      steps: [
+        "Reinstall the fully charged battery and check all connections for corrosion.",
+        "Check engine oil, gear lube, and coolant levels — top off as needed.",
+        "Inspect the hull for cracks, blisters, or damage from storage.",
+        "Check all lights, bilge pump, horn, and electronics — replace any dead batteries.",
+        "Inspect prop for nicks or dings — even small damage causes vibration and hurts performance.",
+        "Check all belts and hoses for cracks or wear.",
+        "Test the trailer lights and wheel bearings before towing.",
+        "Do a short test run near the dock before loading up the family.",
+      ],
+      tips: [
+        "Always check the drain plug before launching — this sinks boats every season.",
+        "Test the bilge pump at the dock — if it fails underway you have a serious problem.",
+        "Check trailer wheel bearings — they fail when they go from sitting to highway speed.",
+      ],
+      toolsNeeded: ["Battery charger", "Marine grease", "Basic hand tools"],
+    },
+    proSearchQuery: "boat spring commissioning service",
+  },
+  {
+    id: "boat-battery",
+    title: "Maintain your boat battery",
+    description: "Boat batteries die faster than car batteries because of heat, vibration, and sitting unused. A little attention makes them last 2x longer.",
+    howDidIKnow: "A dead battery ruins the trip every time — and they always die at the ramp.",
+    category: "home",
+    season: "year-round",
+    requires: "hasBoat",
+    difficulty: "easy",
+    timeEstimate: "30 minutes",
+    diyGuide: {
+      intro: "Keep it charged, clean the terminals, and store it on a trickle charger over winter.",
+      steps: [
+        "Check battery terminals for white or green corrosion — clean with baking soda and water.",
+        "Check the voltage with a multimeter — fully charged marine battery reads 12.6V or higher.",
+        "If not used weekly, connect to a marine trickle charger to maintain charge level.",
+        "Check the water level in flooded batteries — add distilled water only if low.",
+        "Store indoors on a trickle charger over winter — never on concrete.",
+        "Replace if the battery won't hold a charge or is more than 4–5 years old.",
+      ],
+      tips: [
+        "Never let it fully discharge — deep discharge kills marine batteries fast.",
+        "Use a marine-specific battery, not a car battery — they handle vibration and deep cycling better.",
+        "A trickle charger pays for itself in the first battery it saves.",
+      ],
+      toolsNeeded: ["Multimeter", "Battery trickle charger", "Terminal cleaning brush"],
+    },
+    proSearchQuery: "marine battery replacement",
+  },
+
+  // ── GOLF CART ─────────────────────────────────────────────────────────────
+  {
+    id: "golf-cart-battery",
+    title: "Maintain your golf cart batteries",
+    description: "Golf cart batteries are the most expensive part of the cart — $800–1,500 to replace. Proper watering and charging makes them last 5–7 years instead of 2–3.",
+    howDidIKnow: "Most golf cart battery failures are caused by neglect, not age.",
+    category: "home",
+    season: "year-round",
+    requires: "hasGolfCart",
+    difficulty: "easy",
+    timeEstimate: "20 minutes",
+    diyGuide: {
+      intro: "Check water levels monthly, keep them fully charged, and clean the terminals every few months.",
+      steps: [
+        "Check water levels monthly — use distilled water only, never tap water.",
+        "Fill to just above the plates — overfilling causes acid to overflow and corrode the tray.",
+        "Charge after every use, even short trips — don't let them sit discharged.",
+        "Check terminals for corrosion and clean with baking soda and water if needed.",
+        "Check specific gravity with a hydrometer twice a year to catch weak cells early.",
+        "Equalize charge monthly — most chargers have an equalize mode that balances all cells.",
+        "In winter, keep batteries charged and store the cart indoors if possible.",
+      ],
+      tips: [
+        "Never use tap water — minerals cause buildup on the plates.",
+        "Leaving it discharged for weeks kills batteries faster than anything.",
+        "Water AFTER charging, not before — charging makes the electrolyte expand.",
+      ],
+      toolsNeeded: ["Distilled water", "Battery terminal brush", "Hydrometer (optional)"],
+    },
+    proSearchQuery: "golf cart battery service",
+  },
+  {
+    id: "golf-cart-seasonal",
+    title: "Golf cart seasonal checkup",
+    description: "Spring and fall tune-ups keep your cart running reliably and catch problems before they become expensive.",
+    howDidIKnow: "Carts that sit all winter come out in spring with dead batteries and flat spots on tires.",
+    category: "home",
+    season: "spring",
+    requires: "hasGolfCart",
+    difficulty: "easy",
+    timeEstimate: "45 minutes",
+    diyGuide: {
+      intro: "Check tire pressure, brakes, battery connections, lights, and give it a good cleaning after winter storage.",
+      steps: [
+        "Check tire pressure — most golf cart tires run 15–25 PSI, check the sidewall for your spec.",
+        "Inspect tires for flat spots from sitting — they usually round out after a few miles.",
+        "Test the brakes — adjust the brake cable if the cart rolls when parked.",
+        "Check all battery connections and clean any corrosion.",
+        "Test all lights, horn, and turn signals if equipped.",
+        "Lubricate the front end, steering components, and any moving parts.",
+        "For gas carts: check oil level, air filter, and spark plug annually.",
+        "Clean the undercarriage — salt and debris from fall collect under the cart.",
+      ],
+      tips: [
+        "Low tire pressure wears unevenly and reduces range on electric carts.",
+        "A cart that rolls on a hill when parked needs brake adjustment immediately.",
+        "Gas carts: if it sat with fuel all winter, add fresh gas and fuel stabilizer before starting.",
+      ],
+      toolsNeeded: ["Tire pressure gauge", "Basic hand tools", "Lubricant spray"],
+    },
+    proSearchQuery: "golf cart service and repair",
+  },
+
+  // ── UTV / ATV ─────────────────────────────────────────────────────────────
+  {
+    id: "utv-oil-change",
+    title: "Change your UTV/ATV oil",
+    description: "UTVs work hard — mud, dust, heat, and steep terrain beat up the oil faster than a street vehicle. Most need an oil change every 25–50 hours of use.",
+    howDidIKnow: "Dirty oil is the #1 cause of premature UTV engine failure.",
+    category: "home",
+    season: "year-round",
+    requires: "hasUTV",
+    difficulty: "easy",
+    timeEstimate: "30–45 minutes",
+    diyGuide: {
+      intro: "Warm up the engine, drain the old oil, replace the filter, refill with the manufacturer-specified oil, and check for leaks.",
+      steps: [
+        "Run the engine for 5 minutes to warm the oil — warm oil drains faster and more completely.",
+        "Place a drain pan under the drain plug and remove the plug.",
+        "Remove the oil filter while the oil drains.",
+        "Install a new oil filter — lightly oil the gasket before installing.",
+        "Reinstall the drain plug with a new washer if needed.",
+        "Refill with the manufacturer-specified oil type and quantity — check your owner's manual.",
+        "Run for a few minutes and check for leaks around the drain plug and filter.",
+        "Check the oil level on the dipstick and top off if needed.",
+      ],
+      tips: [
+        "Always use the correct oil — UTVs often require specific viscosities for wet clutch systems.",
+        "Never overtighten the drain plug — stripped threads require expensive repair.",
+        "Track hours of use, not just calendar time — UTVs need oil changes by usage.",
+      ],
+      toolsNeeded: ["Drain pan", "Oil filter wrench", "Funnel", "Correct oil for your model"],
+    },
+    proSearchQuery: "UTV ATV oil change service",
+  },
+  {
+    id: "utv-seasonal",
+    title: "UTV/ATV pre-season inspection",
+    description: "Check everything before your first big ride of the season — finding a problem in the garage beats finding it on a trail 10 miles from the truck.",
+    howDidIKnow: "Most trail breakdowns are preventable with a 30-minute pre-season check.",
+    category: "home",
+    season: "spring",
+    requires: "hasUTV",
+    difficulty: "medium",
+    timeEstimate: "1 hour",
+    diyGuide: {
+      intro: "Check fluids, brakes, tires, belts, air filter, and all safety equipment before heading out.",
+      steps: [
+        "Check engine oil, coolant, brake fluid, and differential fluid levels.",
+        "Inspect the CVT belt for cracks, fraying, or glazing — replace if worn.",
+        "Check tire pressure and inspect for sidewall damage or dry rot.",
+        "Test brakes — both hand and foot brakes should engage firmly.",
+        "Inspect the air filter — clean or replace if dirty.",
+        "Check spark plugs and replace if fouled or more than a season old.",
+        "Lubricate all grease fittings, pivot points, and steering components.",
+        "Test all lights, kill switch, and seat belts/harnesses.",
+        "Check wheel lug nuts — vibration loosens them over time.",
+      ],
+      tips: [
+        "A CVT belt failure strands you immediately — always inspect it before season.",
+        "A dirty air filter destroys engines fast in dusty conditions — cheapest insurance there is.",
+        "Carry a spare belt on the trail — they're the most common breakdown part.",
+      ],
+      toolsNeeded: ["Grease gun", "Air pressure gauge", "Basic hand tools", "Replacement filters"],
+    },
+    proSearchQuery: "UTV ATV service and inspection",
+  },
+  {
+    id: "utv-storage",
+    title: "Store your UTV/ATV for winter",
+    description: "Proper storage prevents dead batteries, gummed-up carbs, and flat-spotted tires when spring comes.",
+    howDidIKnow: "A UTV that sat all winter usually needs $200–500 in fixes before it runs right.",
+    category: "home",
+    season: "fall",
+    requires: ["hasUTV", "coldClimate"],
+    difficulty: "easy",
+    timeEstimate: "1 hour",
+    diyGuide: {
+      intro: "Add fuel stabilizer, change the oil, remove or maintain the battery, and cover it properly.",
+      steps: [
+        "Fill the tank and add fuel stabilizer — run for 10 minutes to circulate through the system.",
+        "Change the oil before storage, not in spring — used oil contains acids that corrode internals.",
+        "Remove the battery and store on a trickle charger indoors.",
+        "Inflate tires to the upper end of the recommended range to prevent flat spots.",
+        "Clean off all mud and debris — mud holds moisture and causes rust.",
+        "Lubricate all cables, pivot points, and exposed metal.",
+        "Cover with a breathable cover — not a plastic tarp which traps moisture.",
+        "If storing long-term, block up the frame to take weight off the tires.",
+      ],
+      tips: [
+        "Change the oil BEFORE storage — acids in old oil corrode your engine all winter.",
+        "Never leave the battery in — it self-discharges and dies over winter.",
+        "A plastic tarp traps condensation and causes rust and mold — use a breathable cover.",
+      ],
+      toolsNeeded: ["Fuel stabilizer", "Trickle charger", "Breathable cover", "Tire pump"],
+    },
+    proSearchQuery: "UTV ATV storage preparation service",
+  },
+
+  // ── RV ────────────────────────────────────────────────────────────────────
+  {
+    id: "rv-winterize",
+    title: "Winterize your RV",
+    description: "One hard freeze with water in your lines can crack pipes, damage the water pump, and destroy the hot water heater — easily $2,000+ in repairs.",
+    howDidIKnow: "RV repair shops are flooded every spring with freeze damage that was completely preventable.",
+    category: "home",
+    season: "fall",
+    requires: ["hasRV", "coldClimate"],
+    difficulty: "medium",
+    timeEstimate: "2–3 hours",
+    diyGuide: {
+      intro: "Drain all water systems, blow out the lines with compressed air or run RV antifreeze through every fixture.",
+      steps: [
+        "Drain the fresh water tank completely.",
+        "Drain and flush the gray and black tanks at a dump station.",
+        "Drain the hot water heater — turn off and let cool first, then remove the drain plug.",
+        "Bypass the hot water heater using the winterization bypass valve so antifreeze doesn't fill it.",
+        "Use a water pump conversion kit to pull RV antifreeze (pink, non-toxic) through the system.",
+        "Run antifreeze through every faucet — hot and cold — until you see pink.",
+        "Flush all toilets until pink antifreeze appears.",
+        "Pour a cup of antifreeze into each drain to protect the P-traps.",
+        "Remove and store water filters — antifreeze damages them.",
+        "Disconnect the battery or put it on a trickle charger.",
+      ],
+      tips: [
+        "Use only pink RV antifreeze — automotive antifreeze is toxic.",
+        "Bypass the hot water heater — without it you'd need 6+ gallons of antifreeze just for that tank.",
+        "Don't forget the ice maker or washing machine water lines if equipped.",
+      ],
+      toolsNeeded: ["RV antifreeze (pink)", "Water pump conversion kit", "Air compressor (optional)"],
+    },
+    proSearchQuery: "RV winterization service",
+  },
+  {
+    id: "rv-roof",
+    title: "Inspect and seal your RV roof",
+    description: "RV roof leaks are the #1 cause of serious water damage. A $15 tube of sealant applied annually prevents a $5,000–15,000 repair.",
+    howDidIKnow: "Water damage shows up on the ceiling long after it started — by then the damage is extensive.",
+    category: "home",
+    season: "spring",
+    requires: "hasRV",
+    difficulty: "easy",
+    timeEstimate: "2 hours",
+    diyGuide: {
+      intro: "Walk the roof, inspect all seams and around every vent and AC unit, and reseal anything that looks cracked, shrunk, or separated.",
+      steps: [
+        "Get on the roof carefully using a proper ladder — step only on structural supports, not soft spots.",
+        "Inspect all seams and edges where the roof meets the sidewalls.",
+        "Check every roof penetration — vents, AC units, antennas, solar panels, and skylights.",
+        "Look for cracks, shrinkage, separation, or discoloration in existing sealant.",
+        "Remove old cracked sealant with a plastic scraper — don't use metal on rubber roofs.",
+        "Clean the area with rubbing alcohol before applying new sealant.",
+        "Apply self-leveling RV roof sealant to all questionable areas — use the type for your roof material.",
+        "Check the inside ceiling for soft spots or water stains — signs of existing damage.",
+      ],
+      tips: [
+        "Use the right sealant — silicone doesn't bond to rubber roofs.",
+        "The stain on your ceiling is never directly below the leak — water travels.",
+        "Inspect every year without fail — sealant dries out and cracks annually.",
+      ],
+      toolsNeeded: ["RV roof sealant", "Plastic scraper", "Rubbing alcohol", "Caulk gun"],
+    },
+    proSearchQuery: "RV roof inspection and repair",
+  },
+  {
+    id: "rv-generator",
+    title: "Service your RV generator",
+    description: "A generator that won't start when you need it is worthless. Annual service keeps it reliable and extends its life.",
+    howDidIKnow: "Generators that sit unused are the ones that fail — fuel gums up, oil degrades, plugs foul.",
+    category: "home",
+    season: "spring",
+    requires: "hasRV",
+    difficulty: "medium",
+    timeEstimate: "1–2 hours",
+    diyGuide: {
+      intro: "Change the oil and filter, replace the spark plug and air filter, and run it under load for 2 hours to exercise it.",
+      steps: [
+        "Change the oil — most RV generators use 10W-30 and need an oil change every 100–150 hours or annually.",
+        "Replace the spark plug — even if it looks okay, a new plug is cheap insurance.",
+        "Replace the air filter — a clogged filter causes hard starting and poor performance.",
+        "Check the fuel level and add fresh fuel if it's been sitting.",
+        "If stored with old fuel, drain and replace — stale gas is the #1 generator problem.",
+        "Run the generator under load (run the AC) for at least 2 hours to exercise it.",
+        "Check for fuel leaks, unusual noise, or excessive exhaust smoke while running.",
+        "Exercise monthly during storage — run for 2 hours under load to keep seals lubricated.",
+      ],
+      tips: [
+        "Always run under load — generators need to work hard to stay in good condition.",
+        "Storing with fuel and no stabilizer causes varnish deposits that clog the carburetor.",
+        "Oil degrades with time, not just use — change it annually even with low hours.",
+      ],
+      toolsNeeded: ["Oil and filter for your generator model", "Spark plug", "Air filter", "Fuel stabilizer"],
+    },
+    proSearchQuery: "RV generator service and repair",
+  },
 ];
 
 export function getCurrentSeason(): Season {
@@ -1728,6 +2081,10 @@ function checkSingleRequires(req: TaskRequires, profile: any): boolean {
     case "homeOwner": return profile.homeType === "own-house";
     case "hasOutdoorAccess": return profile.homeType === "rent-house" || profile.homeType === "own-house";
     case "coldClimate": return !WARM_CLIMATE_STATES.has(profile.state ?? "");
+    case "hasBoat": return !!profile.hasBoat;
+    case "hasGolfCart": return !!profile.hasGolfCart;
+    case "hasUTV": return !!profile.hasUTV;
+    case "hasRV": return !!profile.hasRV;
     default: return true;
   }
 }

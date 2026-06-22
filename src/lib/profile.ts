@@ -30,6 +30,10 @@ export interface UserProfile {
   hasWaterSoftener: boolean;
   hasDryer: boolean;
   hasFireplace: boolean;
+  hasBoat: boolean;
+  hasGolfCart: boolean;
+  hasUTV: boolean;
+  hasRV: boolean;
   setupComplete: boolean;
 }
 
@@ -78,5 +82,9 @@ export const DEFAULT_PROFILE: UserProfile = {
   hasWaterSoftener: false,
   hasDryer: true,
   hasFireplace: false,
+  hasBoat: false,
+  hasGolfCart: false,
+  hasUTV: false,
+  hasRV: false,
   setupComplete: false,
 };
