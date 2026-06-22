@@ -27,9 +27,38 @@ export default function RewardsPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setPoints(getTotalPoints());
-    setLedger(getLedgerEntries());
-  }, []);
+    // Start with localStorage points
+    const localPoints = getTotalPoints();
+    const localLedger = getLedgerEntries();
+    setPoints(localPoints);
+    setLedger(localLedger);
+
+    // Merge with Supabase points_ledger for logged-in users
+    if (!user) return;
+    const supabase = getSupabase();
+    supabase
+      .from("points_ledger")
+      .select("id, type, points, label, created_at")
+      .eq("user_id", user.id)
+      .order("created_at", { ascending: false })
+      .then(({ data }) => {
+        if (!data || data.length === 0) return;
+        const dbTotal = data.reduce((sum, r) => sum + (r.points ?? 0), 0);
+        const dbLedger: PointEvent[] = data.map((r) => ({
+          id: r.id,
+          type: r.type as PointEvent["type"],
+          points: r.points,
+          label: r.label ?? r.type,
+          ts: r.created_at,
+        }));
+        // Combine: DB points + local points, deduplicate by id
+        const localIds = new Set(localLedger.map((e) => e.id));
+        const merged = [...dbLedger.filter((e) => !localIds.has(e.id)), ...localLedger];
+        merged.sort((a, b) => new Date(b.ts).getTime() - new Date(a.ts).getTime());
+        setPoints(localPoints + dbTotal);
+        setLedger(merged);
+      });
+  }, [user]);
 
   const selectedTier = GIFT_CARD_TIERS.find((t) => t.id === selected);
 
@@ -156,11 +185,6 @@ export default function RewardsPage() {
 
       {/* Gift card tiers */}
       <h2 className="text-base font-bold text-gray-900 mb-3">Redeem for gift cards</h2>
-      {process.env.NEXT_PUBLIC_REWARDS_LIVE !== "true" && (
-        <div className="mb-4 bg-yellow-50 border border-yellow-200 rounded-2xl p-4 text-sm text-yellow-800">
-          <strong>Gift card redemption coming soon.</strong> Keep earning — your points are safe and will be ready to redeem when we go live.
-        </div>
-      )}
       <div className="space-y-3 mb-6">
         {GIFT_CARD_TIERS.map((tier) => {
           const canAfford = points >= tier.points;
@@ -208,7 +232,7 @@ export default function RewardsPage() {
         <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
           <h3 className="font-bold text-gray-900 mb-1">Confirm redemption</h3>
           <p className="text-sm text-gray-500 mb-4">
-            We&apos;ll email you an Amazon gift card code within 2 business days.
+            We&apos;ll email you an Amazon gift card code within <strong>1–2 business days</strong>.
             This will deduct <strong>{selectedTier.points.toLocaleString()} points</strong> from your balance.
           </p>
           <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
@@ -246,7 +270,7 @@ export default function RewardsPage() {
           <div className="text-5xl mb-3">🎉</div>
           <h2 className="text-xl font-bold text-gray-900 mb-2">Request submitted!</h2>
           <p className="text-gray-500 text-sm leading-relaxed mb-6">
-            Your Amazon gift card is on its way to <strong>{email}</strong> — check your inbox in a few minutes!
+            Your request is in. We&apos;ll send your Amazon gift card to <strong>{email}</strong> within 1–2 business days.
           </p>
           <Link href="/home" className="inline-block bg-orange-500 text-white font-bold px-8 py-3 rounded-2xl text-sm">
             Back to home →

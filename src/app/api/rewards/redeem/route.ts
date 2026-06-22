@@ -82,24 +82,25 @@ export async function POST(req: NextRequest) {
 
   const requiredPoints = points ?? TIER_POINTS[tierId];
 
-  // Verify user has enough points in DB before redeeming
-  const { data: profile } = await supabase
-    .from("profiles")
+  // Verify user has enough points by summing their points_ledger
+  const { data: ledgerRows } = await supabase
+    .from("points_ledger")
     .select("points")
-    .eq("id", userId)
-    .single();
+    .eq("user_id", userId);
 
-  if (!profile || (profile.points ?? 0) < requiredPoints) {
+  const totalPoints = (ledgerRows ?? []).reduce((sum, row) => sum + (row.points ?? 0), 0);
+
+  if (totalPoints < requiredPoints) {
     return NextResponse.json({ error: "Insufficient points" }, { status: 403 });
   }
 
-  const pointsAfter = (profile.points ?? 0) - requiredPoints;
-
-  // Deduct points
-  await supabase
-    .from("profiles")
-    .update({ points: pointsAfter })
-    .eq("id", userId);
+  // Deduct points by inserting a negative ledger entry
+  await supabase.from("points_ledger").insert({
+    user_id: userId,
+    type: "redemption",
+    points: -requiredPoints,
+    label: `Redeemed ${points ?? TIER_POINTS[tierId]} pts for $${amount} gift card`,
+  });
 
   // Save redemption as pending manual fulfillment
   await supabase.from("rewards").insert({
@@ -115,6 +116,7 @@ export async function POST(req: NextRequest) {
   });
 
   // Notify admin to fulfill manually
+  const pointsAfter = totalPoints - requiredPoints;
   await sendAdminNotification({ userEmail: email, amount, tierId, userId, pointsAfter });
 
   return NextResponse.json({ ok: true, manual: true });
