@@ -31,7 +31,7 @@ export default function SharePage() {
       .then(({ count }) => setReferralCount(count ?? 0));
   }, [user]);
 
-  const baseUrl = typeof window !== "undefined" ? window.location.origin : "";
+  const baseUrl = "https://itscalledadulting.com";
   const friendLink = `${baseUrl}/auth?ref=${referralCode}`;
   const parentLink = `${baseUrl}/auth?ref=${referralCode}&mode=parent`;
 
@@ -129,12 +129,21 @@ export default function SharePage() {
             📤 Share with a friend
           </button>
 
-          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4">
-            <h3 className="text-xs font-semibold text-blue-600 uppercase tracking-widest mb-2">How rewards work</h3>
-            <ul className="space-y-2 text-sm text-blue-900">
-              <li className="flex gap-2"><span className="font-bold">3 referrals</span><span className="text-blue-600">→ counts toward Tier 1 reward eligibility</span></li>
-              <li className="flex gap-2"><span className="font-bold">5 referrals</span><span className="text-blue-600">→ jump-starts your Tier 2 reward unlock</span></li>
+          <div className="bg-orange-50 border border-orange-100 rounded-2xl p-4">
+            <h3 className="text-xs font-semibold text-orange-600 uppercase tracking-widest mb-3">You earn points for every friend who joins</h3>
+            <ul className="space-y-3 text-sm">
+              <li className="flex items-center gap-3">
+                <span className="bg-orange-500 text-white font-black text-xs px-2 py-1 rounded-lg shrink-0">+50 pts</span>
+                <span className="text-gray-700">per friend who creates an account</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <span className="bg-orange-500 text-white font-black text-xs px-2 py-1 rounded-lg shrink-0">+100 pts</span>
+                <span className="text-gray-700">bonus when they subscribe to Pro</span>
+              </li>
             </ul>
+            <p className="text-xs text-orange-700 font-medium mt-3">
+              3 friends joining = 150 pts — almost a free month of Pro
+            </p>
           </div>
         </div>
       )}
