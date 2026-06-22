@@ -1,3 +1,16 @@
+// States where hard freezes are rare — pool winterizing, hose winterizing
+// and freeze-focused content should be suppressed
+const WARM_CLIMATE_STATES = new Set([
+  "Florida", "Hawaii", "Arizona", "California",
+  "Louisiana", "Mississippi", "Alabama", "Georgia",
+  "South Carolina", "Texas", "Nevada", "New Mexico",
+]);
+
+export function isWarmClimate(state?: string): boolean {
+  if (!state) return false;
+  return WARM_CLIMATE_STATES.has(state);
+}
+
 export interface UserProfile {
   homeType: "apartment" | "rent-house" | "own-house" | null;
   hasCar: boolean;

@@ -9,8 +9,9 @@ export type TaskRequires =
   | "hasWaterSoftener"
   | "hasDryer"
   | "hasFireplace"
-  | "homeOwner"    // own-house only
-  | "hasOutdoorAccess"; // rent-house or own-house (not apartment)
+  | "homeOwner"        // own-house only
+  | "hasOutdoorAccess" // rent-house or own-house (not apartment)
+  | "coldClimate";     // hidden for FL, AZ, HI, TX, etc. — freeze tasks irrelevant
 
 export interface Task {
   id: string;
@@ -20,7 +21,7 @@ export interface Task {
   category: Category;
   season: Season;
   difficulty: "easy" | "medium" | "hard";
-  requires?: TaskRequires;
+  requires?: TaskRequires | TaskRequires[];
   timeEstimate: string;
   checkInterval?: number; // days between completions (30 = monthly, 90 = quarterly, 365 = yearly)
   diyGuide: {
@@ -56,9 +57,10 @@ export const TASKS: Task[] = [
   {
     id: "tire-pressure",
     checkInterval: 30,
+    requires: "hasCar",
     title: "Check Tire Pressure",
     description: "Low tire pressure reduces fuel economy and can be dangerous in wet or icy conditions.",
-    howDidIKnow: "Your car loses about 1 PSI of tire pressure for every 10°F it gets colder — so every fall your tires are slowly going flat and nobody tells you to check.",
+    howDidIKnow: "Your car loses about 1 PSI of tire pressure for every 10°F temperature change — so your tires are slowly going flat and nobody tells you to check.",
     category: "car",
     season: "year-round",
     difficulty: "easy",
@@ -86,6 +88,7 @@ export const TASKS: Task[] = [
   {
     id: "oil-check",
     checkInterval: 30,
+    requires: "hasCar",
     title: "Check Engine Oil",
     description: "Running low on oil is one of the fastest ways to destroy an engine. Takes 2 minutes to check.",
     howDidIKnow: "An engine with no oil can seize and die in minutes — and the repair bill is thousands of dollars. Nobody tells you it's a 2-minute check that could save your entire car.",
@@ -117,6 +120,7 @@ export const TASKS: Task[] = [
   {
     id: "wiper-blades",
     checkInterval: 180,
+    requires: "hasCar",
     title: "Replace Wiper Blades",
     description: "Streaky or squeaky wipers are a safety hazard in rain. Blades last about 6–12 months.",
     howDidIKnow: "Most people wait until they can barely see in the rain to replace wipers. You're supposed to swap them every fall before the weather turns — it takes 15 minutes and no tools.",
@@ -147,6 +151,7 @@ export const TASKS: Task[] = [
   {
     id: "coolant-check",
     checkInterval: 90,
+    requires: "hasCar",
     title: "Check Coolant Level",
     description: "Coolant keeps your engine from overheating in summer and freezing in winter.",
     howDidIKnow: "If your engine overheats on the highway, you pull over — but the damage is already done. A cracked engine block from low coolant can cost more than the car is worth.",
@@ -155,7 +160,7 @@ export const TASKS: Task[] = [
     difficulty: "easy",
     timeEstimate: "5 minutes",
     diyGuide: {
-      intro: "Coolant (antifreeze) regulates engine temperature. Running low in summer causes overheating; in winter it can freeze and crack your engine block.",
+      intro: "Coolant (antifreeze) regulates engine temperature year-round. Running low in summer causes overheating and potential engine damage; in winter it can freeze and crack your engine block. Both scenarios are catastrophic.",
       steps: [
         "Let your engine cool completely before touching anything — at least 2 hours after driving. Hot coolant can spray and cause serious burns.",
         "Open the hood and find the coolant reservoir — a translucent plastic tank, usually near the radiator, with a colored cap (often yellow or green).",
@@ -242,8 +247,8 @@ export const TASKS: Task[] = [
     category: "home",
     season: "fall",
     difficulty: "easy",
+    requires: ["hasOutdoorAccess", "coldClimate"],
     timeEstimate: "20 minutes",
-    requires: "hasOutdoorAccess",
     diyGuide: {
       intro: "When temps drop below 32°F, water left in outdoor faucet lines can freeze, expand, and crack pipes inside your walls. Do this before the first hard freeze in your area — typically mid-October in colder climates.",
       steps: [
@@ -457,8 +462,8 @@ export const TASKS: Task[] = [
     category: "home",
     season: "fall",
     difficulty: "medium",
+    requires: ["hasPool", "coldClimate"],
     timeEstimate: "2–3 hours",
-    requires: "hasPool",
     diyGuide: {
       intro: "Close your pool when temperatures consistently stay below 65°F — usually late September to mid-October in most areas. A proper close prevents freezing damage to pipes and equipment.",
       steps: [
@@ -554,19 +559,20 @@ export const TASKS: Task[] = [
     timeEstimate: "2–3 hours",
     requires: "hasYard",
     diyGuide: {
-      intro: "Do this in September–October when temps drop to the 60s. Cool-season grasses (fescue, bluegrass) grow most aggressively in fall — take advantage of it.",
+      intro: "Fall lawn care timing depends on your grass type. Cool-season grasses (fescue, bluegrass — most of the North) thrive with fall treatment. Warm-season grasses (Bermuda, St. Augustine, Zoysia — most of the South and Southwest) go dormant in fall and need different care.",
       steps: [
-        "Aerate your lawn if it's been compacted — rent a core aerator from Home Depot ($75–$90/day). It pulls plugs of soil and lets air, water, and nutrients penetrate.",
-        "Overseed heavily after aerating — the seed falls into the holes and makes excellent contact with soil.",
-        "Apply a fall fertilizer (high in phosphorus and potassium — look for something like 12-12-12 or a 'winterizer' blend).",
-        "Keep watering until the ground freezes.",
-        "Rake or mulch leaves as they fall — a thick layer of leaves smothers grass and promotes disease.",
-        "Do your final mow of the season at 2.5 inches — slightly shorter than normal to prevent snow mold.",
+        "IDENTIFY YOUR GRASS TYPE first. Cool-season: stays green in fall, found in northern states. Warm-season: turns tan/brown in fall as it goes dormant, found in the South and Southwest.",
+        "COOL-SEASON (North): Aerate in September–October when temps drop to the 60s — rent a core aerator ($75–$90/day at Home Depot). Overseed heavily after aerating.",
+        "COOL-SEASON: Apply a fall 'winterizer' fertilizer (high potassium — look for 12-12-12 or similar). This builds strong roots for next spring.",
+        "COOL-SEASON: Final mow of the season at 2.5 inches — slightly shorter than normal to prevent snow mold.",
+        "WARM-SEASON (South/Southwest): Skip overseeding Bermuda or Zoysia in fall — it damages the dormant grass. You can overseed with annual ryegrass for winter color, but it's optional.",
+        "WARM-SEASON: Stop fertilizing 6 weeks before first expected frost. Fertilizing dormant grass forces growth that cold will kill.",
+        "ALL GRASS: Rake or mulch leaves as they fall — a thick leaf layer smothers grass and promotes disease. Mulching with your mower (chopping leaves small) adds free nitrogen back to the soil.",
       ],
       tips: [
-        "Fall overseeding gives new grass time to establish strong roots before summer heat stress.",
-        "Mulching leaves with your mower (mowing them into tiny pieces) adds nitrogen back to the soil — free fertilizer.",
-        "Don't fertilize too late in fall — if the ground freezes with lush new growth, it can be damaged.",
+        "Not sure what grass you have? Google '[your state] common lawn grass types' — your local county extension office often has a free guide.",
+        "Mulching leaves with your mower is faster than raking and adds organic matter back to the soil.",
+        "Cool-season lawns look better in fall than any other time of year — that's your signal to take care of them.",
       ],
       toolsNeeded: ["Core aerator (rent)", "Grass seed", "Fall fertilizer", "Spreader", "Rake or mulching mower"],
     },
@@ -633,7 +639,7 @@ export const TASKS: Task[] = [
         "🔴 RED FLAGS — Walk away from: salvage or rebuilt title (means it was totaled), any car the seller won't let you take to a mechanic, extreme reluctance to share the VIN, odometer reading that doesn't match wear on pedals and seat, seller pushing hard for cash only.",
         "🔩 GET A PRE-PURCHASE INSPECTION — Before you pay, take it to an independent mechanic (not the seller's mechanic) for a pre-purchase inspection ($100–$150). They put it on a lift and check what you can't see. This single step has saved thousands of people from buying lemons.",
         "💰 NEGOTIATE — Use any problems found as leverage. Look up the fair market value on Kelley Blue Book (kbb.com) before you go. You should pay BELOW the private party value for a car from a private seller, and at or below the 'fair purchase price' at a dealer.",
-        "📝 PAPERWORK — Get the title signed over to you at time of purchase. In Ohio, take it to the BMV within 30 days to transfer the title into your name. Make sure the name on the title matches the seller's ID.",
+        "📝 PAPERWORK — Get the title signed over to you at time of purchase. Take it to your state's DMV within 30 days (most states require this) to transfer the title into your name. Make sure the name on the title matches the seller's ID.",
       ],
       tips: [
         "The best $150 you'll spend is on a pre-purchase inspection — always do it, no exceptions.",
@@ -750,12 +756,12 @@ export const TASKS: Task[] = [
     description: "A dead battery leaves you stranded. Know how to jump start a car — or use a jump pack — before it happens.",
     howDidIKnow: "A dead battery will happen to you eventually, usually at the worst time. The cables look simple but connect them wrong and you can fry your car's electronics. The order matters.",
     category: "car",
-    season: "winter",
+    season: "year-round",
     difficulty: "medium",
     timeEstimate: "15 minutes",
     requires: "hasCar",
     diyGuide: {
-      intro: "Car batteries die more often in cold weather. Knowing the correct jump start sequence prevents sparks, damage to electronics, and injury. The order is non-negotiable.",
+      intro: "Batteries die in both extreme cold AND extreme heat — cold slows the chemical reaction, heat evaporates the battery fluid. The jump start process is the same either way, and the order of connections is non-negotiable.",
       steps: [
         "Park the working car so its battery is close to the dead car's battery — hoods facing each other or side by side.",
         "Turn OFF the working car before connecting cables.",
@@ -769,7 +775,7 @@ export const TASKS: Task[] = [
       tips: [
         "A portable jump pack (lithium jump starter, $40–$80) lives in your trunk and means you never need another car. Worth every penny.",
         "If a car battery is dead for no apparent reason and the car is less than 5 years old, the battery itself may need replacement ($100–$200).",
-        "In very cold weather (-10°F and below), a battery can freeze — jumping won't help. Needs a warm garage.",
+        "Extreme heat (Arizona, Texas summers) is as hard on batteries as extreme cold. Replace your battery every 3–5 years — don't wait for it to fail.",
       ],
       toolsNeeded: ["Jumper cables (keep a set in your trunk)", "Or: portable jump starter ($40–$80)"],
     },
@@ -1709,11 +1715,10 @@ export function getCurrentSeason(): Season {
   return "winter";
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function taskMatchesProfile(task: Task, profile: any): boolean {
-  if (!task.requires) return true;
-  if (!profile) return true; // no profile = show everything
-  switch (task.requires) {
+const WARM_CLIMATE_STATES = new Set(["Florida","Hawaii","Arizona","California","Louisiana","Mississippi","Alabama","Georgia","South Carolina","Texas","Nevada","New Mexico"]);
+
+function checkSingleRequires(req: TaskRequires, profile: any): boolean {
+  switch (req) {
     case "hasCar": return !!profile.hasCar;
     case "hasPool": return !!profile.hasPool;
     case "hasYard": return !!profile.hasYard;
@@ -1722,8 +1727,17 @@ function taskMatchesProfile(task: Task, profile: any): boolean {
     case "hasFireplace": return !!profile.hasFireplace;
     case "homeOwner": return profile.homeType === "own-house";
     case "hasOutdoorAccess": return profile.homeType === "rent-house" || profile.homeType === "own-house";
+    case "coldClimate": return !WARM_CLIMATE_STATES.has(profile.state ?? "");
     default: return true;
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function taskMatchesProfile(task: Task, profile: any): boolean {
+  if (!task.requires) return true;
+  if (!profile) return true; // no profile = show everything
+  const reqs = Array.isArray(task.requires) ? task.requires : [task.requires];
+  return reqs.every((r) => checkSingleRequires(r, profile));
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
