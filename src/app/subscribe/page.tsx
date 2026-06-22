@@ -34,8 +34,16 @@ export default function SubscribePage() {
         }),
       });
       const json = await res.json();
-      if (json.url) window.location.href = json.url;
-      else throw new Error("No checkout URL returned");
+      if (json.url) {
+        // Use a form POST redirect to avoid iOS Safari blocking async navigation
+        const form = document.createElement("form");
+        form.method = "GET";
+        form.action = json.url;
+        document.body.appendChild(form);
+        form.submit();
+      } else {
+        throw new Error("No checkout URL returned");
+      }
     } catch {
       setError("Something went wrong. Please try again.");
       setLoading(false);
