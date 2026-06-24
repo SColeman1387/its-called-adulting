@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
               id: ledgerId,
               user_id: referrer.id,
               type: "referral",
-              points: 50,
+              points: 100,
               label: `Friend joined — referral bonus`,
             });
           }

@@ -159,8 +159,9 @@ export default function RewardsPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ customerId: stripeCustomerId }),
               });
-              const { url } = await res.json();
-              if (url) window.location.href = url;
+              const json = await res.json();
+              if (json.url) window.location.href = json.url;
+              else alert("Could not open billing portal: " + (json.error ?? "unknown error"));
             }}
             className="text-xs text-gray-400 underline"
           >
