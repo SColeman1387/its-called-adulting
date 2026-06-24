@@ -26,12 +26,12 @@ export default function LandingPage() {
           Free to start · No download required
         </div>
         <h1 className="text-4xl sm:text-5xl font-black text-gray-900 leading-tight mb-6">
-          Everything they need<br />
-          <span className="text-orange-500">to go on their own.</span>
+          Nobody taught you this.<br />
+          <span className="text-orange-500">We will.</span>
         </h1>
         <p className="text-lg text-gray-600 leading-relaxed mb-8 max-w-lg mx-auto">
-          Practical skills, timely reminders, and the tools they&apos;ll actually need —
-          all in one place, ready the moment they need them.
+          The practical skills, timely reminders, and real-world tools you need to handle
+          adult life — before you get blindsided by it.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
@@ -93,9 +93,10 @@ export default function LandingPage() {
             Build your toolkit before you need it.
           </h2>
           <p className="text-gray-400 text-base max-w-xl mx-auto">
-            Jumper cables. A socket set. Duct tape. The stuff you don&apos;t think about until
-            you&apos;re standing in a parking lot at 9pm wishing you had it.
-            Complete tasks, earn points, get the tools — shipped to your door.
+            Jumper cables. A tape measure. A socket set. The stuff you don&apos;t think about
+            until you&apos;re standing in a parking lot at 9pm wishing you had it.
+            We guide you through building your toolkit one item at a time — so you&apos;re
+            never caught off guard.
           </p>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-8">
@@ -116,7 +117,7 @@ export default function LandingPage() {
           ))}
         </div>
         <p className="text-center text-xs text-gray-400">
-          Earn one tool per month for your first year. Real gear, shipped free.
+          12 essential tools. Build your kit over your first year — one item at a time.
         </p>
       </section>
 
