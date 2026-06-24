@@ -1,5 +1,10 @@
 const KEY = "ica_points_ledger";
 
+// Max points a user can earn per calendar month (excludes deductions).
+// At 125 pts/mo it takes ~4 months to reach the 500-pt ($10) gift card,
+// meaning users earn back at most ~50% of their $4.99/mo subscription.
+export const MONTHLY_EARN_CAP = 125;
+
 export interface PointEvent {
   id: string;
   type: "task_complete" | "lesson_complete" | "tool_acquired" | "referral" | "signup";
@@ -43,6 +48,18 @@ export function getLedgerEntries(): PointEvent[] {
   return getLedger().slice().reverse();
 }
 
+export function getMonthlyEarned(): number {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+  return getLedger()
+    .filter((e) => e.points > 0 && e.ts >= monthStart)
+    .reduce((sum, e) => sum + e.points, 0);
+}
+
+export function getMonthlyRemaining(): number {
+  return Math.max(0, MONTHLY_EARN_CAP - getMonthlyEarned());
+}
+
 function hasEarned(type: PointEvent["type"], refId: string): boolean {
   return getLedger().some((e) => e.type === type && e.refId === refId);
 }
@@ -53,7 +70,13 @@ export function awardPoints(
   refId: string
 ): number {
   if (hasEarned(type, refId)) return 0;
-  const points = POINT_VALUES[type];
+
+  const remaining = getMonthlyRemaining();
+  if (remaining <= 0) return 0;
+
+  const rawPoints = POINT_VALUES[type];
+  const points = Math.min(rawPoints, remaining); // cap at monthly limit
+
   const event: PointEvent = {
     id: crypto.randomUUID(),
     type,

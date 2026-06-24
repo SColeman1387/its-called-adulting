@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getTotalPoints, getLedgerEntries, deductPoints, GIFT_CARD_TIERS, POINT_VALUES, PointEvent } from "@/lib/points";
+import { getTotalPoints, getLedgerEntries, deductPoints, GIFT_CARD_TIERS, POINT_VALUES, PointEvent, getMonthlyRemaining, MONTHLY_EARN_CAP } from "@/lib/points";
 import { getSupabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/useAuth";
 import { useSubscription } from "@/lib/useSubscription";
@@ -175,6 +175,19 @@ export default function RewardsPage() {
         <p className="text-sm text-blue-300 font-semibold uppercase tracking-widest mb-1">Your balance</p>
         <p className="text-6xl font-black mb-1">{points.toLocaleString()}</p>
         <p className="text-blue-300 text-sm">Adulting Bucks</p>
+        <div className="mt-4 bg-white/10 rounded-xl px-4 py-2">
+          <p className="text-xs text-blue-200">
+            {getMonthlyRemaining() > 0
+              ? <>{getMonthlyRemaining()} of {MONTHLY_EARN_CAP} pts remaining to earn this month</>
+              : <>Monthly limit reached — resets next month</>}
+          </p>
+          <div className="w-full bg-white/20 rounded-full h-1.5 mt-1.5">
+            <div
+              className="bg-orange-400 h-1.5 rounded-full transition-all"
+              style={{ width: `${Math.min(100, ((MONTHLY_EARN_CAP - getMonthlyRemaining()) / MONTHLY_EARN_CAP) * 100)}%` }}
+            />
+          </div>
+        </div>
       </div>
 
       {/* How to earn */}
