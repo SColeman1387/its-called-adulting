@@ -71,11 +71,11 @@ export function awardPoints(
 ): number {
   if (hasEarned(type, refId)) return 0;
 
-  const remaining = getMonthlyRemaining();
-  if (remaining <= 0) return 0;
-
   const rawPoints = POINT_VALUES[type];
-  const points = Math.min(rawPoints, remaining); // cap at monthly limit
+
+  // Referrals are self-funding (each signup = $4.99/mo revenue) so they
+  // bypass the monthly cap entirely.
+  const points = type === "referral" ? rawPoints : Math.min(rawPoints, Math.max(0, getMonthlyRemaining()));
 
   const event: PointEvent = {
     id: crypto.randomUUID(),
